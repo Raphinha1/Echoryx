@@ -1,0 +1,23 @@
+{
+    "source": "Assets/_Echoryx/Art/Animations/SuperSoldier/MixamoReplacement/Jumping Up.fbx",
+    "sha256": "ef2bf9ee16614c1bdf8c77280b4a576a9a87878c7641c50316b75a1399620d74",
+    "unity": "6000.3.22f1",
+    "clip": "Jump",
+    "verticalRootReference": "Original; only authored downward preparation retained, upward trajectory removed; Apply Root Motion disabled",
+    "generatedMotion": "Assets/_Echoryx/Art/Animations/SuperSoldier/JumpInPlace.anim",
+    "bytes": 347920,
+    "seconds": 0.8333333730697632,
+    "frameRate": 30.0,
+    "jumpToFallExitTime": -1.0,
+    "jumpToFallTransitionSeconds": 0.18000000715255738,
+    "approximateFrameCount": 26,
+    "sourceHumanBoneCount": 66,
+    "meshAssetCount": 0,
+    "humanMotion": true,
+    "avatarValid": true,
+    "avatarHuman": true,
+    "loop": false,
+    "applyRootMotion": false,
+    "verticalRootMotionBakedIntoPose": true,
+    "jumpToFallHasExitTime": false
+}

@@ -1,0 +1,33 @@
+{
+  "baselineCount": 546,
+  "unchangedCount": 532,
+  "modified": [
+    "Assets/_Echoryx/Tests/PlayMode/Game/Characters/SuperSoldierLocomotionPlayChecks.cs",
+    "Assets/_Echoryx/Tests/PlayMode/Game/Characters/JumpFallTransitionChecks.cs",
+    "Assets/_Echoryx/Tests/Editor/Game/SuperSoldierLocomotionImportTests.cs",
+    "Assets/_Echoryx/Scripts/Game/Editor/S05LocomotionLabSetup.cs",
+    "Assets/_Echoryx/Scripts/Game/Editor/S05JumpReplacementSetup.cs",
+    "Assets/_Echoryx/Art/Animations/SuperSoldier/provenance.json",
+    "Assets/_Echoryx/Art/Animations/SuperSoldier/SuperSoldierLocomotion.controller",
+    "docs/supersoldier-locomotion-import-report.json",
+    "docs/supersoldier-locomotion-play-report.json",
+    "docs/supersoldier-locomotion.md",
+    "docs/supersoldier-locomotion-cycle-report.json",
+    "docs/supersoldier-jump-replacement-report.json",
+    "README.md",
+    "MEMORY.md"
+  ],
+  "new": [
+    "Assets/_Echoryx/Art/Animations/SuperSoldier/JumpInPlace.anim",
+    "Assets/_Echoryx/Art/Animations/SuperSoldier/JumpInPlace.anim.meta",
+    "Assets/_Echoryx/Tests/PlayMode/Game/Characters/JumpPreparationChecks.cs",
+    "Assets/_Echoryx/Tests/PlayMode/Game/Characters/JumpPreparationChecks.cs.meta",
+    "docs/images/s05-b3-jump-preparation-1x.mp4",
+    "docs/images/s05-b3-jump-preparation-poses.png",
+    "docs/supersoldier-jump-preparation-integrity.json",
+    "docs/supersoldier-jump-preparation-report.json"
+  ],
+  "deleted": [],
+  "originalSourceAndImporterUnchanged": true,
+  "existingScenesAndGameplayUnchanged": true
+}

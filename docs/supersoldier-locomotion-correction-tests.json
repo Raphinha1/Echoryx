@@ -1,0 +1,457 @@
+{
+  "unity": "6000.3.22f1",
+  "finalRunsInIsolatedCopy": true,
+  "initialWorkingProjectEditModePassed": 86,
+  "initialWorkingProjectTargetedPassed": 5,
+  "results": {
+    "targetedGraphics": {
+      "result": "Passed",
+      "total": "5",
+      "passed": "5",
+      "failed": "0",
+      "start-time": "2026-10-09 21:34:57Z",
+      "end-time": "2026-10-09 21:35:05Z",
+      "xml": "/tmp/echoryx-b3-fix-targeted-final.xml",
+      "cases": [
+        {
+          "name": "Echoryx.Game.PlayTests.SuperSoldierLocomotionDiagnostics.IndividualCyclesKeepSolesAboveFloor",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.PlayTests.SuperSoldierLocomotionPlayChecks.BlendAndAirTransitionsThenAutomaticDemoVisitAllPhases",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.PlayTests.SuperSoldierLocomotionPlayChecks.IndividualPreviewHasExclusiveControlAndRestoresController",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.PlayTests.SuperSoldierLocomotionPlayChecks.RepeatedLandingsAreSingleAndInterruptibleAt30And120Hz",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.PlayTests.SuperSoldierLocomotionPlayChecks.SixClipsRetargetWithMovingBonesAndNoRootOrAccumulatedBodyDrift",
+          "result": "Passed"
+        }
+      ]
+    },
+    "editMode": {
+      "result": "Passed",
+      "total": "86",
+      "passed": "86",
+      "failed": "0",
+      "start-time": "2026-10-09 21:36:30Z",
+      "end-time": "2026-10-09 21:36:36Z",
+      "xml": "/tmp/echoryx-b3-fix-edit-final.xml",
+      "cases": [
+        {
+          "name": "Echoryx.Echo.Tests.EchoCaptureTests.CancelClearsBothActiveAndCompletedRecordings",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Echo.Tests.EchoCaptureTests.CancelDuringPlaybackAllowsANewRecording",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Echo.Tests.EchoCaptureTests.InterpolationUsesElapsedTimeAndHandlesOneSample",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Echo.Tests.EchoCaptureTests.IrregularFramesProduceOrderedScheduledSamplesAndFinalPose",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Echo.Tests.EchoCaptureTests.PlaybackIsExclusiveAndCompletionClearsTheRecording",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Echo.Tests.EchoCaptureTests.RecordingAutomaticallyEndsAtFiveSeconds",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Echo.Tests.EchoCaptureTests.StartStopAndReplaceRespectStates",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Echo.Tests.EchoWiringTests.ExistingInputAssetAndPlayerPrefabAreConnected",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Echo.Tests.EchoWiringTests.PlaybackActionActorAndPrefabAreConnectedWithoutPhysics",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CheckpointTests.ActiveRoomDoesNotResetOtherRoomsOrAcceptForeignParticipants",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CheckpointTests.DestroyedCheckpointDoesNotLoseCapturedRespawnPose",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CheckpointTests.HazardRequestsRespawnAndDisabledVolumeDoesNot",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CheckpointTests.InitialRespawnUsesStableAuthoredPoint",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CheckpointTests.OnlyOneCheckpointActiveAndRepeatEntryDoesNotReplaceSnapshot",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CheckpointTests.OptInTransformRestoresItsInitialPose",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CheckpointTests.RespawnClearsVelocityJumpWindowAndPlatformDisplacement",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CheckpointTests.RewindReleaseEndsActiveInteractionWithoutResettingHistory",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CheckpointTests.RoomResetsInExplicitPhaseOrderBeforePlayerMovesAndCoalescesRequests",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CheckpointTests.VolumeEntryActivatesPlayerAndExitAllowsLaterReactivation",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CheckpointWiringTests.PrototypeHasInitialSpawnAndSeparateRoomsRestartAndFallZone",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CheckpointWiringTests.RoomBRespawnHasSafeApproachLongerThanInitialPlatformTrip",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CombinedPuzzleTests.CombinedResetRestoresOnlyItsMechanismsAndEchoAvailable",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CombinedPuzzleTests.CombinedRoomHasOwnCheckpointMechanismsAndOrderedParticipants",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CombinedPuzzleTests.EntranceCheckpointVolumeCoversJumpAndSpawnIsOutsideDoorAndHazard",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CombinedPuzzleTests.LeavingPlateCannotReachThresholdBeforeDoorCloses",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CombinedPuzzleTests.ParkedPlatformAndArrivalAreOutsideJumpAndCoyoteReach",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CombinedPuzzleTests.RecoveredPlatformConnectsDocksAndIsSelectableAtTheAimMark",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CombinedPuzzleTests.RepeatedRespawnCannotReachFirstDepartureEvenIgnoringClosedEchoDoor",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CombinedPuzzleTests.WallsRoofAndDoorPreventJumpAroundBothBarriers",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CoordinatedResetTests.DirectAndRepeatedRespawnCleanCloneAndRecording",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CoordinatedResetTests.HazardUsesImmediateEchoCancellationPath",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CoordinatedResetTests.MechanismResetDropsFutureAndStartsWithOneInitialPose",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CoordinatedResetTests.PendingResetCannotSwitchToAnotherCheckpoint",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CoordinatedResetTests.PlateAndDoorClearOccupancyAndThresholdLatchBeforePlayerRelocation",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CoordinatedResetTests.PlatformRestoresStartAndProgressThenResumesFreshTrip",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CoordinatedResetTests.RequestImmediatelyClearsEchoBeforeQueuedTeleport(Recording)",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CoordinatedResetTests.RequestImmediatelyClearsEchoBeforeQueuedTeleport(Ready)",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CoordinatedResetTests.RequestImmediatelyClearsEchoBeforeQueuedTeleport(Playing)",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CoordinatedResetTests.RestorationBypassesPassengerPoseApplicationAndSuppressesSameFrameTick",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CoordinatedResetTests.RewindSessionReleasesImmediatelyBeforeScopedRestoration",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CoordinatedResetTests.RoomIsolationPreservesOtherMechanismPoseHistoryPlateAndDoor",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.CoordinatedResetWiringTests.PrototypeRegistersGlobalEchoAndSeparateRoomMechanismsWithoutDuplicates",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.InputReleaseGateTests.HeldButtonRequiresReleaseAndFreshPressAfterReset",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.InputReleaseGateTests.HeldMovementRequiresNeutralWhileUnheldActionsRemainAvailable",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.SuperSoldierLocomotionImportTests.ClipPoliciesSeparateTakeoffAndGroundContactWithoutBakingTravel",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.SuperSoldierLocomotionImportTests.ControllerUsesSourceCadenceAndOneNonLoopingLandingWithSafeExit",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.Tests.SuperSoldierLocomotionImportTests.SourceAvatarsUseTheSameRestCalibrationRatherThanDifferentAnimatedPoses",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Interactions.Tests.DoorGateStateTests.ClosedDoorDoesNotOpenForPlayerAlone",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Interactions.Tests.DoorGateStateTests.FullyClosedDoorClearsPreviousPlateActivation",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Interactions.Tests.DoorGateStateTests.PlateOpensDoorAndThresholdKeepsItOpenAfterRelease",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Interactions.Tests.InteractionWiringTests.PrefabsCarrySeparateIdentityWithoutEchoPhysics",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Interactions.Tests.InteractionWiringTests.PrototypeKeepsS01CircuitAndHasWiredPuzzle",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Interactions.Tests.PressurePlateTests.DisablingOrDestroyingEchoClearsOccupancy",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Interactions.Tests.PressurePlateTests.PlayerAndEchoCanOccupyTogetherAndLeavingOneKeepsPlatePressed",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Interactions.Tests.PressurePlateTests.PlayerEnteringAndLeavingChangesPlateState",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Interactions.Tests.PressurePlateTests.VolumeRejectsActorsAboveOrOutsideThePlate",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Player.Tests.JumpWindowTests.BufferedPressIsConsumedOnLandingWithinWindow",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Player.Tests.JumpWindowTests.CoyoteJumpExpiresAfterWindow",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Player.Tests.JumpWindowTests.GroundedPressCanOnlyBeConsumedOnce",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.MovingPlatformTests.CarrierConsumesAtMostOnePlatformDeltaPerFrame",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.MovingPlatformTests.DegeneratePathStaysAtStart",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.MovingPlatformTests.LongWaitAtDestinationKeepsStartInHistory",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.MovingPlatformTests.PathArrivesAndStaysAtDestination",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.MovingPlatformTests.RecoveredTimelineResumesOnSameBranchWithoutJump",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.MovingPlatformTests.RidePolicyAcceptsFeetOnTopAndRejectsSideOrAir",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindHistoryTests.ConfigurationRejectsInvalidDurationAndRate",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindHistoryTests.EmptyAndSingleSampleHistoryCannotRewind",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindHistoryTests.IrregularFramesInterpolatePositionAndRotationByTime",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindHistoryTests.LongFrameAndInvalidDeltasRemainBounded",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindHistoryTests.ReleaseKeepsRecoveredPoseAndDiscardsFutureBranch",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindHistoryTests.ResetDuringRewindClearsOldTimeline",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindHistoryTests.RewindClampsToOldestAvailablePose",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindHistoryTests.RewindSuspendsNormalSamplingAndUsesElapsedTime",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindHistoryTests.SamplingStaysWithinFiveSecondWindowAndFixedCapacity",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindInteractionWiringTests.PlayerPrefabUsesExistingInputActionsForRmb",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindInteractionWiringTests.PrototypeCrossingHasSolidSelectableSurfaceAndPlayerCarrier",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindInteractionWiringTests.PrototypeRetainsEarlierContentAndHasKinematicTestRotor",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindSelectionSessionTests.DestroyedUnityTargetIsReleasedWithoutAccessingIt",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindSelectionSessionTests.DisabledTargetEndsAndCannotBeReplacedDuringSamePress",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindSelectionSessionTests.InsufficientHistoryWaitsForSameTargetWithoutSwitching",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindSelectionSessionTests.OnlyOneConcreteMechanismCanRewindGlobally",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindSelectionSessionTests.PressLocksOneTargetAndReleaseEndsRewind",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindSelectionSessionTests.ReleaseWithoutTargetIsSafeAndIdempotent",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindTargetResolverTests.CameraRayIgnoresPlayerAndResolvesChildColliderToParent",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindTargetResolverTests.DistanceAndOccludingGeometryPreventSelection",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Rewind.Tests.RewindTargetResolverTests.MissingCameraColliderOrBufferIsSafe",
+          "result": "Passed"
+        }
+      ]
+    },
+    "playMode": {
+      "result": "Passed",
+      "total": "13",
+      "passed": "13",
+      "failed": "0",
+      "start-time": "2026-10-09 21:37:47Z",
+      "end-time": "2026-10-09 21:38:04Z",
+      "xml": "/tmp/echoryx-b3-fix-play-final.xml",
+      "cases": [
+        {
+          "name": "Echoryx.Game.PlayTests.CombinedPuzzlePlayChecks.CombinedResetClearsLiveAbilitiesHeldRmbAndKeepsOtherRooms",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.PlayTests.CombinedPuzzlePlayChecks.CombinedRoomRequiresBothSkillsAndRepeatsAfterReset",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.PlayTests.CombinedPuzzlePlayChecks.HistoricalRoomBDockSpawnReproducesShortcut",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.PlayTests.CombinedPuzzlePlayChecks.RoomBRemainsRecoverableAfterLongWaitAndRepeatsWithRmb",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.PlayTests.CombinedPuzzlePlayChecks.RoomBResetAccessOutlastsInitialTrip",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.PlayTests.SuperSoldierAnimationPlayCheck.HumanoidIdleClipEvaluatesOnSkinnedMeshes",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.PlayTests.SuperSoldierLocomotionDiagnostics.IndividualCyclesKeepSolesAboveFloor",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.PlayTests.SuperSoldierLocomotionPlayChecks.BlendAndAirTransitionsThenAutomaticDemoVisitAllPhases",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.PlayTests.SuperSoldierLocomotionPlayChecks.IndividualPreviewHasExclusiveControlAndRestoresController",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.PlayTests.SuperSoldierLocomotionPlayChecks.RepeatedLandingsAreSingleAndInterruptibleAt30And120Hz",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.PlayTests.SuperSoldierLocomotionPlayChecks.SixClipsRetargetWithMovingBonesAndNoRootOrAccumulatedBodyDrift",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.PlayTests.VisualReferenceRoomPlayChecks.CameraFollowsOrbitsAndAvoidsTheRoomWall",
+          "result": "Passed"
+        },
+        {
+          "name": "Echoryx.Game.PlayTests.VisualReferenceRoomPlayChecks.PlayerCrossesOpenFrameAndCannotCrossClosedDoorOrWalls",
+          "result": "Passed"
+        }
+      ]
+    }
+  }
+}

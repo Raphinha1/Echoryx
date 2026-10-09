@@ -1,0 +1,28 @@
+{
+  "baselineFiles": 490,
+  "unchanged": 481,
+  "intentionalModifications": [
+    "Assets/_Echoryx/Art/Animations/SuperSoldier/Mixamo/X Bot@Falling Idle.fbx.meta",
+    "Assets/_Echoryx/Art/Animations/SuperSoldier/Mixamo/X Bot@Falling To Landing.fbx.meta",
+    "Assets/_Echoryx/Art/Animations/SuperSoldier/Mixamo/X Bot@Jumping.fbx.meta",
+    "Assets/_Echoryx/Art/Animations/SuperSoldier/Mixamo/X Bot@Running.fbx.meta",
+    "Assets/_Echoryx/Art/Animations/SuperSoldier/Mixamo/X Bot@Walking.fbx.meta",
+    "Assets/_Echoryx/Art/Animations/SuperSoldier/SuperSoldierLocomotion.controller",
+    "Assets/_Echoryx/Scripts/Game/Editor/S05LocomotionLabSetup.cs",
+    "Assets/_Echoryx/Scripts/Game/VisualLabs/LocomotionAnimationPreview.cs",
+    "Assets/_Echoryx/Tests/PlayMode/Game/Characters/SuperSoldierLocomotionPlayChecks.cs"
+  ],
+  "newFiles": [
+    "Assets/_Echoryx/Tests/Editor/Game/SuperSoldierLocomotionImportTests.cs",
+    "Assets/_Echoryx/Tests/Editor/Game/SuperSoldierLocomotionImportTests.cs.meta",
+    "Assets/_Echoryx/Tests/PlayMode/Game/Characters/SuperSoldierLocomotionDiagnostics.cs",
+    "Assets/_Echoryx/Tests/PlayMode/Game/Characters/SuperSoldierLocomotionDiagnostics.cs.meta"
+  ],
+  "missing": [],
+  "originalSourcesMatched": 5,
+  "allExistingScenesModelsMaterialsPackagesProjectSettingsPreserved": true,
+  "validationCopyDifferences": [
+    "Assets/Settings/Mobile_RPAsset.asset"
+  ],
+  "validationCopyNote": "Unity automatically upgraded the unused Mobile URP asset from internal version 12 to 13 on fresh import. Not propagated to the working project. Active PC pipeline, gameplay, locomotion code, sources and metadata match."
+}
