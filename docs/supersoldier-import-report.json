@@ -1,0 +1,75 @@
+{
+    "unity": "6000.3.22f1",
+    "modelPath": "Assets/_Echoryx/Art/Characters/SihaGamesSuperSoldier/Idle.fbx",
+    "importerAnimationType": "Human",
+    "avatarName": "IdleAvatar",
+    "globalScale": 1.0,
+    "fileScale": 0.009999999776482582,
+    "bounds": {
+        "x": 1.4632341861724854,
+        "y": 2.0272302627563478,
+        "z": 1.4627673625946046
+    },
+    "meshCount": 25,
+    "skinnedRendererCount": 25,
+    "materialSlotCount": 27,
+    "boneCount": 46,
+    "bindPoseCount": 87,
+    "avatarCount": 1,
+    "materialCount": 7,
+    "vertices": 37333,
+    "triangles": 66982,
+    "avatarValid": true,
+    "avatarHuman": true,
+    "materials": [
+        "Material_002 (Universal Render Pipeline/Lit)",
+        "Ch44_body1 (Universal Render Pipeline/Lit)",
+        "Ch44_Body (Universal Render Pipeline/Lit)",
+        "Material_001 (Universal Render Pipeline/Lit)",
+        "Material_003 (Universal Render Pipeline/Lit)",
+        "Material_005 (Universal Render Pipeline/Lit)",
+        "Material_004 (Universal Render Pipeline/Lit)"
+    ],
+    "clips": [
+        {
+            "name": "mixamo.com",
+            "lengthSeconds": 1.9666668176651,
+            "frameRate": 30.0,
+            "legacy": false
+        }
+    ],
+    "textures": [
+        {
+            "name": "file2",
+            "format": "DXT1",
+            "width": 2048,
+            "height": 2048,
+            "normal": false,
+            "sRGB": true
+        },
+        {
+            "name": "file4",
+            "format": "DXT5",
+            "width": 2048,
+            "height": 2048,
+            "normal": true,
+            "sRGB": false
+        },
+        {
+            "name": "file8",
+            "format": "DXT1",
+            "width": 2048,
+            "height": 2048,
+            "normal": false,
+            "sRGB": true
+        },
+        {
+            "name": "file10",
+            "format": "DXT5",
+            "width": 2048,
+            "height": 2048,
+            "normal": true,
+            "sRGB": false
+        }
+    ]
+}
