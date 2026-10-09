@@ -1,0 +1,111 @@
+{
+  "slice": "S05-B1",
+  "status": "retired",
+  "reason": "Candidate Cybernet Warrior descartado: FBX sin esqueleto/skinning/Avatar y 157410 triangulos; SuperSoldier fue seleccionado.",
+  "retiredFiles": [
+    {
+      "path": "Assets/_Echoryx/Art/Characters/CybernetWarrior.meta",
+      "sha256": "fd47351fa4ea84765165f0e64945b7b89313b1ce393e1ac80fefbc8d2f3e6266"
+    },
+    {
+      "path": "Assets/_Echoryx/Art/Characters/CybernetWarrior/ATTRIBUTION.md",
+      "sha256": "5a61bd97117feb86c75655a40a79975b8d36addfc8ba833c5a96d196cb992cb9"
+    },
+    {
+      "path": "Assets/_Echoryx/Art/Characters/CybernetWarrior/ATTRIBUTION.md.meta",
+      "sha256": "8c1b90ebed1924d82aa8ece85ff68566f69777ccc331f91082f3729bcb3d5c4b"
+    },
+    {
+      "path": "Assets/_Echoryx/Art/Characters/CybernetWarrior/Models.meta",
+      "sha256": "bc12cc251ae4cd5d49b6684921536399ecc9ff4bfd5a605cfcef48305dd71d81"
+    },
+    {
+      "path": "Assets/_Echoryx/Art/Characters/CybernetWarrior/Models/Warrior.fbx",
+      "sha256": "7d59c4e06055be5bb4018d4ffcdf2dff19d4ef7ca1310dc106ee883b8345c880"
+    },
+    {
+      "path": "Assets/_Echoryx/Art/Characters/CybernetWarrior/Models/Warrior.fbx.meta",
+      "sha256": "b57863cdbd90e19791cd05dc3a611c1f024e307b17bec8f93a1ddff576e52dcd"
+    },
+    {
+      "path": "Assets/_Echoryx/Art/Characters/CybernetWarrior/Textures.meta",
+      "sha256": "f10215602921577a9d786a5e562c72d1af5df49cac43e7a0cf2d4ab86b7ea4cb"
+    },
+    {
+      "path": "Assets/_Echoryx/Art/Characters/CybernetWarrior/Textures/Diffuse_Bake.jpg",
+      "sha256": "9bde60b446e170011da972c35ba92ec1a5856c4056a7cd6be4a14e5dfe991228"
+    },
+    {
+      "path": "Assets/_Echoryx/Art/Characters/CybernetWarrior/Textures/Diffuse_Bake.jpg.meta",
+      "sha256": "32d51b2c7fbcbd826604c231175eb4c80571fb98c82b12510f72cc7dfe1b56ef"
+    },
+    {
+      "path": "Assets/_Echoryx/Art/Characters/CybernetWarrior/Textures/Metallic.jpg",
+      "sha256": "29a9560fa8e2b6c0c141345376d3ebc16b2fb6b267e85d56cd23206d211ca964"
+    },
+    {
+      "path": "Assets/_Echoryx/Art/Characters/CybernetWarrior/Textures/Metallic.jpg.meta",
+      "sha256": "b5277159916e1285e7544e41e727cb214a1ee4d023988f3c892853d940f2b17f"
+    },
+    {
+      "path": "Assets/_Echoryx/Art/Characters/CybernetWarrior/Textures/Normal_Bake.jpg",
+      "sha256": "a924da6909054fb50dacf9304f2da53ed033c74c906eca272c069b7c89323ad4"
+    },
+    {
+      "path": "Assets/_Echoryx/Art/Characters/CybernetWarrior/Textures/Normal_Bake.jpg.meta",
+      "sha256": "62db70d23ffec9fd2520d1f5a9dc9f9ad8591e9f4f891e5b444ca3c05d93d0fd"
+    },
+    {
+      "path": "Assets/_Echoryx/Art/Characters/CybernetWarrior/provenance.json",
+      "sha256": "788eeb561799ec3957173fc92ef5cf55157889e362d44904762a441ef21b1a1d"
+    },
+    {
+      "path": "Assets/_Echoryx/Art/Characters/CybernetWarrior/provenance.json.meta",
+      "sha256": "3b9a39c17f018a433fbb533381552dae8d2bd6547f651e2258cf46e1e428c9f7"
+    },
+    {
+      "path": "Assets/_Echoryx/Materials/Characters/CybernetWarrior.meta",
+      "sha256": "b75b41e2a535e7cb0628d8e3334f7cbf4b23dd8b225e80e5fd8280bbc2ea8093"
+    },
+    {
+      "path": "Assets/_Echoryx/Materials/Characters/CybernetWarrior/Body.mat",
+      "sha256": "c9612ec9e0632605b8d47c17dac3812a6b4c8f951fe4d8adf7d35b8ef15ed69a"
+    },
+    {
+      "path": "Assets/_Echoryx/Materials/Characters/CybernetWarrior/Body.mat.meta",
+      "sha256": "f90565f8849ad9c7cb5477dbb6c71451c8ff7734367a779d9848fd809aabc9b5"
+    },
+    {
+      "path": "Assets/_Echoryx/Materials/Characters/CybernetWarrior/Visor.mat",
+      "sha256": "bee2de54388b522ce52067f67b69b1a9f8181e6b0adb8d8d6dfdcb826f93908f"
+    },
+    {
+      "path": "Assets/_Echoryx/Materials/Characters/CybernetWarrior/Visor.mat.meta",
+      "sha256": "81d2f3479f674ad9a8f1547cd02f3eceaf15a57390804f3585515a81f85c6db1"
+    },
+    {
+      "path": "Assets/_Echoryx/Scenes/CharacterVisualLab.unity",
+      "sha256": "ab8210e95528113be421cb5940979f25e6da14f3dca45704cd139ab6405199d6"
+    },
+    {
+      "path": "Assets/_Echoryx/Scenes/CharacterVisualLab.unity.meta",
+      "sha256": "2945e3f1d13a070d105970f547494ecd004e308e6b64ea4a4a4ce1a774950f38"
+    },
+    {
+      "path": "Assets/_Echoryx/Scripts/Game/Editor/S05CharacterVisualSetup.cs",
+      "sha256": "0f3cc19b52df8c3950a12341113e05da820963c0054c2c15963ef9627e938c53"
+    },
+    {
+      "path": "Assets/_Echoryx/Scripts/Game/Editor/S05CharacterVisualSetup.cs.meta",
+      "sha256": "2e4394912de730eeb7b19e7675b134121f35d765e72ec17e33211bb8a49552b7"
+    },
+    {
+      "path": "docs/character-import-report.json",
+      "sha256": "8e4734a245ececcb95a9db34a1b5a5c3da41a76c43a024892bde87c1db4e8495"
+    },
+    {
+      "path": "docs/images/s05-b1-character-lab.png",
+      "sha256": "0cb2ae83aad4b615f67280d4d4c96aaee448b9247f0bcb2b0a7c33b2ec411dc3"
+    }
+  ]
+}

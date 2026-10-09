@@ -21,3 +21,12 @@ Biblioteca mínima gratuita de Quaternius Standard (CC0), materiales URP y galer
 ## Sala de referencia S05-A2
 
 Abrir `Assets/_Echoryx/Scenes/VisualReferenceRoom.unity` y entrar en Play Mode para recorrer la sala con el Player y la cámara existentes. Hay cinco prefabs reutilizables de estructura con colliders simples; la puerta norte es una muestra cerrada, no un mecanismo. [Disposición, capturas y validaciones](docs/visual-reference-room.md).
+
+## Personajes evaluados S05-B1/B2
+
+Cybernet Warrior (S05-B1) fue descartado por falta de rig y retirado de Assets; [registro y trazabilidad](docs/character-visual-assets.md). SCI-FI SuperSoldier (SihaGames, CC BY 4.0; casco Udon-San) tiene Avatar Humanoid y locomoción Idle/Walk/Run/Jump/Fall/Land aprobados en laboratorios aislados. S05-B2/B3 están cerrados; S05-B4, integración con PlayerMotor, es el siguiente paso pendiente. [Validación del modelo](docs/supersoldier-validation.md).
+
+
+## Laboratorio de locomoción S05-B3
+
+Abrir `Assets/_Echoryx/Scenes/SuperSoldierLocomotionLab.unity` en Play Mode: muestra automáticamente Idle/Walk/Run/Jump/Fall/Land con el Avatar del SuperSoldier y Root Motion desactivado. El usuario aprobó manualmente Idle/Walk/Run/Jump/Fall/Land, contacto y transiciones tras corregir la preparación de Jump. La fase aérea del laboratorio no simula el salto físico, que se integrará en S05-B4. Playback Rate también permite inspeccionar la demo a velocidad reducida. El laboratorio ofrece Individual Clip (sin controller, con pausa/scrub) y parámetros manuales al desactivar Automatic Demo. El siguiente paso es S05-B4, aún sin implementar. [Fuentes Mixamo, controller, resultados y pendientes](docs/supersoldier-locomotion.md). El Player aún conserva la cápsula provisional.

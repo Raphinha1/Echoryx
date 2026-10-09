@@ -145,3 +145,17 @@ Las fuentes de terceros se aíslan en `Art/Environment/Quaternius/ModularSciFiMe
 `Prefabs/Environment` contiene Floor4, Wall4, InnerCorner4, Column5 y DoorFramePanel, con raíces lógicas y BoxCollider independientes de instancias FBX. Los offsets/escalas locales pertenecen a wrappers, no a importers/fuentes. El marco y panel están separados: desactivar Panel deja libre el umbral y sus colliders de postes/dintel. La escena nueva usa una instancia original de Player y copias del rig Cinemachine de Prototype con referencias remapeadas; no añade un motor, habilidades o mecanismos propios.
 
 `S05ReferenceRoomBuilder` es una herramienta de Editor para guardar componentes estándar y validar la escena aislada. El nuevo archivo PlayMode `VisualReferenceRoomPlayChecks` prueba movimiento/colisiones/cámara existentes en ese montaje; no cambia sus implementaciones ni tests previos. Datos, disposición y límites en [visual-reference-room](visual-reference-room.md).
+
+## Registro histórico S05-B1
+
+Cybernet Warrior se evaluó y descartó por carecer de esqueleto/skinning/Avatar y por su densidad de 157.410 triángulos. Sus recursos y laboratorio exclusivos se retiraron después de elegir SuperSoldier. La decisión y procedencia CC BY 4.0 se conservan en [el registro B1](character-visual-assets.md), con hashes en el manifiesto de retirada. No es una dependencia de gameplay ni de B2/B3.
+
+## Evaluación del personaje S05-B2
+
+SCI-FI SuperSoldier se conserva aislado en `Art/Characters/SihaGamesSuperSoldier`; sus originales y procedencia tienen hash/atribución. Un helper Editor configura Humanoid y materiales URP, genera el Avatar desde el FBX y prepara `SuperSoldierValidationLab` con un controller de Idle. La escena no altera Player ni la estructura runtime; la sustitución futura debe ocurrir en `VisualRoot`, sin absorber CharacterController, motor o cámara. El FBX contiene 25 renderers skinned y un clip. Resultados, límites y crédito del casco de Udon-San en [validación S05-B2](supersoldier-validation.md).
+
+## Locomoción aislada S05-B3
+
+Cada fuente X Bot conserva su Avatar Humanoid propio, pero genera la descripción de referencia con la animación desactivada para no calibrar huesos desde una pose animada. Clips/restos originales y Avatar destino se preservan. El controller usa Speed/Grounded/VerticalSpeed; umbrales de `averageSpeed`, Foot IK en locomoción/aterrizaje, Jump de despegue y Land desde contacto. Rotación corporal extraída y raíz sin motion; interrupciones desde Destination con salida de Land condicionada a apoyo. El motor sigue siendo independiente.
+
+`LocomotionAnimationPreview` es exclusivo del laboratorio: demo, parámetros manuales o Playable individual con pausa/scrub. Solo una fuente procesa pose/Animator; el modo individual restaura controller y destruye graph al salir. No añade Input System, transporte ni salto físico. Las pruebas incluyen referencia común de los Avatars, ciclos de skin completos, mezclas, contactos repetidos/interrupciones y arbitraje entre modos. Idle/Walk/Run/Jump/Fall/Land y sus transiciones fueron aprobados técnica y visualmente. La integración con PlayerMotor pertenece al S05-B4 pendiente. [Diagnóstico y uso](supersoldier-locomotion.md).

@@ -283,4 +283,60 @@ echoryx_editor="/home/raphinha/Unity/Hub/Editor/6000.3.22f1/Editor/Unity"
 
 El builder no reemplaza una escena existente ni prefabs ya creados. La validación/captura abre solamente VisualReferenceRoom; guardar cambios manuales antes de ejecutarlas.
 
-**Pendientes manuales:** seguir [el recorrido documentado](visual-reference-room.md#uso-y-revisión-manual-pendiente): encajes de las cuatro esquinas, juntas de suelo, biseles/colisiones conservadoras de puerta y ornamentos, cámara en todos los ángulos incluyendo vigas y columnas, 30/60/120 FPS, legibilidad de luces/señales y aprobación artística con el dispositivo real. La automatización no demuestra todos los ángulos ni rendimiento de un nivel o build final. Revisar Console en ese recorrido; no hubo errores nuevos de importación/compilación ni errores inesperados de gameplay en los comandos ejecutados. Los mensajes no fatales de licencia/limpieza SDK del Editor corresponden al entorno.
+**Estado:** el usuario confirmó S05-A2 aprobado técnica y manualmente. La suite previa comprobó importación/encajes, colisión, Player y cámara. La automatización no certifica todos los FPS, dispositivos, ángulos o rendimiento del build. El delta local actual de VisualReferenceRoom (encuadre y datos URP de luces) no se ha vuelto a aprobar; su recorrido manual permanece como verificación de ese cambio antes de incluirlo en un commit.
+
+## S05-B1: evaluación archivada
+
+Cybernet Warrior de Faisu VFX Studio fue descartado: el FBX carece de esqueleto, skinning, Avatar Humanoid y clips, y contiene 157.410 triángulos. Se retiraron sus recursos exclusivos, escena de laboratorio, herramienta y capturas. El registro breve conserva modelo, licencia CC BY 4.0, resultado y decisión; el manifiesto registra rutas y hashes de los 26 archivos retirados. No hay pruebas ni integración activas de B1.
+
+## S05-B2: validación técnica del protagonista animado
+
+**Estado inicial:** Git estaba sucio con cambios de S05 previos; se preservaron. El candidato se encontró en `~/Descargas/sci-fi-supersoldier-game-ready-animated.zip`. Los originales se inspeccionaron antes de copiarlos a una ruta nueva de Assets. No se sobrescribió Cybernet Warrior ni se modificó Player o una escena jugable.
+
+**Ejecutado en Unity 6000.3.22f1 / URP 17.3.0:** importador Editor configuró Humanoid `CreateFromThisModel`, siete materiales URP Lit y cuatro texturas a 2048 con clasificación BaseColor/Normal. El Avatar `IdleAvatar` informa `isValid` e `isHuman`. Informe en `docs/supersoldier-import-report.json`: 25 mallas, 25 SkinnedMeshRenderer, 46 huesos referenciados, 87 bind poses, 66.982 triángulos y 37.333 vértices sumados. Son siete materiales distintos en 27 slots. Incluye un clip Idle de 1,967 s a 30 fps. La escena aislada tiene escala aproximada 2 m y cero colliders de gameplay.
+
+**PlayMode:** `SuperSoldierAnimationPlayCheck` carga únicamente `SuperSoldierValidationLab`, verifica Avatar Humanoid, Animator Controller, avance temporal del clip, cambio de pose en al menos un hueso y SkinnedMeshRenderers; no integra las mecánicas ni demuestra locomoción. Captura real URP en `docs/images/s05-b2-supersoldier.png`, orientada al frente mediante transformación de la instancia del laboratorio.
+
+**Pruebas ejecutadas:** el test dirigido `SuperSoldierAnimationPlayCheck` pasó **1/1**; la suite completa pasó **83/83 EditMode** y **8/8 PlayMode**. El test aislado usa Unity Editor para cargar la escena. Los XML/log se conservaron en `/tmp/echoryx-s05b2-*`.
+
+**Límite del entorno:** Unity batch informó handshake 505/protocolo no compatible y token no disponible del servicio de licencias. La importación, captura y suites terminaron con código 0 y XML aprobados; no se observaron errores de compilación, shaders o gameplay atribuibles al candidato. Los errores de autenticación del Editor deben distinguirse de errores de la escena.
+
+```bash
+echoryx_editor="/home/raphinha/Unity/Hub/Editor/6000.3.22f1/Editor/Unity"
+"$echoryx_editor" -batchmode -nographics -projectPath "$PWD" -executeMethod Echoryx.Game.Editor.S05SuperSoldierValidation.ImportAndValidate -quit -logFile /tmp/echoryx-s05b2-import.log
+"$echoryx_editor" -batchmode -force-glcore -projectPath "$PWD" -executeMethod Echoryx.Game.Editor.S05SuperSoldierValidation.RenderPreview -quit -logFile /tmp/echoryx-s05b2-render.log
+"$echoryx_editor" -batchmode -nographics -projectPath "$PWD" -runTests -testPlatform PlayMode -testFilter Echoryx.Game.PlayTests.SuperSoldierAnimationPlayCheck -testResults /tmp/echoryx-s05b2-play.xml -logFile /tmp/echoryx-s05b2-play.log
+"$echoryx_editor" -batchmode -nographics -projectPath "$PWD" -runTests -testPlatform EditMode -testResults /tmp/echoryx-s05b2-edit.xml -logFile /tmp/echoryx-s05b2-edit.log
+"$echoryx_editor" -batchmode -force-glcore -projectPath "$PWD" -runTests -testPlatform PlayMode -testResults /tmp/echoryx-s05b2-play-all.xml -logFile /tmp/echoryx-s05b2-play-all.log
+```
+
+El usuario confirmó aprobación técnica y visual de B2/B3 tras revisión de rig, materiales, proporciones y locomoción. La escena aislada no valida integración con PlayerMotor, el clon simultáneo ni rendimiento del build; esos límites se mantienen para B4 y pruebas de plataforma.
+
+
+## S05-B3: corrección tras rechazo manual
+
+La revisión manual rechazó Walk/Run/Jump/Land y contacto/transiciones pese al resultado anterior 2/2 dirigidas, 83/83 EditMode y 10/10 PlayMode. Los tests anteriores no comprobaban referencia correcta del Avatar ni un ciclo completo de suelas. Diagnóstico, cifras antes/después y pasos manuales en [locomoción](supersoldier-locomotion.md).
+
+**Nuevas coberturas:**
+
+- EditMode: igualdad de referencia entre cinco Avatars fuente, codos de referencia rectos, Humanoid propio sin Copy; bucles/rangos/root policies; Tree con umbrales fuente/1×; Land no looping y salida/interrupciones configuradas.
+- PlayMode: seis ciclos completos con Playables sin controller, skin a 60 Hz, penetración de Walk/Run/Land <25 mm, dirección corporal <12° y raíz fija; pesos Idle→Walk→Run→Walk→Idle; Jump/Fall/Land y automático; contactos repetidos/interrupciones a 30/120 Hz; exclusividad individual/manual/auto, pausa/scrub y limpieza del graph.
+- Capturas URP de ocho fases desde frente y perfil por clip. Se conservan sin cambios los FBX originales y el Avatar destino. Foot IK de Mecanim, sin solver de escenario ni física.
+
+**Resultados finales ejecutados:** importación/validación Editor con código 0, **5/5 PlayMode dirigidas con gráficos**, **86/86 EditMode** y **13/13 PlayMode** completas. Incluyen regresiones de gameplay existentes, sin errores nuevos de compilación/runtime en las ejecuciones finales. [Resultados y casos](supersoldier-locomotion-correction-tests.json). La suite EditMode inicial y las primeras dirigidas se ejecutaron sobre el proyecto; las finales se ejecutaron en una copia temporal porque el usuario abrió el Editor. El import fresco migró automáticamente solo Mobile_RPAsset en esa copia, sin propagarlo; PC pipeline y fuentes/lógica coinciden. Los avisos ambientales previos de licencias/Cinemachine/SDK siguen separados de errores de los clips.
+
+**Preservación:** 481/490 archivos previos idénticos por hash; las nueve diferencias son exactamente los archivos B3 detallados en el informe de integridad; cero eliminaciones y cuatro archivos nuevos bajo Assets (dos tests y sus meta). Cinco FBX originales idénticos a Descargas. Todas las escenas existentes, modelos, materiales, gameplay, Packages y ProjectSettings intactos. [Integridad de esta corrección](supersoldier-locomotion-correction-integrity.json).
+
+El Editor se abrió durante la validación. La suite EditMode inicial (86/86) y las primeras dirigidas corregidas (5/5) se ejecutaron en el proyecto; las comprobaciones finales se hicieron en una copia temporal con los mismos Assets/Packages/ProjectSettings y caché de paquetes existente. El único cambio adicional del import fresco fue la migración automática de `Mobile_RPAsset` de versión interna 12 a 13 en esa copia; no se propagó al proyecto. El pipeline PC activo y las fuentes/configuración de gameplay coinciden. No se añaden paquetes. Ver informes de integridad y resultados. Los avisos previos de licencias/Cinemachine/SDK se distinguen de errores nuevos; el instrumento temporal que consultaba Body Rotation fuera del callback IK se retiró, usando HumanPoseHandler en los tests definitivos.
+
+Comandos (cerrar el Editor del proyecto correspondiente para batchmode):
+
+```bash
+echoryx_editor="/home/raphinha/Unity/Hub/Editor/6000.3.22f1/Editor/Unity"
+"$echoryx_editor" -batchmode -nographics -projectPath "$PWD" -executeMethod Echoryx.Game.Editor.S05LocomotionLabSetup.Prepare -quit -logFile /tmp/echoryx-b3-fix-prepare.log
+"$echoryx_editor" -batchmode -force-glcore -projectPath "$PWD" -runTests -testPlatform PlayMode -testFilter Echoryx.Game.PlayTests.SuperSoldierLocomotion -testResults /tmp/echoryx-b3-fix-targeted-final.xml -logFile /tmp/echoryx-b3-fix-targeted-final.log
+"$echoryx_editor" -batchmode -nographics -projectPath "$PWD" -runTests -testPlatform EditMode -testResults /tmp/echoryx-b3-fix-edit-final.xml -logFile /tmp/echoryx-b3-fix-edit-final.log
+"$echoryx_editor" -batchmode -nographics -projectPath "$PWD" -runTests -testPlatform PlayMode -testResults /tmp/echoryx-b3-fix-play-final.xml -logFile /tmp/echoryx-b3-fix-play-final.log
+```
+
+La suite completa sin gráficos preserva las capturas ajenas a B3. Las dirigidas con gráficos sí regeneran imágenes B3. El usuario confirmó la aceptación visual final de Idle/Walk/Run/Jump/Fall/Land, contacto y transiciones. El laboratorio no simula el salto físico ni prueba el desplazamiento de PlayerMotor o el clon simultáneo; corresponden a integración/validación posterior en S05-B4. S05-B4 queda pendiente, no iniciado.

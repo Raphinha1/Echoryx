@@ -25,7 +25,11 @@
 - Corrección final S04: checkpoint y reaparición B trasladados al inicio del acceso para impedir embarcar en el viaje inicial después de R/caída; plataforma y núcleos temporales sin cambios. 83/83 EditMode y 5/5 PlayMode pasaron en Unity batchmode; comprobación visual manual del ajuste pendiente.
 - Dirección visual S05 confirmada: ciencia ficción temporal estilizada, 3D de detalle medio; grafito/titanio, cian Echo y violeta Rewind.
 - S05-A1: ZIP Standard gratuito de Quaternius localizado; subconjunto de 10 FBX y 8 texturas CC0, materiales URP y VisualAssetLab independiente preparados. Importación validada en Unity 6000.3.22f1; captura final URP renderizada e inspeccionada, con presentación corregida. Revisión artística/manual pendiente; S05-A2 abordará montaje modular, iluminación y colliders. No se modifican mecánicas ni Prototype.
-- S05-A2: cinco prefabs estáticos con raíces lógicas/colliders, VisualReferenceRoom aislada y Player/rig existentes. Suites 83/83 EditMode y 7/7 PlayMode (dos casos nuevos de movimiento/colisión/cámara) y capturas URP comprobadas; revisión artística y recorrido manual de todos los encajes pendiente. No se modifican fuentes ni escenas/mecánicas previas; sin commit.
+- S05-A2: cinco prefabs estáticos, VisualReferenceRoom aislada y Player/rig existentes; 83/83 EditMode y 7/7 PlayMode. El usuario confirmó terminado y validado al iniciar S05-B1; registrado en `ad2f52f`.
+- S05-B1: Cybernet Warrior de Faisu VFX Studio (CC BY 4.0) descartado por carecer de rig/skinning y medir 157.410 triángulos. Sus recursos exclusivos se retiraron; procedencia y hashes constan en el registro/manifiesto B1.
+- S05-B2: SCI-FI SuperSoldier de SihaGames, Avatar Humanoid, materiales y laboratorio aprobados técnica y visualmente. Créditos CC BY 4.0 de SihaGames/Udon-San preservados.
+- S05-B3: locomoción aislada y clips Idle/Walk/Run/Jump/Fall/Land con correcciones y transiciones aprobados técnica y visualmente; sin integración al Player.
 - HUD y niveles definitivos siguen sin implementarse.
+- S05-B4: siguiente etapa pendiente — integrar animación visual con PlayerMotor; aún no iniciada.
 
 Consulta `docs/` para especificaciones completas, dependencias y criterios; evita duplicar aquí detalles técnicos.

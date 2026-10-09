@@ -2,6 +2,8 @@
 
 ## Entrega y límites
 
+**Estado:** S05-A2 fue aprobado técnica y manualmente por el usuario. La limpieza posterior eliminó el objeto de prueba FPS; el delta local de cámara/serialización de luces se conserva para revisión, sin atribuirle una intención no confirmada.
+
 `Assets/_Echoryx/Scenes/VisualReferenceRoom.unity` es una sala aislada para validar la biblioteca gratuita [S05-A1](visual-assets.md), escala, iluminación, colisiones y cámara. No es el nivel definitivo ni un rompecabezas. No se añadieron materiales, shaders, paquetes, Rigidbody ni componentes de gameplay nuevos. El montaje usa componentes estándar y el Player/rig existentes; las herramientas nuevas son solo de Editor y pruebas.
 
 Se comenzó con Git limpio en `039cc89` (`feat: add sci-fi environment assets and URP materials`). No se modifican Prototype, Laboratory, VisualAssetLab, fuentes FBX/PNG, materiales, prefab Player, sistemas ni tests anteriores. Los nuevos `.prefab` y `.unity` se guardaron mediante APIs de Unity; sus `.meta` son del Editor.
@@ -64,11 +66,11 @@ Player Cinemachine Camera
 
 Se conservan los nueve materiales de S05-A1, las trim sheets, normales y alfa de decals. No se duplican materiales por pieza. Grafito/titanio forman paredes, suelo y estructura; signos cian/violeta pequeños se distribuyen en laterales y suelo, sin efectos temporales ni HUD.
 
-La iluminación usa ambiente neutro, una luz principal direccional y un relleno suave, con dos luces puntuales de acento sin sombras. No se agregan bloom, volumen, lightmaps ni dependencia de efectos. Es iluminación de referencia, con contraste de suelo respecto a paredes; la iluminación final necesita aprobación artística y revisión de rendimiento.
+La iluminación usa ambiente neutro, una luz principal direccional y un relleno suave, con dos luces puntuales de acento sin sombras. No se agregan bloom, volumen, lightmaps ni dependencia de efectos. Es iluminación de referencia, con contraste de suelo respecto a paredes; esta iluminación fue aprobada como referencia de S05-A2. El nivel final aún requerirá su propia revisión artística y de rendimiento.
 
 El builder abre Prototype **solo para leer/copiar** Main Camera, Camera Orbit Target y Player Cinemachine Camera, cierra esa escena sin guardarla y remapea las referencias al nuevo Player. Cinemachine 3 conserva ThirdPersonFollow, **4 m de distancia, FOV 40°**, damping y prevención de obstáculos del juego. El orbit/motor reciben las nuevas referencias de escena. El prefab Player y el código de cámara permanecen intactos.
 
-La cápsula provisional de 2 m ocupa una parte grande de la pantalla a ese FOV; se conserva como evidencia del encuadre actual, sin cambiar la cámara de S01 ni sustituir al personaje. La valoración de silueta/encuadre con humanoide y otras proporciones queda pendiente.
+La cápsula provisional de 2 m ocupa una parte grande de la pantalla a ese FOV; se conserva como evidencia del encuadre actual, sin cambiar la cámara de S01 ni sustituir al personaje. El encuadre de referencia fue aceptado para la cápsula provisional; la proporción del modelo integrado se validará en S05-B4.
 
 ## Verificaciones y capturas
 
@@ -83,7 +85,7 @@ La cápsula provisional de 2 m ocupa una parte grande de la pantalla a ese FOV; 
 
 ![Sala — cámara del juego en Play Mode](images/s05-a2-third-person.png)
 
-## Uso y revisión manual pendiente
+## Recorrido manual de referencia
 
 1. Abrir `VisualReferenceRoom.unity` desde Project y revisar Console. En Scene View mirar desde el interior y acercarse a las cuatro esquinas, uniones entre baldosas, tiras de puerta y remates; comprobar z-fighting, huecos y orientación desde otras vistas.
 2. Entrar en Play Mode. WASD cruza la entrada desde el vestíbulo; ratón orbita y Espacio salta. Recorrer todas las juntas de suelo y rodear las columnas, sin engancharse o caer. La puerta norte debe bloquear; el marco sur debe permitir entrar/salir.
@@ -91,7 +93,7 @@ La cápsula provisional de 2 m ocupa una parte grande de la pantalla a ese FOV; 
 4. Revisar grafito/titanio y señales cian/violeta con la cámara del juego; comprobar que se distingue el suelo transitable sin exceso de emisión. No interpretar las señales como mecanismos ya implementados.
 5. Comparar el panel ajustado, los colliders conservadores y la compresión de textura en las tiras de encaje. Valorar si este montaje sirve como base estética para la siguiente etapa antes de adoptar las dimensiones en un nivel final.
 
-La automatización no es una aprobación artística humana ni prueba todos los FPS, dispositivos, ángulos o backends gráficos. No hay navegación, checkpoints ni solución de nivel en esta escena.
+El usuario confirmó la revisión manual del alcance S05-A2. La automatización no certifica todos los FPS, dispositivos, ángulos o backends gráficos. No hay navegación, checkpoints ni solución de nivel en esta escena. El recorrido también sirve para comprobar cambios locales posteriores antes de incluirlos en un commit.
 
 ## Herramientas
 

@@ -1,0 +1,7 @@
+# S05-B1 — evaluación archivada: Cybernet Warrior
+
+**Resultado: descartado para Echoryx.** Se evaluó “Futuristic Cybernet Warrior High Detail Sci Fi”, de [Faisu VFX Studio](https://sketchfab.com/faisuvfxstudio), [publicado en Sketchfab](https://sketchfab.com/3d-models/futuristic-cybernet-warrior-high-detail-sci-fi-d0795b13d694424c93ca1635eb26aaa3) bajo **CC BY 4.0**. La atribución que se usaría al distribuirlo es: *Futuristic Cybernet Warrior High Detail Sci Fi — Faisu VFX Studio, Sketchfab; CC BY 4.0; adaptación de materiales y presentación para Echoryx.*
+
+La inspección del FBX confirmó una malla estática de **157.410 triángulos**, sin esqueleto, skinning, bind poses, Avatar Humanoid ni clips. Por ello no era viable como protagonista animado sin añadir rigging manual, y su densidad también resultaba elevada para la dirección de detalle medio. Se descartó en favor del **SCI-FI SuperSoldier de SihaGames**, con rig/skinning y Avatar Humanoid válido, validado después en S05-B2 y locomoción en S05-B3.
+
+Los recursos importados exclusivos de B1 —FBX/texturas, materiales URP, CharacterVisualLab y su herramienta— se retiraron de `Assets`. El manifiesto [s05-b1-retirement-manifest.json](s05-b1-retirement-manifest.json) conserva rutas y SHA-256 de los 26 archivos retirados, incluidos los `.meta`, como trazabilidad. No quedan enlaces internos a los recursos retirados. Las atribuciones activas del SuperSoldier y Mixamo están en sus directorios de recursos.

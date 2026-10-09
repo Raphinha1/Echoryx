@@ -45,8 +45,14 @@ Los controles, métricas concretas, plataformas destino y criterios artísticos 
 | Etapa | Entrega | Aceptación |
 |---|---|---|
 | S05-A1 | Subconjunto Standard gratuito, procedencia/licencia, materiales URP y galería independiente. | Fuentes identificadas y acotadas; materiales compatibles, escala registrada e importación comprobada; Prototype y S01–S04 intactos. No crea el nivel final. |
-| S05-A2 (implementado; revisión manual pendiente) | Sala de referencia modular, wrappers/prefabs visuales y colliders simples. | Encajes y proporciones coherentes, iluminación legible y cámaras/colisiones comprobadas en escena separada antes de integrar un nivel. |
+| S05-A2 (terminado y validado según el usuario) | Sala de referencia modular, wrappers/prefabs visuales y colliders simples. | Encajes y proporciones coherentes, iluminación legible y cámaras/colisiones comprobadas en escena separada antes de integrar un nivel. |
+| S05-B1 (evaluado y retirado) | Revisión histórica de Cybernet Warrior. | No apto: sin rig/skinning y 157.410 triángulos; recursos exclusivos retirados. Registro y hashes conservados. |
+| S05-B2 (aprobado) | SCI-FI SuperSoldier, rig Humanoid, materiales y laboratorio aislado. | Avatar y escala verificados; aprobado técnica y visualmente. |
+| S05-B3 (aprobado) | Locomoción Humanoid aislada, Animator y correcciones de clips/transiciones. | Idle/Walk/Run/Jump/Fall/Land aprobados técnica y visualmente; motor y física fuera de alcance. |
+| S05-B4 (siguiente, pendiente) | Integrar presentación visual con PlayerMotor y validar locomoción en juego. | PlayerMotor conserva autoridad sobre movimiento/raíz; probar sincronía de salto/caída, escala y cámara. Echo/clon queda sujeto a alcance acordado para B4. |
 
-Las decisiones y la evidencia de S05-A1 se conservan en [visual-assets](visual-assets.md); esta preparación no cierra por sí sola el vertical slice S05.
+Las decisiones y evidencia S05-A1 se conservan en [visual-assets](visual-assets.md); esta preparación no cierra por sí sola el vertical slice S05.
 
-S05-A2 creó VisualReferenceRoom y cinco prefabs de estructura; la verificación automatizada y las capturas están documentadas en [sala de referencia](visual-reference-room.md). El siguiente montaje visual requiere revisar esa referencia con cámara real y aprobar proporciones/contraste; todavía no se cierra el nivel 1 ni el slice S05 completo.
+S05-A2 creó VisualReferenceRoom y cinco prefabs de estructura; la verificación automatizada y las capturas están documentadas en [sala de referencia](visual-reference-room.md). El usuario confirmó su cierre/validación al iniciar S05-B1. S05-B1 evaluó y retiró Cybernet Warrior; su registro y hashes se conservan. S05-B2/B3 aprobaron técnica y visualmente el SuperSoldier y su locomoción en laboratorios aislados. S05-B4 integrará el aspecto visual con PlayerMotor; todavía no comienza.
+
+Evidencia B3 y pasos para reproducir la validación manual: [laboratorio de locomoción](supersoldier-locomotion.md).
