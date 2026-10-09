@@ -15,6 +15,8 @@ namespace Echoryx.Interactions
 
         private readonly DoorGateState gate = new DoorGateState();
         private Vector3 closedLocalPosition;
+        private int resetFrame = -1;
+        private bool resetPending;
 
         public bool IsOpen => doorPanel != null
             && Vector3.Distance(doorPanel.localPosition, closedLocalPosition + openOffset) < 0.001f;
@@ -26,7 +28,7 @@ namespace Echoryx.Interactions
 
         private void LateUpdate()
         {
-            if (plate == null || doorPanel == null || threshold == null) return;
+            if (resetPending || resetFrame == Time.frameCount || plate == null || doorPanel == null || threshold == null) return;
             var fullyClosed = Vector3.Distance(doorPanel.localPosition, closedLocalPosition) < 0.001f;
             var open = gate.ShouldOpen(plate.IsPressed, PlayerInThreshold(), fullyClosed);
             var target = closedLocalPosition + (open ? openOffset : Vector3.zero);
@@ -50,6 +52,16 @@ namespace Echoryx.Interactions
         }
 
         private void OnDisable() => gate.Reset();
+
+        public void ResetForAttempt()
+        {
+            gate.Reset();
+            if (doorPanel != null) doorPanel.localPosition = closedLocalPosition;
+            resetPending = false;
+            resetFrame = Time.frameCount;
+        }
+
+        public void SuspendForReset() => resetPending = true;
 
         private void OnDrawGizmosSelected()
         {

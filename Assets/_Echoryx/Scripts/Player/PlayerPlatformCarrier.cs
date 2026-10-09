@@ -12,12 +12,13 @@ namespace Echoryx.Player
         private CharacterController controller;
         private Vector3 pendingDisplacement;
         private bool hasPending;
+        private bool awaitingMoveAfterReset;
 
         private void Awake() => controller = GetComponent<CharacterController>();
 
         public bool IsStandingOn(BoxCollider surface)
         {
-            return isActiveAndEnabled && controller != null && controller.isGrounded
+            return !awaitingMoveAfterReset && isActiveAndEnabled && controller != null && controller.isGrounded
                 && surface != null && surface.enabled && surface.gameObject.activeInHierarchy
                 && PlatformRidePolicy.IsSupported(transform.position, surface.bounds,
                     verticalTolerance, horizontalMargin);
@@ -25,7 +26,7 @@ namespace Echoryx.Player
 
         public void OfferMotion(Vector3 displacement)
         {
-            if (!isActiveAndEnabled || hasPending) return;
+            if (!isActiveAndEnabled || awaitingMoveAfterReset || hasPending) return;
             pendingDisplacement = displacement;
             hasPending = true;
         }
@@ -39,5 +40,13 @@ namespace Echoryx.Player
         }
 
         private void OnDisable() => ConsumeMotion();
+
+        public void ResetTransport()
+        {
+            ConsumeMotion();
+            awaitingMoveAfterReset = true;
+        }
+
+        public void CompletePlayerMove() => awaitingMoveAfterReset = false;
     }
 }

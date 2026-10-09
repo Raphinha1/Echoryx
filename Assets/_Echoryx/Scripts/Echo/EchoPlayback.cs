@@ -17,6 +17,14 @@ namespace Echoryx.Echo
 
         public EchoActor ActiveActor => activeActor;
 
+        /// <summary>Immediately clears capture and actor before the player can be relocated.</summary>
+        public void ResetForAttempt()
+        {
+            if (recorder == null) recorder = GetComponent<EchoRecorder>();
+            recorder?.Cancel();
+            CleanupActor();
+        }
+
         private void Awake()
         {
             recorder = GetComponent<EchoRecorder>();
@@ -102,7 +110,8 @@ namespace Echoryx.Echo
             if (activeActor != null)
             {
                 activeActor.gameObject.SetActive(false);
-                Destroy(activeActor.gameObject);
+                if (Application.isPlaying) Destroy(activeActor.gameObject);
+                else DestroyImmediate(activeActor.gameObject);
             }
             activeActor = null;
             activeRecording = null;

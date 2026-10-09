@@ -12,6 +12,9 @@ namespace Echoryx.Rewind
         [SerializeField, Min(0.01f)] private float rewindSpeed = 1f;
 
         private RewindHistory history;
+        private RewindPose initialPose;
+        private int resetFrame = -1;
+        private bool resetPending;
         private static RewindableMechanism activeMechanism;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -19,7 +22,7 @@ namespace Echoryx.Rewind
 
         public RewindMode Mode => history?.Mode ?? RewindMode.Normal;
         public bool IsAvailable => isActiveAndEnabled;
-        public bool CanRewind => history != null && history.CanRewind;
+        public bool CanRewind => !resetPending && history != null && history.CanRewind;
         protected double TimelineTime => history?.Time ?? 0d;
 
         protected virtual RewindPose CapturePose() =>
@@ -34,7 +37,8 @@ namespace Echoryx.Rewind
         protected virtual void Awake()
         {
             history = new RewindHistory(historySeconds, samplesPerSecond);
-            history.Reset(CapturePose());
+            initialPose = CapturePose();
+            history.Reset(initialPose);
         }
 
         protected virtual void LateUpdate() => TickTimeline();
@@ -42,7 +46,7 @@ namespace Echoryx.Rewind
         /// <summary>Allows a passenger-carrying mechanism to tick before PlayerMotor.Update.</summary>
         protected void TickTimeline()
         {
-            if (history == null) return;
+            if (history == null || resetPending || resetFrame == Time.frameCount) return;
             if (history.Mode == RewindMode.Rewinding)
             {
                 if (history.StepRewind(Time.deltaTime * rewindSpeed, out var pose))
@@ -56,7 +60,7 @@ namespace Echoryx.Rewind
 
         public bool BeginRewind()
         {
-            if (history == null || (activeMechanism != null && activeMechanism != this)
+            if (resetPending || history == null || (activeMechanism != null && activeMechanism != this)
                 || !history.BeginRewind(CapturePose())) return false;
             activeMechanism = this;
             return true;
@@ -74,6 +78,24 @@ namespace Echoryx.Rewind
         {
             if (activeMechanism == this) activeMechanism = null;
             history?.Reset(CapturePose());
+        }
+
+        public void SuspendForReset()
+        {
+            EndRewind();
+            resetPending = true;
+        }
+
+        /// <summary>Restores the authored pose and starts a fresh local timeline.
+        /// Bypasses ApplyPose: a room reset must never offer teleport motion to a passenger.</summary>
+        public void ResetForAttempt()
+        {
+            if (history == null) return;
+            if (activeMechanism == this) activeMechanism = null;
+            transform.SetPositionAndRotation(initialPose.Position, initialPose.Rotation);
+            history.Reset(initialPose);
+            resetPending = false;
+            resetFrame = Time.frameCount;
         }
 
         protected virtual void OnDisable()

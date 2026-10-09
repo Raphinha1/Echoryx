@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Echoryx.Player;
 
 namespace Echoryx.Rewind
 {
@@ -17,11 +18,13 @@ namespace Echoryx.Rewind
         private readonly RewindSelectionSession session = new RewindSelectionSession();
         private InputAction rewindAction;
         private ReticleState reticle;
+        private PlayerInputReader input;
 
         private enum ReticleState { None, Insufficient, Ready, Rewinding }
 
         private void OnEnable()
         {
+            input = GetComponent<PlayerInputReader>();
             rewindAction = actions?.FindAction("Player/Rewind");
             if (rewindAction == null)
             {
@@ -34,15 +37,21 @@ namespace Echoryx.Rewind
 
         private void OnDisable()
         {
-            session.Release();
+            ReleaseForRespawn();
             rewindAction?.Disable();
+        }
+
+        public void ReleaseForRespawn()
+        {
+            session.Release();
             reticle = ReticleState.None;
         }
 
         private void LateUpdate()
         {
             if (selectionCamera == null) selectionCamera = Camera.main;
-            var pressed = rewindAction != null && rewindAction.IsPressed();
+            var pressed = rewindAction != null && (input == null || input.CanReadAction(rewindAction))
+                && rewindAction.IsPressed();
             var aimed = !session.IsHolding
                 ? RewindTargetResolver.Raycast(selectionCamera, transform, maximumDistance,
                     targetLayers, hitBuffer)

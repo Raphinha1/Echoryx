@@ -1,0 +1,14 @@
+{
+  "name": "Echoryx.Game",
+  "rootNamespace": "Echoryx.Game",
+  "references": [
+    "Echoryx.Player",
+    "Echoryx.Rewind.Input",
+    "Unity.InputSystem",
+    "Unity.Cinemachine",
+    "Echoryx.Echo",
+    "Echoryx.Rewind",
+    "Echoryx.Interactions"
+  ],
+  "autoReferenced": true
+}

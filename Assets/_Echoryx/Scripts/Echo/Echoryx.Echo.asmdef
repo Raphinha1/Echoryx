@@ -1,6 +1,6 @@
 {
   "name": "Echoryx.Echo",
   "rootNamespace": "Echoryx.Echo",
-  "references": ["Unity.InputSystem"],
+  "references": ["Unity.InputSystem", "Echoryx.Player"],
   "autoReferenced": true
 }

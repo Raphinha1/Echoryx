@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Echoryx.Player;
 
 namespace Echoryx.Echo
 {
@@ -11,10 +12,12 @@ namespace Echoryx.Echo
 
         private InputAction playAction;
         private EchoPlayback playback;
+        private PlayerInputReader input;
 
         private void Awake()
         {
             playback = GetComponent<EchoPlayback>();
+            input = GetComponent<PlayerInputReader>();
         }
 
         private void OnEnable()
@@ -36,7 +39,7 @@ namespace Echoryx.Echo
 
         private void Update()
         {
-            if (playAction.WasPressedThisFrame())
+            if ((input == null || input.CanReadAction(playAction)) && playAction.WasPressedThisFrame())
                 playback.TryStart();
         }
     }

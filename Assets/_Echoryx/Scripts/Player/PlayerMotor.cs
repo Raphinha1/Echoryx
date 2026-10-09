@@ -26,8 +26,30 @@ namespace Echoryx.Player
         private readonly JumpWindow jumpWindow = new JumpWindow();
         private Vector3 horizontalVelocity;
         private float verticalVelocity;
+        private bool ignorePreviousGrounded;
+        private int skipThroughFrame = -1;
 
         public void SetCameraReference(Transform value) => cameraReference = value;
+
+        public void Respawn(Vector3 position, Quaternion rotation)
+        {
+            // Resolve components here as well so editor tools can safely call the API.
+            if (controller == null) controller = GetComponent<CharacterController>();
+            if (input == null) input = GetComponent<PlayerInputReader>();
+            if (platformCarrier == null) platformCarrier = GetComponent<PlayerPlatformCarrier>();
+            horizontalVelocity = Vector3.zero;
+            verticalVelocity = 0f;
+            jumpWindow.Reset();
+            platformCarrier?.ResetTransport();
+            input?.ResetInputState();
+            ignorePreviousGrounded = true;
+            skipThroughFrame = Time.frameCount;
+            var wasEnabled = controller.enabled;
+            controller.enabled = false;
+            transform.SetPositionAndRotation(position, rotation);
+            Physics.SyncTransforms();
+            controller.enabled = wasEnabled;
+        }
 
         private void Awake()
         {
@@ -38,8 +60,10 @@ namespace Echoryx.Player
 
         private void Update()
         {
+            if (Time.frameCount <= skipThroughFrame || !controller.enabled) return;
             var time = Time.time;
-            var grounded = controller.isGrounded;
+            var grounded = !ignorePreviousGrounded && controller.isGrounded;
+            ignorePreviousGrounded = false;
             jumpWindow.SetGrounded(grounded, time);
             if (input.JumpPressed) jumpWindow.Press(time);
 
@@ -66,6 +90,7 @@ namespace Echoryx.Player
             var displacement = (horizontalVelocity + Vector3.up * verticalVelocity) * Time.deltaTime
                 + (platformCarrier != null ? platformCarrier.ConsumeMotion() : Vector3.zero);
             var collision = controller.Move(displacement);
+            platformCarrier?.CompletePlayerMove();
             if ((collision & CollisionFlags.Above) != 0 && verticalVelocity > 0f)
                 verticalVelocity = 0f;
             if ((collision & CollisionFlags.Below) != 0 && verticalVelocity < 0f)

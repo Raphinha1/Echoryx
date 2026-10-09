@@ -15,6 +15,8 @@ namespace Echoryx.Interactions
 
         private readonly PlateOccupancy occupancy = new PlateOccupancy();
         private MaterialPropertyBlock properties;
+        private int resetFrame = -1;
+        private bool resetPending;
         private static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
 
         public bool IsPressed => occupancy.IsPressed;
@@ -33,6 +35,7 @@ namespace Echoryx.Interactions
 
         public void RefreshFrom(IReadOnlyList<MechanismActor> actors)
         {
+            if (resetPending || resetFrame == Time.frameCount) return;
             var player = false;
             var echo = false;
             for (var i = 0; i < actors.Count; i++)
@@ -53,6 +56,21 @@ namespace Echoryx.Interactions
         private void OnDisable()
         {
             occupancy.Clear();
+            UpdateIndicator();
+        }
+
+        public void ResetForAttempt()
+        {
+            occupancy.Clear();
+            resetPending = false;
+            resetFrame = Time.frameCount;
+            UpdateIndicator();
+        }
+
+        public void SuspendForReset()
+        {
+            occupancy.Clear();
+            resetPending = true;
             UpdateIndicator();
         }
 

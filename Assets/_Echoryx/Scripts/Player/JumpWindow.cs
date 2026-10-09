@@ -8,6 +8,12 @@ namespace Echoryx.Player
         private bool consumed;
         private bool wasGrounded;
 
+        public void Reset()
+        {
+            lastGrounded = lastPressed = float.NegativeInfinity;
+            consumed = wasGrounded = false;
+        }
+
         public void SetGrounded(bool grounded, float time)
         {
             if (grounded)

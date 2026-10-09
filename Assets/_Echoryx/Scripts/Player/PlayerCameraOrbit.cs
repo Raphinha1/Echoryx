@@ -25,6 +25,11 @@ namespace Echoryx.Player
             input = inputReader;
         }
 
+        public void SnapToAnchor()
+        {
+            if (anchor != null) transform.position = anchor.position;
+        }
+
         private void OnEnable()
         {
             if (Application.isPlaying && lockCursorOnPlay)

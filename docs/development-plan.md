@@ -25,4 +25,17 @@ Los controles, métricas concretas, plataformas destino y criterios artísticos 
 - S02-C incorpora una placa y puerta con detección espacial del clon y un rompecabezas en `Prototype`; pasaron 21/21 pruebas EditMode del proyecto y el usuario confirmó S02 en Play Mode.
 - S03-A implementa el núcleo Rewind de posición y rotación con historial acotado, retroceso temporal y descarte de futuros. Pasaron 30/30 pruebas EditMode del proyecto; la selección/control del mecanismo y la integración jugable corresponden a S03-B.
 - S03-B añade selección por cámara, RMB y un rotor cinemático provisional en `Prototype`. Pasaron 41/41 pruebas EditMode del proyecto y el usuario confirmó 10/10 validaciones manuales.
-- S03-C incorporó una plataforma cinemática transportable y un cruce en `Prototype`; el usuario confirmó 11/11 pruebas manuales de la primera versión. El ajuste final hace obligatorio Rewind para devolver la plataforma detenida y pasó 48/48 EditMode; esta variante requiere una nueva validación jugable en Play Mode.
+- S03-C incorporó la plataforma cinemática y el cruce obligatorio con Rewind; pasó 48/48 EditMode y el usuario confirmó S03 completo en `fc73688`.
+- S04-A incorpora checkpoints, reaparición, limpieza básica del jugador y contrato de reinicio por sala; pasó 61/61 EditMode del proyecto. El usuario confirmó su validación manual en Play Mode.
+
+- S04-B incorpora adaptadores de Echo y mecanismos por sala, liberación inmediata y restauración antes de reaparecer; pasó 74/74 EditMode. El usuario confirmó 11/11 comprobaciones manuales.
+
+- S04-C añade el rompecabezas combinado en Prototype, con ámbito y checkpoint propios, sin implementar niveles definitivos. Pasaron 82/82 EditMode y 3/3 PlayMode automatizados; el usuario confirmó 11/11 comprobaciones manuales. La corrección final del acceso B tras R/caída está documentada en testing; requiere su propia regresión visual antes de cerrar S04.
+
+## Desglose de S04
+
+| Etapa | Depende de | Entrega y aceptación |
+|---|---|---|
+| S04-A | S01–S03 | Un checkpoint activo y punto inicial; R y caída reaparecen sin velocidad, salto o transporte residual; liberación, restauración y reaparición en orden determinista; solo recibe reinicio la sala activa. Pruebas EditMode y recorrido manual documentados. |
+| S04-B | S04-A | Adaptadores completos para cancelar y limpiar Echo, historiales Rewind, plataforma, rotor, placas y puertas en el ámbito correcto; reinicios repetidos sin estados residuales ni regresiones. |
+| S04-C | S04-B | Rompecabezas combinado que use las mecánicas existentes y checkpoints; resolverlo, fallar y repetir sin intervención del Editor. |

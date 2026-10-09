@@ -12,12 +12,17 @@ namespace Echoryx.Player
         private InputAction move;
         private InputAction look;
         private InputAction jump;
+        private readonly InputReleaseGate releaseGate = new InputReleaseGate();
 
-        public Vector2 Move => move?.ReadValue<Vector2>() ?? Vector2.zero;
-        public Vector2 Look => look?.ReadValue<Vector2>() ?? Vector2.zero;
-        public bool JumpPressed => jump != null && jump.WasPressedThisFrame();
+        public Vector2 Move => CanReadAction(move) ? move.ReadValue<Vector2>() : Vector2.zero;
+        public Vector2 Look => CanReadAction(look) ? look.ReadValue<Vector2>() : Vector2.zero;
+        public bool JumpPressed => CanReadAction(jump) && jump.WasPressedThisFrame();
         public bool LookIsPointer => look?.activeControl?.device is Pointer;
         public bool ReleaseCursorPressed => Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
+
+        public bool CanReadAction(InputAction action) => releaseGate.CanRead(action, Time.frameCount);
+
+        public void ResetInputState() => releaseGate.Reset(playerMap, Time.frameCount);
 
         private void OnEnable()
         {
