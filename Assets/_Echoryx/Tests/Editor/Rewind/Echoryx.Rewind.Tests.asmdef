@@ -1,0 +1,7 @@
+{
+  "name": "Echoryx.Rewind.Tests",
+  "rootNamespace": "Echoryx.Rewind.Tests",
+  "references": ["Echoryx.Rewind", "Echoryx.Rewind.Input", "Echoryx.Rewind.Platforms", "Echoryx.Player", "Unity.InputSystem"],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "includePlatforms": ["Editor"]
+}

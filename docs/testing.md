@@ -59,9 +59,9 @@ La reproducción, el clon, la placa y la puerta no formaban parte de S02-A.
 
 ## S02-C: placa y puerta Echo
 
-**Verificación automatizada ejecutada:** Unity 6000.3.22f1 compiló los scripts, `S02InteractionInstaller` guardó los cambios de prefabs y `Prototype` mediante APIs del editor y pasaron **21/21** pruebas EditMode del proyecto (9 de S02-C y 12 existentes). Las pruebas nuevas cubren activación, desactivación, ocupación simultánea, desaparición del clon, limpieza, volumen espacial, protección del umbral y referencias de prefabs/escena. El menú `Echoryx/S02-C/Install Echo Puzzle` evita duplicar el ramal si ya existe. La jugabilidad aún requiere Play Mode.
+**Verificación automatizada ejecutada:** Unity 6000.3.22f1 compiló los scripts, `S02InteractionInstaller` guardó los cambios de prefabs y `Prototype` mediante APIs del editor y pasaron **21/21** pruebas EditMode del proyecto (9 de S02-C y 12 existentes). Las pruebas nuevas cubren activación, desactivación, ocupación simultánea, desaparición del clon, limpieza, volumen espacial, protección del umbral y referencias de prefabs/escena. El menú `Echoryx/S02-C/Install Echo Puzzle` evita duplicar el ramal si ya existe. El usuario confirmó posteriormente S02 en Play Mode.
 
-**Pendiente en Unity Editor:**
+**Regresión en Unity Editor:** el usuario confirmó S02 en Play Mode. Conservar estos pasos para comprobar que S03-B no altera la placa ni la puerta.
 
 1. Abrir `Prototype` y localizar `S02-C Echo Puzzle` al lado izquierdo de `Start Floor`. Comprobar `Echo Pressure Plate`, `Echo Door/Door Panel` con `BoxCollider`, corredor y `Exit Marker`. Confirmar que `S01 Test Circuit` conserva sus plataformas y que `Laboratory` no cambió.
 2. Entrar en Play Mode. Avanzar hasta la placa: debe cambiar de naranja a verde y abrir la puerta. Salir de la placa sin Echo; la placa debe apagarse y la puerta cerrar. Acercarse a la puerta cerrada: debe impedir el paso y no abrirse por proximidad.
@@ -71,7 +71,53 @@ La reproducción, el clon, la placa y la puerta no formaban parte de S02-A.
 6. Esperar a que termine o cancelar la reproducción mientras solo el Echo pisa la placa. Confirmar que desaparece, la placa se limpia y la puerta cierra si el umbral está libre. Revisar que el jugador conserva WASD, salto y cámara, y que el circuito S01 sigue transitable.
 7. Revisar Console sin excepciones ni referencias faltantes. Ajustar en Inspector volumen de `PressurePlate`, `thresholdSize`, `openOffset` y `moveSpeed` solo si la geometría observada lo requiere; anotar cualquier cambio y repetir los casos de cierre seguro.
 
-No se ha ejecutado Play Mode de S02-C en esta entrega. La placa detecta la posición raíz de las entidades; los casos de borde con saltos o cuerpos parciales en el umbral requieren observación manual.
+La placa detecta la posición raíz de las entidades; los casos de borde con saltos o cuerpos parciales en el umbral siguen siendo comprobaciones útiles de regresión.
+
+## S03-A: historial y Rewind de mecanismos
+
+El núcleo no se instala en `Prototype` ni `Laboratory` durante S03-A. Unity 6000.3.22f1 compiló y pasó **30/30 pruebas EditMode del proyecto** (9 de Rewind y 21 anteriores). Las nuevas pruebas cubren ventana y capacidad, interpolación temporal de posición/rotación, transiciones, suspensión del registro durante el retroceso, límite del historial, reanudación desde la pose recuperada, descarte del futuro, reinicio y entradas insuficientes.
+
+**Integración prevista en S03-A y preparada por S03-B:** el rotor de prueba y RMB ya están montados; los pasos siguientes sirven para su validación en Play Mode.
+
+1. Crear un mecanismo cinemático concreto derivado de `RewindableMechanism`; concentrar su avance normal en `AdvanceNormal`, sin un segundo `Update` que mueva el mismo Transform durante Rewind.
+2. Verificar en Inspector duración de historial (máximo cinco segundos), muestras por segundo y velocidad de retroceso. Dejarlo avanzar al menos cinco segundos y comprobar que el límite de retroceso no excede la ventana.
+3. Iniciar y detener Rewind sobre ese único mecanismo; observar interpolación suave con distintos FPS. Soltar a mitad de trayectoria y verificar que continúa desde la pose recuperada, sin saltar a la pose que tenía antes de rebobinar.
+4. Cambiar el sentido del movimiento normal tras soltar Rewind y volver a rebobinar: la rama futura antigua no debe reaparecer. Repetir con historial vacío/corto, reinicio y desactivación durante el retroceso.
+5. Comprobar regresión del jugador, Echo y placa/puerta en `Prototype` y revisar la consola.
+
+S03-A no añadió controles de entrada, selección ni un mecanismo concreto a una escena. S03-B proporcionó el rotor y el control para esa comprobación.
+
+## S03-B: selección de cámara y RMB
+
+**Verificación ejecutada:** Unity 6000.3.22f1 compiló, `S03RewindInstaller` añadió `Player/Rewind` con `<Mouse>/rightButton` y enlazó `RewindInteractor` en `Player.prefab`. En `Prototype`, el objeto `S03-B Rewind Test Rotor` gira sin Rigidbody y tiene su `BoxCollider` en `Rotor Visual and Collider`, un hijo del mecanismo. Pasaron **41/41 pruebas EditMode del proyecto** (11 nuevas de S03-B y 30 anteriores), con selección por collider hijo, obstáculos y alcance, bloqueo durante pulsación, historial insuficiente, liberación, destrucción, desactivación, exclusividad y referencias de escena/prefab. El menú `Echoryx/S03-B/Install Rewind Interaction` evita duplicar la acción, el componente y el rotor.
+
+**Validación manual:** el usuario confirmó 10/10 pruebas de S03-B en Play Mode. Los pasos siguientes se conservan para regresión tras integrar la plataforma.
+
+1. Abrir `Prototype`, entrar en Play Mode y apuntar el centro de la cámara al rotor violeta situado a un lado del suelo inicial. Dejarlo girar al menos un segundo; la marca central debe mostrarse cian. Antes de disponer de historial suficiente, debe aparecer ámbar.
+2. Mantener RMB: la marca debe pasar a violeta y el rotor debe girar hacia atrás. Mover el ratón para orbitar la cámara mientras RMB sigue pulsado; el rotor inicial debe continuar siendo el objetivo aunque la cámara deje de apuntarle.
+3. Soltar RMB a mitad del retroceso: el rotor debe seguir girando normalmente desde la orientación recuperada, sin volver a la anterior. Repetir cerca del límite de cinco segundos y volver a rebobinar para comprobar que no reaparece la rama futura descartada.
+4. Apuntar a otro objeto o a una pared delante del rotor: no debe seleccionarse el rotor a través del obstáculo. Alejarse más allá de `maximumDistance` y confirmar que no se selecciona. Mantener RMB sobre suelo u objeto incompatible, mover la mira al rotor sin soltar: no debe cambiarse de objetivo hasta una nueva pulsación.
+5. Desactivar el rotor o su componente mientras se rebobina y comprobar que la interacción se libera sin excepciones; volver a activarlo y exigir una nueva pulsación. Comprobar WASD, salto, Q, E y órbita de cámara junto al rotor y el rompecabezas Echo.
+6. Revisar Console y los parámetros `maximumDistance`, `targetLayers`, `historySeconds`, `samplesPerSecond` y `rewindSpeed` en Inspector. Restablecer ajustes temporales tras la prueba.
+
+El rotor permite validar la interacción, la selección mediante collider hijo y el retroceso de rotación. La plataforma móvil y sus colisiones de gameplay corresponden a S03-C; S03-B no demuestra aún ese caso.
+
+## S03-C: plataforma móvil y cruce
+
+**Verificación:** el usuario confirmó 11/11 pruebas manuales de transporte, colisión y continuación de la primera versión. El ajuste final conserva el `BoxCollider` sólido y el transporte, y cambia el recorrido a un solo viaje de 7 m a 3,5 m/s. Un acceso largo impide alcanzar el muelle antes del primer viaje; el extremo de llegada queda fuera del alcance de salto desde la salida, incluso considerando coyote time. El viaje dura unos dos segundos y cabe en el historial configurado de cinco. Unity 6000.3.22f1 guardó la escena mediante `S03PlatformInstaller`, compiló el proyecto y pasó **48/48 pruebas EditMode**: llegada y detención, recuperación y continuación, espera prolongada, política de transporte, geometría de salto, acceso, línea de visión y regresiones existentes. Estas pruebas no sustituyen la nueva validación jugable en Play Mode.
+
+**Política de espera:** al llegar, `RewindMovingPlatform` detiene tanto el movimiento como el avance de su propio historial. Las poses del trayecto no se sustituyen por poses idénticas durante una espera larga. RMB puede devolverla hasta el muelle de salida; al soltar, reanuda el avance desde el progreso recuperado. La política solo afecta a esta plataforma, no al rotor ni al tiempo del jugador o Echo. Si se cambia la velocidad o la duración del historial en Inspector, comprobar de nuevo que el trayecto completo cabe en la ventana.
+
+**Validación específica pendiente en Play Mode de Unity Editor:**
+
+1. Abrir `Prototype`, iniciar Play Mode y seguir `Approach Floor` desde el costado del suelo inicial hasta `Departure Dock`. Sin pulsar RMB, observar que la plataforma ya llegó al destino al alcanzar el muelle; se desplaza desde la salida durante los primeros dos segundos y después se detiene. Esperar al menos 10 segundos: no debe regresar.
+2. Sin usar RMB, intentar alcanzar la plataforma detenida desde el borde de salida con el salto normal y el coyote time; no debe ser posible. Tampoco debe poderse saltar directamente al muelle de llegada. Apuntar desde el muelle a la superficie verde azulado en destino: debe aparecer la marca cian de selección.
+3. Mantener RMB sobre la plataforma hasta devolverla al muelle de salida. Soltar, subir caminando y permanecer quieto durante el avance; debe transportar al jugador con colisión estable. Saltar o caminar al muelle de llegada y tocar `Arrival Marker`.
+4. Reiniciar Play Mode, dejarla detenida en destino durante más de cinco segundos y repetir RMB. Debe poder recuperarse hasta el origen pese a la espera. Repetir tras una segunda llegada. Soltar RMB a mitad del retroceso: debe avanzar desde esa posición sin saltar a la ubicación anterior.
+5. Repetir RMB con el jugador apoyado en la plataforma y saltar durante el transporte: no debe teleportarse, resbalar, atravesar la superficie ni perder el control aéreo. Probar si es posible con FPS bajos y altos.
+6. Recorrer el circuito S01, resolver Q/E en el rompecabezas Echo y usar RMB sobre el rotor. Revisar Console durante el cruce y la regresión: sin errores ni referencias faltantes. Si el jugador cae al hueco, reiniciar Play Mode; aún no hay checkpoint.
+
+**Transporte:** solo se ofrece movimiento si el `CharacterController` estaba grounded y sus pies se encontraban sobre la cara superior de la plataforma antes de moverla. `PlayerMotor` combina ese delta con caminata, gravedad y salto en una sola llamada a `CharacterController.Move`. El jugador no se rebobina ni se parenta; al saltar o perder apoyo deja de recibir transporte.
 
 ## Criterios manuales por slice
 

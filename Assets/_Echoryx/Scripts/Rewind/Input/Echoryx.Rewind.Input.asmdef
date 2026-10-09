@@ -1,0 +1,6 @@
+{
+  "name": "Echoryx.Rewind.Input",
+  "rootNamespace": "Echoryx.Rewind",
+  "references": ["Echoryx.Rewind", "Unity.InputSystem"],
+  "autoReferenced": true
+}

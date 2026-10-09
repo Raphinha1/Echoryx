@@ -1,0 +1,6 @@
+{
+  "name": "Echoryx.Rewind.Platforms",
+  "rootNamespace": "Echoryx.Rewind.Platforms",
+  "references": ["Echoryx.Rewind", "Echoryx.Player"],
+  "autoReferenced": true
+}

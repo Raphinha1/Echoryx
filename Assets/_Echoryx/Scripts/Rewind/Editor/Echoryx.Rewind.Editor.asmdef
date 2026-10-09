@@ -1,0 +1,7 @@
+{
+  "name": "Echoryx.Rewind.Editor",
+  "rootNamespace": "Echoryx.Rewind.Editor",
+  "references": ["Echoryx.Rewind", "Echoryx.Rewind.Input", "Echoryx.Rewind.Platforms", "Echoryx.Player", "Unity.InputSystem"],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": true
+}

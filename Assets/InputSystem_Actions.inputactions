@@ -115,6 +115,16 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "Rewind",
+                    "type": "Button",
+                    "id": "c772b39c-3bd6-41f1-ae12-83970e0c719d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -522,6 +532,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "EchoPlay",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c8b62871-b0d6-4624-985e-f291ff1327d4",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Rewind",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

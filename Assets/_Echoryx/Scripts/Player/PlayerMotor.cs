@@ -22,6 +22,7 @@ namespace Echoryx.Player
 
         private CharacterController controller;
         private PlayerInputReader input;
+        private PlayerPlatformCarrier platformCarrier;
         private readonly JumpWindow jumpWindow = new JumpWindow();
         private Vector3 horizontalVelocity;
         private float verticalVelocity;
@@ -32,6 +33,7 @@ namespace Echoryx.Player
         {
             controller = GetComponent<CharacterController>();
             input = GetComponent<PlayerInputReader>();
+            platformCarrier = GetComponent<PlayerPlatformCarrier>();
         }
 
         private void Update()
@@ -61,7 +63,8 @@ namespace Echoryx.Player
                 verticalVelocity = Mathf.Sqrt(2f * Mathf.Max(0f, jumpHeight) * Mathf.Abs(gravity));
             verticalVelocity += gravity * Time.deltaTime;
 
-            var displacement = (horizontalVelocity + Vector3.up * verticalVelocity) * Time.deltaTime;
+            var displacement = (horizontalVelocity + Vector3.up * verticalVelocity) * Time.deltaTime
+                + (platformCarrier != null ? platformCarrier.ConsumeMotion() : Vector3.zero);
             var collision = controller.Move(displacement);
             if ((collision & CollisionFlags.Above) != 0 && verticalVelocity > 0f)
                 verticalVelocity = 0f;

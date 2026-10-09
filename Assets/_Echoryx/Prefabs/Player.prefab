@@ -48,6 +48,8 @@ GameObject:
   - component: {fileID: 190096794712137661}
   - component: {fileID: 6431384090001173540}
   - component: {fileID: 3156970120932523615}
+  - component: {fileID: 7525376243999143196}
+  - component: {fileID: 6642023742412454491}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -200,6 +202,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Echoryx.Interactions::Echoryx.Interactions.MechanismActor
   kind: 0
+--- !u!114 &7525376243999143196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4441256234434533941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14eb89d6e404484be8bfb9803d9e2583, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Echoryx.Rewind.Input::Echoryx.Rewind.RewindInteractor
+  actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  selectionCamera: {fileID: 0}
+  maximumDistance: 12
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  showReticle: 1
+--- !u!114 &6642023742412454491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4441256234434533941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 829c8f40cdd607758a925d9ab3dc46cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Echoryx.Player::Echoryx.Player.PlayerPlatformCarrier
+  verticalTolerance: 0.2
+  horizontalMargin: 0.1
 --- !u!1 &5611297888598321057
 GameObject:
   m_ObjectHideFlags: 0

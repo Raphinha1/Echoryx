@@ -22,4 +22,7 @@ Los controles, métricas concretas, plataformas destino y criterios artísticos 
 - S01 cerrado según el estado informado por el usuario.
 - S02-A implementó captura Echo y Q; el usuario informó validación manual (hasta 101 muestras).
 - S02-B implementa reproducción con clon y E. Pasaron 12 pruebas EditMode del proyecto y el usuario confirmó la validación en Play Mode.
-- S02-C incorpora una placa y puerta con detección espacial del clon y un rompecabezas en `Prototype`; pasaron 21/21 pruebas EditMode del proyecto y sus comprobaciones jugables quedan pendientes de Play Mode.
+- S02-C incorpora una placa y puerta con detección espacial del clon y un rompecabezas en `Prototype`; pasaron 21/21 pruebas EditMode del proyecto y el usuario confirmó S02 en Play Mode.
+- S03-A implementa el núcleo Rewind de posición y rotación con historial acotado, retroceso temporal y descarte de futuros. Pasaron 30/30 pruebas EditMode del proyecto; la selección/control del mecanismo y la integración jugable corresponden a S03-B.
+- S03-B añade selección por cámara, RMB y un rotor cinemático provisional en `Prototype`. Pasaron 41/41 pruebas EditMode del proyecto y el usuario confirmó 10/10 validaciones manuales.
+- S03-C incorporó una plataforma cinemática transportable y un cruce en `Prototype`; el usuario confirmó 11/11 pruebas manuales de la primera versión. El ajuste final hace obligatorio Rewind para devolver la plataforma detenida y pasó 48/48 EditMode; esta variante requiere una nueva validación jugable en Play Mode.
