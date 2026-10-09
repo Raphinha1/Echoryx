@@ -10,7 +10,8 @@
 ## Estado
 
 - Base: Unity 6000.3.22f1, URP 17.3.0, Input System 1.20.1 y Cinemachine 3.1.7 declarados.
-- S00: estructura y documentación preparadas; escenas `Prototype` y `Laboratory` aún requieren creación y guardado en Unity Editor.
-- Sin movimiento, Echo, Rewind, HUD ni lógica de niveles implementados en S00.
+- S00: cerrado en `aa2f2c5`; `Prototype` y `Laboratory` existen.
+- S01: controlador, cámara Cinemachine 3, prefab provisional y circuito de `Prototype` creados. Compilación Unity y 3 pruebas EditMode completadas; recorrido manual pendiente.
+- Echo, Rewind, checkpoints, HUD y niveles definitivos siguen sin implementarse.
 
 Consulta `docs/` para especificaciones completas, dependencias y criterios; evita duplicar aquí detalles técnicos.

@@ -1,0 +1,7 @@
+{
+  "name": "Echoryx.Player.Editor",
+  "rootNamespace": "Echoryx.Player.Editor",
+  "references": ["Echoryx.Player", "Unity.InputSystem", "Unity.Cinemachine"],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": true
+}

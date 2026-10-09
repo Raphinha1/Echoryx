@@ -15,3 +15,8 @@ Secuencia propuesta para entregar incrementos pequeños. Las dependencias son fu
 | **S08 — Estabilización y entrega** | Revisión integrada, configuración de build y documentación de entrega. | S07 | Validaciones de regresión pasan en Editor y build de destino; escenas incluidas y orden verificadas; sin errores/bloqueos conocidos sin documentar; instrucciones de ejecución reproducibles. |
 
 Los controles, métricas concretas, plataformas destino y criterios artísticos no están definidos en S00. Confirmarlos antes de cerrar los slices que los necesiten. Registrar desviaciones y evidencia de aceptación en cada entrega.
+
+## Estado actual
+
+- S00 cerrado en `aa2f2c5`.
+- S01 implementado y compilado. Pasaron 3 pruebas EditMode de la lógica de salto. La aceptación del movimiento, cámara y circuito sigue pendiente de ejecución manual en Play Mode.

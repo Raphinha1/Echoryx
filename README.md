@@ -10,6 +10,6 @@ Videojuego 3D de plataformas y resolución de desafíos en Unity 6 con URP. El j
 
 ## Estado
 
-El slice **S00** prepara estructura, documentación y validaciones de Editor. No incluye mecánicas implementadas. Las escenas `Prototype` y `Laboratory` están pendientes de crearse y guardarse desde Unity Editor; consulta [validaciones y pasos de Editor](docs/testing.md#preparación-en-unity-editor).
+S00 quedó cerrado en `aa2f2c5`. S01 incluye un controlador con cápsula provisional, cámara en tercera persona y un circuito en `Assets/_Echoryx/Scenes/Prototype.unity`. Las pruebas de lógica temporal pasaron; la jugabilidad y el recorrido del circuito requieren validación manual en Editor. Consulta [validaciones](docs/testing.md#s01-jugador-y-cámara).
 
 Empieza por [GDD](docs/GDD.md), [arquitectura](docs/architecture.md) y [plan de desarrollo](docs/development-plan.md). Las decisiones y el estado breve se registran en [MEMORY.md](MEMORY.md).

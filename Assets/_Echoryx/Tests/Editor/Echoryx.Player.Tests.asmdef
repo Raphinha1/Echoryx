@@ -1,0 +1,7 @@
+{
+  "name": "Echoryx.Player.Tests",
+  "rootNamespace": "Echoryx.Player.Tests",
+  "references": ["Echoryx.Player"],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "includePlatforms": ["Editor"]
+}
