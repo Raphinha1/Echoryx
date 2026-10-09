@@ -39,3 +39,12 @@ Los controles, métricas concretas, plataformas destino y criterios artísticos 
 | S04-A | S01–S03 | Un checkpoint activo y punto inicial; R y caída reaparecen sin velocidad, salto o transporte residual; liberación, restauración y reaparición en orden determinista; solo recibe reinicio la sala activa. Pruebas EditMode y recorrido manual documentados. |
 | S04-B | S04-A | Adaptadores completos para cancelar y limpiar Echo, historiales Rewind, plataforma, rotor, placas y puertas en el ámbito correcto; reinicios repetidos sin estados residuales ni regresiones. |
 | S04-C | S04-B | Rompecabezas combinado que use las mecánicas existentes y checkpoints; resolverlo, fallar y repetir sin intervención del Editor. |
+
+## Preparación visual de S05
+
+| Etapa | Entrega | Aceptación |
+|---|---|---|
+| S05-A1 | Subconjunto Standard gratuito, procedencia/licencia, materiales URP y galería independiente. | Fuentes identificadas y acotadas; materiales compatibles, escala registrada e importación comprobada; Prototype y S01–S04 intactos. No crea el nivel final. |
+| S05-A2 (siguiente paso propuesto) | Sala de referencia modular, wrappers/prefabs visuales y colliders simples. | Encajes y proporciones coherentes, iluminación legible y cámaras/colisiones comprobadas en escena separada antes de integrar un nivel. |
+
+Las decisiones y la evidencia de S05-A1 se conservan en [visual-assets](visual-assets.md); esta preparación no cierra por sí sola el vertical slice S05.

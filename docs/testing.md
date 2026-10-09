@@ -233,3 +233,29 @@ Los casos PlayMode usan motor, colliders y entradas reales con cámaras de prueb
 - **S08:** ejecutar regresión en Editor, crear build para plataforma aprobada y abrirla en entorno objetivo; revisar consola y transiciones.
 
 Registrar dispositivo, plataforma, escena, pasos, resultado y errores. Las pruebas futuras deben cubrir límites/casos vacíos además del recorrido feliz; no considerar una compilación de scripts como validación de jugabilidad.
+
+## S05-A1: importación y galería visual
+
+**Ejecutado en Unity 6000.3.22f1:** `S05VisualAssetsSetup.Prepare` importó 10 FBX de la edición gratuita Standard y ocho PNG, creó nueve materiales URP Lit y guardó `VisualAssetLab.unity` mediante APIs de Unity. La segunda ejecución volvió a validar sin cambiar la escena (SHA-256 comprobado). El validador comprueba los diez modelos, geometría presente, todos los slots remapeados a URP, texturas de trim/decals presentes, tipo/sRGB de las texturas, escala y ausencia de colliders/componentes de gameplay. La suma de los diez modelos es 2.006 triángulos (todos los submeshes).
+
+**Renderizado:** se ejecutó una captura real de URP con OpenGL Core en Mesa Intel UHD Graphics, no una imagen generada. Se inspeccionó la primera captura y se corrigieron únicamente las orientaciones de muestras de una cara en la nueva galería. La captura final corregida se renderizó e inspeccionó sin superficies magenta. El método de captura comprueba además que los nueve shaders de materiales sean soportados por el dispositivo. La evidencia visual se guarda en `docs/images/s05-a1-visual-lab.png`; las dimensiones y métricas medidas por Unity, en `docs/visual-assets-import-report.json`.
+
+**Integridad:** 19 archivos procedentes del ZIP (10 FBX, ocho PNG, licencia) coinciden con sus hashes originales registrados en el manifiesto. La comparación con la auditoría inicial muestra que Prototype, Laboratory, prefabs, materiales previos, todos los componentes S01–S04, Packages y ProjectSettings permanecen idénticos. Git estaba limpio en `2cd3002` antes de esta etapa. No se ejecutaron las suites de gameplay: esta verificación comprueba importación, renderizado e integridad de fuentes, no una nueva validación jugable de S01–S04.
+
+Comandos reproducibles, sin otra instancia de Unity sobre el proyecto:
+
+```bash
+echoryx_editor="/home/raphinha/Unity/Hub/Editor/6000.3.22f1/Editor/Unity"
+"$echoryx_editor" -batchmode -nographics -projectPath "$PWD" -executeMethod Echoryx.Game.Editor.S05VisualAssetsSetup.Prepare -quit -logFile /tmp/echoryx-s05a1-import.log
+"$echoryx_editor" -batchmode -force-glcore -projectPath "$PWD" -executeMethod Echoryx.Game.Editor.S05VisualAssetsSetup.RenderPreview -quit -logFile /tmp/echoryx-s05a1-render.log
+```
+
+**Límites y revisión manual pendiente:**
+
+1. Abrir únicamente `VisualAssetLab`, revisar todas las muestras en Scene View y Game View, así como Console. Confirmar ausencia de superficies magenta/materiales faltantes desde distintas vistas; las caras posteriores de planos pueden ser invisibles por diseño.
+2. Comprobar suelo de 4 m y cápsula de referencia de 2 m. Pared inferior de 3 m + remate superior de 2 m; columna y marco de unos 5 m. No aplicar una segunda conversión centímetros/metros. Revisar encaje real y pivotes en S05-A2.
+3. Comparar grafito, titanio, cian y violeta; ajustar contraste e iluminación en la sala de referencia siguiente. La galería no prueba la iluminación final, bloom, rendimiento de nivel ni todos los backends gráficos/dispositivos.
+4. Revisar en Inspector los cinco materiales de atlas: BaseMap/NormalMap presentes donde corresponda y alfa del atlas Decals recortado. Los mapas ORM/DetailMask no están importados ni se interpretan como Metallic de URP.
+5. Recordar que estos modelos son **solo visuales**, varios sin grosor; no se ha validado movimiento/colisión sobre ellos ni el montaje animado del panel dentro del marco. Los colliders y wrappers corresponden a S05-A2.
+
+Consultar [visual-assets](visual-assets.md) para licencia, organización, selección completa y el próximo montaje. Las advertencias no fatales del servicio de licencias y limpieza de SDK de Unity son del entorno; no se detectaron errores de importación/compilación de los nuevos recursos en los comandos ejecutados. La captura no sustituye la aprobación artística humana.

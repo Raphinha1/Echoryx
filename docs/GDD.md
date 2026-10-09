@@ -44,6 +44,10 @@ R o una caída limpian las habilidades y restauran los tres mecanismos inscritos
 
 Preparación del proyecto, estructura, escenas vacías creadas desde Editor, documentación y validación base. No incluye controles, Echo funcional, Rewind, HUD, interacción ni lógica de niveles.
 
+## Dirección visual confirmada para S05
+
+Ciencia ficción temporal estilizada, con acabado 3D de detalle medio. Estructura de grafito/titanio y señales cian para Echo y violeta para Rewind. S05-A1 prepara un subconjunto gratuito CC0 de Quaternius y materiales URP en una galería independiente; el arte final del nivel y del humanoide todavía no se reemplaza. Ver [biblioteca visual](visual-assets.md).
+
 ## Fuera de decisiones confirmadas
 
-No se fija aquí género de ciencia ficción específico, argumento, arte final, plataforma destino, duración total, asignación de habilidades a niveles ni reglas de puntuación. No tratarlos como requisitos hasta confirmación.
+No se fijan argumento, arte final, plataforma destino, duración total, asignación de habilidades a niveles ni reglas de puntuación. No tratarlos como requisitos hasta confirmación.

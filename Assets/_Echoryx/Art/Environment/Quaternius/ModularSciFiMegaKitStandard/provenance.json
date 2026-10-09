@@ -1,0 +1,127 @@
+{
+  "package": "Quaternius Modular Sci-Fi MegaKit",
+  "edition": "Standard FREE",
+  "archive": "Modular SciFi MegaKit[Standard].zip",
+  "archive_sha256": "6fae60cf5189e44dff0bd91097f094a765acc6d57d64a85a0cc0dd56e03035e3",
+  "source_url": "https://quaternius.com/packs/modularscifimegakit.html",
+  "download_page": "https://quaternius.itch.io/modular-sci-fi-megakit",
+  "license": "CC0-1.0",
+  "inspected_on": "2026-10-09",
+  "unique_unity_fbx_in_archive": 189,
+  "files": [
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Metal.fbx",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Platforms/Platform_Metal.fbx",
+      "bytes": 18540,
+      "sha256": "748c4f0fa56de20b81dd79b9e5137f563552216064b3c13bfe886f3c7f2ac4eb"
+    },
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Platform_Ramp_2.fbx",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Platforms/Platform_Ramp_2.fbx",
+      "bytes": 25372,
+      "sha256": "a09ac3a94b58cbddc87e2d1545ae14e8d473cd8169be2e34d815688014dcf1ce"
+    },
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallAstra_Straight_Flat.fbx",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Walls/WallAstra_Straight_Flat.fbx",
+      "bytes": 26316,
+      "sha256": "48887ce015c6b653f0c164d801d36a9e8446ccb965c780a302676321fd07d24f"
+    },
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallAstra_Corner_Square_Inner.fbx",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Walls/WallAstra_Corner_Square_Inner.fbx",
+      "bytes": 48300,
+      "sha256": "dd08e1ce1aeaa11ff60bc728b4452cf268f06d53bf5425b2477948d7124a3310"
+    },
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/WallAstra_Corner_Square_Outer.fbx",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Walls/WallAstra_Corner_Square_Outer.fbx",
+      "bytes": 47772,
+      "sha256": "504ae18cec79f85757ab01496e637baee2fa0b1e3860ce53b50f00010c83fa69"
+    },
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/FBX (Unity)/Columns/Column_Simple.fbx",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Columns/Column_Simple.fbx",
+      "bytes": 24348,
+      "sha256": "9edc0089cce9b40d456ea6a84ce89627ffc73121351d2f58c0aafac0810d1237"
+    },
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Door_DarkMetal.fbx",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Platforms/Door_DarkMetal.fbx",
+      "bytes": 20140,
+      "sha256": "a717af2565b1d636179019a1754a2f2b4222a382d3cbba861281bebd907e1801"
+    },
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/FBX (Unity)/Platforms/Door_Frame_Square.fbx",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Platforms/Door_Frame_Square.fbx",
+      "bytes": 24364,
+      "sha256": "2513bd2956c209bf087558adbdacb96caf0113df8fbbbb996b887ee19b3636ac"
+    },
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/BottomSimple_Straight.fbx",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Walls/BottomSimple_Straight.fbx",
+      "bytes": 19004,
+      "sha256": "1906d9f94dbe69901f74a56d1271311bde6572e8d34710aeaee0cfee0e0cb7b4"
+    },
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/FBX (Unity)/Walls/TopSimple_Straight.fbx",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Walls/TopSimple_Straight.fbx",
+      "bytes": 24540,
+      "sha256": "911efebc1c2b53464f88ca6e4fd370f3f609d51d1dd8501585b4c21dfbe371cc"
+    },
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/Textures/T_Trim_01_BaseColor.png",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Textures/T_Trim_01_BaseColor.png",
+      "bytes": 980201,
+      "sha256": "a8f3271be2aa9c450ef5ef85c15bf8bcaeeaa48f5fc616df12d1334a96e78605"
+    },
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/Textures/T_Trim_01_Normal.png",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Textures/T_Trim_01_Normal.png",
+      "bytes": 585626,
+      "sha256": "1aec7ad47a642fc68216b5a3119341b7dca038c1fc9493df8a15ad4aa27ddbcf"
+    },
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/Textures/T_Trim_02_BaseColor.png",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Textures/T_Trim_02_BaseColor.png",
+      "bytes": 1125543,
+      "sha256": "7b13c6a7d82b434314237c4b1930b8e12ddc69a70ffef28d73cbd178d3ff6293"
+    },
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/Textures/T_Trim_02_Normal.png",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Textures/T_Trim_02_Normal.png",
+      "bytes": 756841,
+      "sha256": "7faaa7059192f43aded9cc2f93917dd54fd14545509c37318d4e6bf0a8104960"
+    },
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/Textures/T_Trim_03_BaseColor.png",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Textures/T_Trim_03_BaseColor.png",
+      "bytes": 1285125,
+      "sha256": "2a15eadbedbc928d771ed8f2a7a8c1a16bce89b2836a0ecf34ece7e2fab96769"
+    },
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/Textures/T_Trim_03_Normal.png",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Textures/T_Trim_03_Normal.png",
+      "bytes": 375307,
+      "sha256": "b2c3238cbe2586e44df0b00179adf85e5b7ac7fed1713ec0b807482245a30738"
+    },
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/Textures/T_Trim_03_Cables.png",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Textures/T_Trim_03_Cables.png",
+      "bytes": 779284,
+      "sha256": "758a95beccdc9f0621d8b8a283ee2593e04b56f1cd32776165ec85e1568e8eb8"
+    },
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/Textures/T_Decals.png",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Textures/T_Decals.png",
+      "bytes": 161794,
+      "sha256": "cfd1dfe9d3c86a7f5f9bc2e516d935599a70854090f413a29aec0ced1d6c908a"
+    },
+    {
+      "archive_path": "Modular SciFi MegaKit[Standard]/License_Standard.txt",
+      "project_path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/License_Standard.txt",
+      "bytes": 837,
+      "sha256": "885b700f02932c08a41163b35cc97d1abe0895a05de29d9a9062fde5132969a8"
+    }
+  ]
+}

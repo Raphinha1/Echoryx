@@ -1,0 +1,309 @@
+{
+    "unityVersion": "6000.3.22f1",
+    "renderPipeline": "PC_RPAsset",
+    "models": [
+        {
+            "path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Platforms/Platform_Metal.fbx",
+            "size": {
+                "x": 4.0,
+                "y": 0.0,
+                "z": 4.0
+            },
+            "center": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rootScale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "rootRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "fileScale": 0.009999999776482582,
+            "vertices": 16,
+            "triangles": 8,
+            "materialNames": [
+                "Trim02Graphite"
+            ]
+        },
+        {
+            "path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Platforms/Platform_Ramp_2.fbx",
+            "size": {
+                "x": 2.000147819519043,
+                "y": 1.0,
+                "z": 2.0
+            },
+            "center": {
+                "x": 0.00007390975952148438,
+                "y": 0.5,
+                "z": 1.0
+            },
+            "rootScale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "rootRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "fileScale": 0.009999999776482582,
+            "vertices": 48,
+            "triangles": 24,
+            "materialNames": [
+                "Decals",
+                "Trim01Titanium",
+                "Trim02Graphite"
+            ]
+        },
+        {
+            "path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Walls/WallAstra_Straight_Flat.fbx",
+            "size": {
+                "x": 0.10000014305114746,
+                "y": 3.000000238418579,
+                "z": 4.000000953674316
+            },
+            "center": {
+                "x": 2.0500001907348635,
+                "y": 1.4999998807907105,
+                "z": 0.0
+            },
+            "rootScale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "rootRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "fileScale": 0.009999999776482582,
+            "vertices": 132,
+            "triangles": 124,
+            "materialNames": [
+                "Trim02Graphite",
+                "Trim03GraphiteCables",
+                "Trim03Titanium"
+            ]
+        },
+        {
+            "path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Walls/WallAstra_Corner_Square_Inner.fbx",
+            "size": {
+                "x": 4.7739973068237309,
+                "y": 3.027961015701294,
+                "z": 4.773998260498047
+            },
+            "center": {
+                "x": 2.386998176574707,
+                "y": 1.50751531124115,
+                "z": -2.386998176574707
+            },
+            "rootScale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "rootRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "fileScale": 0.009999999776482582,
+            "vertices": 788,
+            "triangles": 730,
+            "materialNames": [
+                "Decals",
+                "Trim01Titanium",
+                "Trim02Graphite",
+                "Trim03GraphiteCables",
+                "Trim03Titanium"
+            ]
+        },
+        {
+            "path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Walls/WallAstra_Corner_Square_Outer.fbx",
+            "size": {
+                "x": 4.435271739959717,
+                "y": 3.027960777282715,
+                "z": 4.435270309448242
+            },
+            "center": {
+                "x": 2.2176339626312258,
+                "y": 1.5075151920318604,
+                "z": -2.2176365852355959
+            },
+            "rootScale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "rootRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "fileScale": 0.009999999776482582,
+            "vertices": 737,
+            "triangles": 686,
+            "materialNames": [
+                "Decals",
+                "Trim01Titanium",
+                "Trim02Graphite",
+                "Trim03GraphiteCables",
+                "Trim03Titanium"
+            ]
+        },
+        {
+            "path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Columns/Column_Simple.fbx",
+            "size": {
+                "x": 0.5068492889404297,
+                "y": 4.999999046325684,
+                "z": 0.9748793840408325
+            },
+            "center": {
+                "x": -1.4901161193847657e-8,
+                "y": 2.499999523162842,
+                "z": -0.018779560923576356
+            },
+            "rootScale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "rootRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "fileScale": 0.009999999776482582,
+            "vertices": 204,
+            "triangles": 108,
+            "materialNames": [
+                "Trim01Titanium",
+                "Trim02Graphite"
+            ]
+        },
+        {
+            "path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Platforms/Door_DarkMetal.fbx",
+            "size": {
+                "x": 2.1057209968566896,
+                "y": 4.0489020347595219,
+                "z": 0.20320472121238709
+            },
+            "center": {
+                "x": 1.0528604984283448,
+                "y": 2.0244510173797609,
+                "z": 0.0
+            },
+            "rootScale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "rootRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "fileScale": 0.009999999776482582,
+            "vertices": 44,
+            "triangles": 24,
+            "materialNames": [
+                "Trim01Titanium"
+            ]
+        },
+        {
+            "path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Platforms/Door_Frame_Square.fbx",
+            "size": {
+                "x": 4.853449821472168,
+                "y": 5.013425350189209,
+                "z": 0.5068492889404297
+            },
+            "center": {
+                "x": 0.0,
+                "y": 2.4932873249053957,
+                "z": 0.0
+            },
+            "rootScale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "rootRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "fileScale": 0.009999999776482582,
+            "vertices": 469,
+            "triangles": 280,
+            "materialNames": [
+                "Trim01Titanium"
+            ]
+        },
+        {
+            "path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Walls/BottomSimple_Straight.fbx",
+            "size": {
+                "x": 0.6000001430511475,
+                "y": 0.02000032551586628,
+                "z": 4.000000476837158
+            },
+            "center": {
+                "x": 1.7000001668930054,
+                "y": 0.01000016275793314,
+                "z": 0.0
+            },
+            "rootScale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "rootRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "fileScale": 0.009999999776482582,
+            "vertices": 26,
+            "triangles": 16,
+            "materialNames": [
+                "Trim03GraphiteCables"
+            ]
+        },
+        {
+            "path": "Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/Models/Walls/TopSimple_Straight.fbx",
+            "size": {
+                "x": 0.0,
+                "y": 2.0,
+                "z": 4.0
+            },
+            "center": {
+                "x": 2.0,
+                "y": 4.0,
+                "z": 4.76837158203125e-7
+            },
+            "rootScale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "rootRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "fileScale": 0.009999999776482582,
+            "vertices": 12,
+            "triangles": 6,
+            "materialNames": [
+                "Trim02Graphite"
+            ]
+        }
+    ]
+}
