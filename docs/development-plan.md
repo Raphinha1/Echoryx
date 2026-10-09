@@ -45,6 +45,8 @@ Los controles, métricas concretas, plataformas destino y criterios artísticos 
 | Etapa | Entrega | Aceptación |
 |---|---|---|
 | S05-A1 | Subconjunto Standard gratuito, procedencia/licencia, materiales URP y galería independiente. | Fuentes identificadas y acotadas; materiales compatibles, escala registrada e importación comprobada; Prototype y S01–S04 intactos. No crea el nivel final. |
-| S05-A2 (siguiente paso propuesto) | Sala de referencia modular, wrappers/prefabs visuales y colliders simples. | Encajes y proporciones coherentes, iluminación legible y cámaras/colisiones comprobadas en escena separada antes de integrar un nivel. |
+| S05-A2 (implementado; revisión manual pendiente) | Sala de referencia modular, wrappers/prefabs visuales y colliders simples. | Encajes y proporciones coherentes, iluminación legible y cámaras/colisiones comprobadas en escena separada antes de integrar un nivel. |
 
 Las decisiones y la evidencia de S05-A1 se conservan en [visual-assets](visual-assets.md); esta preparación no cierra por sí sola el vertical slice S05.
+
+S05-A2 creó VisualReferenceRoom y cinco prefabs de estructura; la verificación automatizada y las capturas están documentadas en [sala de referencia](visual-reference-room.md). El siguiente montaje visual requiere revisar esa referencia con cámara real y aprobar proporciones/contraste; todavía no se cierra el nivel 1 ni el slice S05 completo.

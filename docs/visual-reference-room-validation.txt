@@ -1,0 +1,1 @@
+Unity 6000.3.22f1: 256 floor probes, 24 perimeter rays, open/closed door rays passed.

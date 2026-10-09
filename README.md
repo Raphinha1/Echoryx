@@ -17,3 +17,7 @@ Empieza por [GDD](docs/GDD.md), [arquitectura](docs/architecture.md) y [plan de 
 ## Assets visuales S05-A1
 
 Biblioteca mínima gratuita de Quaternius Standard (CC0), materiales URP y galería independiente `VisualAssetLab`. Consulta [procedencia, selección y límites](docs/visual-assets.md). Abrir la galería para revisar escala, paleta y superficies; no reemplaza Prototype ni el personaje.
+
+## Sala de referencia S05-A2
+
+Abrir `Assets/_Echoryx/Scenes/VisualReferenceRoom.unity` y entrar en Play Mode para recorrer la sala con el Player y la cámara existentes. Hay cinco prefabs reutilizables de estructura con colliders simples; la puerta norte es una muestra cerrada, no un mecanismo. [Disposición, capturas y validaciones](docs/visual-reference-room.md).

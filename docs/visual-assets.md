@@ -89,6 +89,8 @@ El resultado observado y los pasos pendientes se registran en [testing](testing.
 
 ![Galería de validación URP](images/s05-a1-visual-lab.png)
 
-## Próximo paso concreto: S05-A2
+## Montaje posterior: S05-A2
 
 Montar **una pequeña sala de referencia visual en una escena separada**, sobre cuadrícula de 4 m: suelo, tramo de pared + remate superior, esquinas, columnas y puerta con marco. Crear wrappers de prefab con raíces lógicas/pivotes consistentes y colliders simples independientes, ajustar iluminación/contraste y proporciones respecto al jugador de 2 m, y comprobar encajes/visibilidad a distancia de cámara de tercera persona. Usar cian/violeta para señalar funciones temporales, sin sustituir todavía Prototype, sus puzzles ni al protagonista. Resolver ahí los offsets del marco/panel y las caras de paredes antes de montar el nivel definitivo.
+
+S05-A2 ya incorpora esta sala y cinco wrappers en una escena separada. Consultar [VisualReferenceRoom](visual-reference-room.md) para los encajes reales, colisiones, cámara, capturas y pendientes. La biblioteca S05-A1 permanece intacta.

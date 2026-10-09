@@ -25,6 +25,7 @@
 - Corrección final S04: checkpoint y reaparición B trasladados al inicio del acceso para impedir embarcar en el viaje inicial después de R/caída; plataforma y núcleos temporales sin cambios. 83/83 EditMode y 5/5 PlayMode pasaron en Unity batchmode; comprobación visual manual del ajuste pendiente.
 - Dirección visual S05 confirmada: ciencia ficción temporal estilizada, 3D de detalle medio; grafito/titanio, cian Echo y violeta Rewind.
 - S05-A1: ZIP Standard gratuito de Quaternius localizado; subconjunto de 10 FBX y 8 texturas CC0, materiales URP y VisualAssetLab independiente preparados. Importación validada en Unity 6000.3.22f1; captura final URP renderizada e inspeccionada, con presentación corregida. Revisión artística/manual pendiente; S05-A2 abordará montaje modular, iluminación y colliders. No se modifican mecánicas ni Prototype.
+- S05-A2: cinco prefabs estáticos con raíces lógicas/colliders, VisualReferenceRoom aislada y Player/rig existentes. Suites 83/83 EditMode y 7/7 PlayMode (dos casos nuevos de movimiento/colisión/cámara) y capturas URP comprobadas; revisión artística y recorrido manual de todos los encajes pendiente. No se modifican fuentes ni escenas/mecánicas previas; sin commit.
 - HUD y niveles definitivos siguen sin implementarse.
 
 Consulta `docs/` para especificaciones completas, dependencias y criterios; evita duplicar aquí detalles técnicos.

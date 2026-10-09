@@ -37,7 +37,7 @@ Ambas escenas existen. `Prototype` contiene ahora el circuito S01 y `Laboratory`
 - `Player.prefab` contiene raíz con `CharacterController`, `VisualRoot/Capsule Placeholder` y `CameraAnchor`. El modelo futuro puede reemplazar el hijo visual sin modificar el collider o el motor.
 - `S01PrototypeBuilder` (menú `Echoryx/S01/Build Player and Prototype`) generó el prefab y el circuito usando APIs de Unity. Rechaza reconstruir una escena que ya contenga elementos S01.
 
-La órbita y el motor usan parámetros serializados ajustables desde Inspector. La cámara y el circuito solo están configurados en `Prototype`; el prefab de Player no guarda referencias a objetos de escena.
+La órbita y el motor usan parámetros serializados ajustables desde Inspector. El rig de referencia y el circuito S01 están configurados en `Prototype`; S05-A2 copia el rig a su escena aislada. El prefab de Player no guarda referencias a objetos de escena.
 
 ## Implementación S02-A: captura Echo
 
@@ -139,3 +139,9 @@ La lista del ámbito nuevo contiene, en orden, `PressurePlateAttemptReset`, `Doo
 Las fuentes de terceros se aíslan en `Art/Environment/Quaternius/ModularSciFiMegaKitStandard`, con licencia original y manifiesto de procedencia. `Materials/Environment` contiene cuatro materiales básicos y cinco adaptaciones URP Lit para las trim sheets/decals seleccionadas. ModelImporter conserva unidades/pivotes y remapea slots a esos materiales; no añade colliders, animación ni componentes runtime.
 
 `S05VisualAssetsSetup` reutiliza el ensamblado de herramientas de Editor existente para preparar y validar únicamente este subconjunto y crear `VisualAssetLab`, una escena de presentación independiente. La galería desplaza/gira instancias para mostrarlas; los FBX siguen intactos. No modifica Build Settings ni depende de Player/Echo/Rewind para renderizar. Las mallas visuales y colisiones de futura sala se separarán en S05-A2; detalles de escala y uso en [visual-assets](visual-assets.md).
+
+## Sala visual S05-A2
+
+`Prefabs/Environment` contiene Floor4, Wall4, InnerCorner4, Column5 y DoorFramePanel, con raíces lógicas y BoxCollider independientes de instancias FBX. Los offsets/escalas locales pertenecen a wrappers, no a importers/fuentes. El marco y panel están separados: desactivar Panel deja libre el umbral y sus colliders de postes/dintel. La escena nueva usa una instancia original de Player y copias del rig Cinemachine de Prototype con referencias remapeadas; no añade un motor, habilidades o mecanismos propios.
+
+`S05ReferenceRoomBuilder` es una herramienta de Editor para guardar componentes estándar y validar la escena aislada. El nuevo archivo PlayMode `VisualReferenceRoomPlayChecks` prueba movimiento/colisiones/cámara existentes en ese montaje; no cambia sus implementaciones ni tests previos. Datos, disposición y límites en [visual-reference-room](visual-reference-room.md).

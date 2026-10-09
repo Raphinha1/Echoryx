@@ -259,3 +259,28 @@ echoryx_editor="/home/raphinha/Unity/Hub/Editor/6000.3.22f1/Editor/Unity"
 5. Recordar que estos modelos son **solo visuales**, varios sin grosor; no se ha validado movimiento/colisión sobre ellos ni el montaje animado del panel dentro del marco. Los colliders y wrappers corresponden a S05-A2.
 
 Consultar [visual-assets](visual-assets.md) para licencia, organización, selección completa y el próximo montaje. Las advertencias no fatales del servicio de licencias y limpieza de SDK de Unity son del entorno; no se detectaron errores de importación/compilación de los nuevos recursos en los comandos ejecutados. La captura no sustituye la aprobación artística humana.
+
+## S05-A2: sala de referencia
+
+**Ejecutado:** Unity 6000.3.22f1 compiló y creó cinco prefabs en `Prefabs/Environment` y `VisualReferenceRoom.unity` mediante APIs de Unity. El montaje preserva los importers, texturas, materiales y fuentes de S05-A1. `S05ReferenceRoomBuilder.Validate` pasó 256 consultas de apoyo continuo a y=0, 24 rayos de perímetro y consultas de marco abierto/panel cerrado; comprueba referencias del rig, materiales presentes y ausencia de MeshCollider. Informe en `docs/visual-reference-room-validation.txt`.
+
+**Pruebas:** pasó la suite completa de **83/83 EditMode** y **7/7 PlayMode** (cinco casos anteriores más dos nuevos). Los dos casos S05, en un archivo separado, utilizan teclado/ratón virtuales, PlayerMotor, CharacterController, PlayerCameraOrbit y Cinemachine reales: entrada por marco abierto, bloqueo del panel y pared, salto/aterrizaje, seguimiento/órbita y prevención de colisión de cámara. El harness usa 60 Hz simulados; copia/restaura los ajustes de Input System y desactiva solo el bloqueo de cursor de la instancia de prueba para permitir ratón en batchmode. No guarda esos cambios ni modifica el prefab o los controles del juego. Los tests previos permanecen idénticos.
+
+**Capturas:** dos imágenes reales URP en `docs/images/s05-a2-reference-room.png` (cámara temporal de conjunto, no guardada) y `s05-a2-third-person.png` (Main Camera/Cinemachine durante Play Mode). Renderizadas con OpenGL Core en Mesa Intel UHD Graphics e inspeccionadas, sin superficies magenta en las vistas ejecutadas. El FOV 40°/distancia 4 m reproducen el rig actual y hacen que la cápsula provisional ocupe bastante pantalla; se mantiene como evidencia, sin retocar la cámara global.
+
+**Integridad:** comparación por SHA-256 con el estado inicial limpio en `039cc89`: Prototype, Laboratory, VisualAssetLab, prefab Player/EchoActor, mecánicas, tests previos, FBX/PNG y `.meta`, materiales, Packages y ProjectSettings permanecen intactos. No hay commits nuevos ni modificaciones a Build Settings. Los respaldos de los módulos evitan vacíos por caras unilaterales; panel y tiras de puerta reciben ajustes locales de encaje, registrados en la documentación.
+
+**Reproducción:** sin otra instancia de Editor sobre el mismo proyecto:
+
+```bash
+echoryx_editor="/home/raphinha/Unity/Hub/Editor/6000.3.22f1/Editor/Unity"
+"$echoryx_editor" -batchmode -nographics -projectPath "$PWD" -executeMethod Echoryx.Game.Editor.S05ReferenceRoomBuilder.Build -quit -logFile /tmp/echoryx-s05a2-build.log
+"$echoryx_editor" -batchmode -nographics -projectPath "$PWD" -executeMethod Echoryx.Game.Editor.S05ReferenceRoomBuilder.Validate -quit -logFile /tmp/echoryx-s05a2-validate.log
+"$echoryx_editor" -batchmode -force-glcore -projectPath "$PWD" -executeMethod Echoryx.Game.Editor.S05ReferenceRoomBuilder.RenderPreview -quit -logFile /tmp/echoryx-s05a2-render.log
+"$echoryx_editor" -batchmode -nographics -projectPath "$PWD" -runTests -testPlatform EditMode -testResults /tmp/echoryx-s05a2-edit.xml -logFile /tmp/echoryx-s05a2-edit.log
+"$echoryx_editor" -batchmode -force-glcore -projectPath "$PWD" -runTests -testPlatform PlayMode -testResults /tmp/echoryx-s05a2-play.xml -logFile /tmp/echoryx-s05a2-play.log
+```
+
+El builder no reemplaza una escena existente ni prefabs ya creados. La validación/captura abre solamente VisualReferenceRoom; guardar cambios manuales antes de ejecutarlas.
+
+**Pendientes manuales:** seguir [el recorrido documentado](visual-reference-room.md#uso-y-revisión-manual-pendiente): encajes de las cuatro esquinas, juntas de suelo, biseles/colisiones conservadoras de puerta y ornamentos, cámara en todos los ángulos incluyendo vigas y columnas, 30/60/120 FPS, legibilidad de luces/señales y aprobación artística con el dispositivo real. La automatización no demuestra todos los ángulos ni rendimiento de un nivel o build final. Revisar Console en ese recorrido; no hubo errores nuevos de importación/compilación ni errores inesperados de gameplay en los comandos ejecutados. Los mensajes no fatales de licencia/limpieza SDK del Editor corresponden al entorno.
