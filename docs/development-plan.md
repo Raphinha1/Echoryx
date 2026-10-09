@@ -19,4 +19,7 @@ Los controles, métricas concretas, plataformas destino y criterios artísticos 
 ## Estado actual
 
 - S00 cerrado en `aa2f2c5`.
-- S01 implementado y compilado. Pasaron 3 pruebas EditMode de la lógica de salto. La aceptación del movimiento, cámara y circuito sigue pendiente de ejecución manual en Play Mode.
+- S01 cerrado según el estado informado por el usuario.
+- S02-A implementó captura Echo y Q; el usuario informó validación manual (hasta 101 muestras).
+- S02-B implementa reproducción con clon y E. Pasaron 12 pruebas EditMode del proyecto y el usuario confirmó la validación en Play Mode.
+- S02-C incorpora una placa y puerta con detección espacial del clon y un rompecabezas en `Prototype`; pasaron 21/21 pruebas EditMode del proyecto y sus comprobaciones jugables quedan pendientes de Play Mode.

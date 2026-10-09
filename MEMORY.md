@@ -11,7 +11,10 @@
 
 - Base: Unity 6000.3.22f1, URP 17.3.0, Input System 1.20.1 y Cinemachine 3.1.7 declarados.
 - S00: cerrado en `aa2f2c5`; `Prototype` y `Laboratory` existen.
-- S01: controlador, cámara Cinemachine 3, prefab provisional y circuito de `Prototype` creados. Compilación Unity y 3 pruebas EditMode completadas; recorrido manual pendiente.
-- Echo, Rewind, checkpoints, HUD y niveles definitivos siguen sin implementarse.
+- S01: cerrado según el estado informado por el usuario; controlador, cámara y circuito de `Prototype` presentes.
+- S02-A: captura con Q hasta cinco segundos a 20 Hz, validada manualmente por el usuario (hasta 101 muestras).
+- S02-B: clon holográfico y reproducción con E implementados; 12 pruebas EditMode pasaron y el usuario confirmó validación en Play Mode.
+- S02-C: placa, puerta y rompecabezas de Echo incorporados a `Prototype`; 21/21 pruebas EditMode del proyecto pasan; validación jugable de este slice pendiente.
+- Rewind, checkpoints, HUD y niveles definitivos siguen sin implementarse.
 
 Consulta `docs/` para especificaciones completas, dependencias y criterios; evita duplicar aquí detalles técnicos.

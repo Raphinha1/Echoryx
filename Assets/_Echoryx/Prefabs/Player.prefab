@@ -43,6 +43,11 @@ GameObject:
   - component: {fileID: 5747599838333803622}
   - component: {fileID: 6723704898447884015}
   - component: {fileID: 7856034756479784342}
+  - component: {fileID: 2162405965465906317}
+  - component: {fileID: 5882320182419366330}
+  - component: {fileID: 190096794712137661}
+  - component: {fileID: 6431384090001173540}
+  - component: {fileID: 3156970120932523615}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -128,6 +133,73 @@ MonoBehaviour:
   coyoteTime: 0.12
   jumpBuffer: 0.12
   groundedPull: 2
+--- !u!114 &2162405965465906317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4441256234434533941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50feda3ed247ed9f4bb2268357f7f96d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Echoryx.Echo::Echoryx.Echo.EchoRecorder
+  maximumSeconds: 5
+  samplesPerSecond: 20
+  logTransitions: 1
+--- !u!114 &5882320182419366330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4441256234434533941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdb3efd39100d75f59505819c1da0b59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Echoryx.Echo::Echoryx.Echo.EchoRecordInput
+  actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+--- !u!114 &190096794712137661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4441256234434533941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c6af1b480e45e6a93c8a37f07c5b24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Echoryx.Echo::Echoryx.Echo.EchoPlayback
+  actorPrefab: {fileID: 3265692156522189924, guid: 6e052df6c8e612923b4a06ed2a1fd3c6, type: 3}
+--- !u!114 &6431384090001173540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4441256234434533941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8721e40253687d9e68e345cdcf715303, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Echoryx.Echo::Echoryx.Echo.EchoPlaybackInput
+  actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+--- !u!114 &3156970120932523615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4441256234434533941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34ff671c07787b41887efa4da90d3f69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Echoryx.Interactions::Echoryx.Interactions.MechanismActor
+  kind: 0
 --- !u!1 &5611297888598321057
 GameObject:
   m_ObjectHideFlags: 0

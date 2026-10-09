@@ -1,0 +1,7 @@
+{
+  "name": "Echoryx.Echo.Tests",
+  "rootNamespace": "Echoryx.Echo.Tests",
+  "references": ["Echoryx.Echo", "Unity.InputSystem"],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "includePlatforms": ["Editor"]
+}

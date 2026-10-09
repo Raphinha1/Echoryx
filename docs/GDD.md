@@ -14,7 +14,11 @@ Echoryx es un videojuego 3D en el que una persona equipada con un traje tecnoló
 
 ## Ciclo de juego previsto
 
-Observar un desafío, actuar, decidir si una repetición Echo ayuda a coordinar la solución y usar Rewind sobre los objetos habilitados cuando sea necesario. El nivel confirma el avance en un checkpoint y conduce al siguiente reto. Las reglas exactas de grabación, coste, restricciones de reproducción, tipos de objetos y fallo/recuperación siguen abiertas y deben validarse con prototipos.
+Observar un desafío, actuar, decidir si una repetición Echo ayuda a coordinar la solución y usar Rewind sobre los objetos habilitados cuando sea necesario. El nivel confirma el avance en un checkpoint y conduce al siguiente reto. El prototipo actual graba hasta cinco segundos y consume cada grabación tras una reproducción; coste, otros tipos de objetos y reglas de fallo/recuperación siguen abiertos.
+
+## Prototipo S02-C
+
+Un ramal de `Prototype` contiene una placa alejada de una puerta. El jugador puede activar la placa, pero la puerta se cierra antes de que llegue si abandona la placa. La solución prevista es grabar con Q unos segundos de permanencia sobre la placa, acercarse a la puerta y reproducir con E: el Echo reaparece en la placa y sostiene la apertura mientras el jugador cruza. La grabación se consume tras una reproducción. Esta prueba define el comportamiento del prototipo, no la disposición de niveles definitivos.
 
 ## Alcance de S00
 
