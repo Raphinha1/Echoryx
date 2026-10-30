@@ -30,6 +30,7 @@
 - S05-B2: SCI-FI SuperSoldier de SihaGames, Avatar Humanoid, materiales y laboratorio aprobados técnica y visualmente. Créditos CC BY 4.0 de SihaGames/Udon-San preservados.
 - S05-B3: locomoción aislada y clips Idle/Walk/Run/Jump/Fall/Land con correcciones y transiciones aprobados técnica y visualmente; sin integración al Player.
 - HUD y niveles definitivos siguen sin implementarse.
-- S05-B4: siguiente etapa pendiente — integrar animación visual con PlayerMotor; aún no iniciada.
+- S05-B4: integración de animación visual con PlayerMotor mediante PlayerAnimationDriver y desacoplamiento de velocidad sobre plataformas con ResolvedPlanarMotion; laboratorio PlayerAnimationIntegrationLab completado; 91/91 EditMode y 25/25 PlayMode pasaron (116/116 total).
+- Documentación e informe general de avance con capturas técnicas preparado en docs/informe-avance-proyecto.md y README.md actualizado.
 
 Consulta `docs/` para especificaciones completas, dependencias y criterios; evita duplicar aquí detalles técnicos.

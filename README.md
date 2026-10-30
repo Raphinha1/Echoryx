@@ -1,32 +1,116 @@
 # Echoryx
 
-Videojuego 3D de plataformas y resolución de desafíos en Unity 6 con URP. El jugador controla a una persona con traje tecnológico y usa una grabación temporal llamada Echo y el Rewind de objetos controlados para superar tres niveles cortos y un desafío final.
+[![Unity](https://img.shields.io/badge/Unity-6000.3.22f1-blue.svg)](https://unity.com/)
+[![Render Pipeline](https://img.shields.io/badge/Render%20Pipeline-URP%2017.3.0-orange.svg)](https://unity.com/srp/universal-render-pipeline)
+[![Tests](https://img.shields.io/badge/Tests-116%20Passed%20(100%25)-brightgreen.svg)](docs/testing.md)
+[![License](https://img.shields.io/badge/License-Academic%20Project-lightgrey.svg)]()
 
-## Requisitos y apertura
+**Echoryx** es un videojuego 3D de plataformas y resolución de rompecabezas temporales desarrollado en **Unity 6** con **Universal Render Pipeline (URP)**. El jugador controla a un soldado tecnológico (*SuperSoldier*) y utiliza dos habilidades temporales complementarias —la grabación y reproducción de acciones pasadas (**Echo**) y la reversión cinemática de objetos interactivos (**Rewind**)— para navegar salas modulares y superar obstáculos sincronizados.
 
-- Unity Editor **6000.3.22f1** (ver `ProjectSettings/ProjectVersion.txt`).
-- Abrir la raíz del repositorio desde Unity Hub. Unity Package Manager resuelve las dependencias declaradas en `Packages/manifest.json`.
-- URP, Input System y Cinemachine ya están declarados; no agregues versiones duplicadas ni cambies sus versiones sin revisar compatibilidad.
+---
 
-## Estado
+## Capturas del Proyecto
 
-S01, S02 y S03 están completos y validados por el usuario en `fc73688`. `Prototype` conserva movimiento y cámara, Q/E para Echo, placa/puerta y RMB para Rewind. S04-A añade checkpoints y reaparición con R o al caer: solo reinicia los participantes inscritos en la sala del checkpoint activo. S04-B cancela Echo y libera RMB inmediatamente; restaura los mecanismos e historiales de la sala activa antes de reaparecer. S04-A/B/C están validados manualmente por el usuario; el ajuste posterior del acceso B tiene pruebas automatizadas y una regresión visual pendiente. S04-C añade una sala combinada al final del puente derecho (x = 22): Q/E abren la primera barrera y RMB recupera la plataforma para cruzar la segunda. Consulta [solución y pruebas de S04-C](docs/testing.md#s04-c-sala-combinada) y [corrección del acceso B](docs/testing.md#corrección-final-s04-acceso-b-tras-reinicio).
+| Sala de Referencia Sci-Fi (URP) | Locomoción del Protagonista |
+|:---:|:---:|
+| ![Sala de referencia visual sci-fi](docs/images/s05-a2-reference-room.png) | ![SuperSoldier corriendo](docs/images/s05-b42-run.png) |
 
-Empieza por [GDD](docs/GDD.md), [arquitectura](docs/architecture.md) y [plan de desarrollo](docs/development-plan.md). Las decisiones y el estado breve se registran en [MEMORY.md](MEMORY.md).
+| Vista en Tercera Persona | Plataforma Móvil con Físicas Desacopladas |
+|:---:|:---:|
+| ![Tercera persona](docs/images/s05-a2-third-person.png) | ![SuperSoldier sobre plataforma](docs/images/s05-b42-platform-idle.png) |
 
-## Assets visuales S05-A1
+---
 
-Biblioteca mínima gratuita de Quaternius Standard (CC0), materiales URP y galería independiente `VisualAssetLab`. Consulta [procedencia, selección y límites](docs/visual-assets.md). Abrir la galería para revisar escala, paleta y superficies; no reemplaza Prototype ni el personaje.
+## Requisitos y Apertura
 
-## Sala de referencia S05-A2
+- **Unity Editor:** `6000.3.22f1` (consistente con `ProjectSettings/ProjectVersion.txt`).
+- **Apertura:** Abrir la raíz del proyecto desde **Unity Hub**. Unity Package Manager resolverá automáticamente las dependencias declaradas en `Packages/manifest.json`.
+- **Paquetes Principales Integrados:**
+  - Universal Render Pipeline (`com.unity.render-pipelines.universal` @ `17.3.0`)
+  - Input System (`com.unity.inputsystem` @ `1.20.1`)
+  - Cinemachine (`com.unity.cinemachine` @ `3.1.7`)
+  - Test Framework (`com.unity.test-framework` @ `2.0.1`)
 
-Abrir `Assets/_Echoryx/Scenes/VisualReferenceRoom.unity` y entrar en Play Mode para recorrer la sala con el Player y la cámara existentes. Hay cinco prefabs reutilizables de estructura con colliders simples; la puerta norte es una muestra cerrada, no un mecanismo. [Disposición, capturas y validaciones](docs/visual-reference-room.md).
+---
 
-## Personajes evaluados S05-B1/B2
+## Controles del Videojuego
 
-Cybernet Warrior (S05-B1) fue descartado por falta de rig y retirado de Assets; [registro y trazabilidad](docs/character-visual-assets.md). SCI-FI SuperSoldier (SihaGames, CC BY 4.0; casco Udon-San) tiene Avatar Humanoid y locomoción Idle/Walk/Run/Jump/Fall/Land aprobados en laboratorios aislados. S05-B2/B3 están cerrados; S05-B4, integración con PlayerMotor, es el siguiente paso pendiente. [Validación del modelo](docs/supersoldier-validation.md).
+| Acción | Tecla / Control | Descripción |
+|---|---|---|
+| **Moverse** | `W` `A` `S` `D` | Movimiento planar relativo a la orientación de la cámara |
+| **Orbitar Cámara** | `Ratón` | Rotación orbital en tercera persona con Cinemachine |
+| **Saltar** | `Espacio` | Salto vertical con *Coyote Time* y *Jump Buffering* |
+| **Grabar Echo** | `Q` | Graba hasta 5 segundos de acciones (posición y rotación a 20 Hz) |
+| **Reproducir Echo** | `E` | Instancia un clon holográfico que replica la trayectoria grabada |
+| **Rebobinar (Rewind)** | `Click Derecho (RMB)` *(mantener)* | Rebobina en el tiempo el mecanismo o plataforma apuntada |
+| **Reiniciar Sala** | `R` | Devuelve al jugador al checkpoint activo y reinicia los mecanismos de la sala |
 
+---
 
-## Laboratorio de locomoción S05-B3
+## Mecánicas Principales
 
-Abrir `Assets/_Echoryx/Scenes/SuperSoldierLocomotionLab.unity` en Play Mode: muestra automáticamente Idle/Walk/Run/Jump/Fall/Land con el Avatar del SuperSoldier y Root Motion desactivado. El usuario aprobó manualmente Idle/Walk/Run/Jump/Fall/Land, contacto y transiciones tras corregir la preparación de Jump. La fase aérea del laboratorio no simula el salto físico, que se integrará en S05-B4. Playback Rate también permite inspeccionar la demo a velocidad reducida. El laboratorio ofrece Individual Clip (sin controller, con pausa/scrub) y parámetros manuales al desactivar Automatic Demo. El siguiente paso es S05-B4, aún sin implementar. [Fuentes Mixamo, controller, resultados y pendientes](docs/supersoldier-locomotion.md). El Player aún conserva la cápsula provisional.
+### 1. Grabación y Clon Temporal (Echo)
+Al presionar `Q`, el sistema comienza a registrar las poses y rotaciones del jugador durante un máximo de 5 segundos. Al pulsar `E`, un actor holográfico cian reproduce el recorrido exacto. Esta mecánica permite resolver retos asíncronos (por ejemplo, pararse sobre una placa de presión que abre una compuerta distante, grabar el tiempo necesario, correr hacia la puerta y ejecutar el clon para que mantenga la placa activada).
+
+### 2. Reversión Cinemática de Objetos (Rewind)
+El jugador puede apuntar con el ratón hacia objetos móviles (como plataformas flotantes) y mantener presionado `RMB`. El objeto retrocede fotograma a fotograma por su trayectoria histórica. Al soltar `RMB`, el mecanismo reanuda su movimiento normal hacia adelante desde el punto temporal recuperado, permitiendo cruzar abismos o recuperar plataformas que ya habían partido.
+
+### 3. Checkpoints y Restauración Determinista de Salas
+El juego divide los desafíos en salas independientes. Si el jugador cae al abismo o pulsa `R`, el sistema restaura el estado exacto de la sala en curso (posiciones iniciales de plataformas, compuertas, placas y cancela cualquier grabación o clon activo), garantizando que los puzles no queden en estados irrecuperables.
+
+### 4. Puzle Combinado (Sala S04-C)
+Integra ambas habilidades en secuencia coordinada:
+1. Superar una compuerta pesada mediante **Echo**.
+2. Llegar a una zona segura intermedia.
+3. Rebobinar con **Rewind** una plataforma móvil que se encuentra al otro lado del abismo para poder abordarla y cruzar al muelle final.
+
+---
+
+## Pipeline Visual y Animación Humanoide
+
+- **Entorno Sci-Fi Modular:** Biblioteca de piezas estructurales CC0 (Quaternius) con materiales URP en paleta grafito/titanio y detalles emisivos cian y violeta.
+- **Protagonista:** Modelo *SCI-FI SuperSoldier* con rig Humanoid de 66 huesos y IK en pies.
+- **Locomoción y Física Desacopladas:** [`PlayerMotor`](file:///home/raphinha/Proyectos/Universidad/ISC%207/Desarrollo%20de%20entretenimiento/Echoryx/Assets/_Echoryx/Scripts/Player/PlayerMotor.cs) mantiene la autoridad absoluta del movimiento físico, mientras que [`PlayerAnimationDriver`](file:///home/raphinha/Proyectos/Universidad/ISC%207/Desarrollo%20de%20entretenimiento/Echoryx/Assets/_Echoryx/Scripts/Player/PlayerAnimationDriver.cs) y [`ResolvedPlanarMotion`](file:///home/raphinha/Proyectos/Universidad/ISC%207/Desarrollo%20de%20entretenimiento/Echoryx/Assets/_Echoryx/Scripts/Player/ResolvedPlanarMotion.cs) calculan la cadencia y transiciones del Animator aislando el transporte de plataformas móviles, evitando que el personaje camine en falso cuando la plataforma lo transporta.
+
+---
+
+## Catálogo de Escenas
+
+Las escenas principales se encuentran en `Assets/_Echoryx/Scenes/`:
+
+- **`Prototype.unity`:** Escena de juego principal con el circuito de pruebas de movimiento, el puzzle de Echo, el cruce con Rewind y la sala combinada S04-C.
+- **`VisualReferenceRoom.unity`:** Sala ambientada con arquitectura sci-fi definitiva, iluminación URP y cámara orbital.
+- **`PlayerAnimationIntegrationLab.unity`:** Laboratorio de integración entre físicas de movimiento, transporte de plataformas y animación del SuperSoldier.
+- **`SuperSoldierLocomotionLab.unity`:** Laboratorio de calibración y análisis de clips de locomoción Mixamo (Walk, Run, Jump, Fall, Land).
+
+---
+
+## Pruebas y Calidad de Software
+
+El proyecto se rige por Desarrollo Guiado por Pruebas (TDD) y cuenta con una batería completa de pruebas automatizadas ejecutables en Unity Editor y batchmode:
+
+```bash
+# Ejecutar pruebas EditMode desde terminal:
+/ruta/hacia/Unity -batchmode -quit -projectPath . -runTests -testPlatform editmode -testResults editmode-results.xml
+
+# Ejecutar pruebas PlayMode desde terminal:
+/ruta/hacia/Unity -batchmode -quit -projectPath . -runTests -testPlatform playmode -testResults playmode-results.xml
+```
+
+- **EditMode Tests:** 91 pasadas / 0 fallidas (100%)
+- **PlayMode Tests:** 25 pasadas / 0 fallidas (100%)
+- **Total:** **116 pruebas automatizadas aprobadas**
+
+Para más detalles, consulta la [documentación de pruebas](docs/testing.md).
+
+---
+
+## Documentación del Proyecto
+
+- 📄 [**Informe General de Avance (con capturas y análisis técnico)**](docs/informe-avance-proyecto.md)
+- 🎮 [Game Design Document (GDD)](docs/GDD.md)
+- 🏛️ [Arquitectura de Software y Ensamblados](docs/architecture.md)
+- 📅 [Plan de Desarrollo y Roadmap](docs/development-plan.md)
+- 🧪 [Guía de Pruebas y Validación](docs/testing.md)
+- 🎨 [Pipeline de Assets Visuales](docs/visual-assets.md)
+- 🚶 [Calibración de Locomoción del SuperSoldier](docs/supersoldier-locomotion.md)
