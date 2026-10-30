@@ -28,6 +28,14 @@ namespace Echoryx.Player
         private float verticalVelocity;
         private bool ignorePreviousGrounded;
         private int skipThroughFrame = -1;
+        private bool observingMove;
+        private Vector3 unblockedTransport;
+        private Vector3 unblockedOwnMotion;
+
+        // Presentation telemetry only: the motor remains the sole movement authority.
+        public Vector3 PlanarVelocity { get; private set; }
+        public float PlanarSpeed => PlanarVelocity.magnitude;
+        public int MotionSampleFrame { get; private set; } = -1;
 
         public void SetCameraReference(Transform value) => cameraReference = value;
 
@@ -38,6 +46,8 @@ namespace Echoryx.Player
             if (input == null) input = GetComponent<PlayerInputReader>();
             if (platformCarrier == null) platformCarrier = GetComponent<PlayerPlatformCarrier>();
             horizontalVelocity = Vector3.zero;
+            PlanarVelocity = Vector3.zero;
+            MotionSampleFrame = -1;
             verticalVelocity = 0f;
             jumpWindow.Reset();
             platformCarrier?.ResetTransport();
@@ -87,9 +97,17 @@ namespace Echoryx.Player
                 verticalVelocity = Mathf.Sqrt(2f * Mathf.Max(0f, jumpHeight) * Mathf.Abs(gravity));
             verticalVelocity += gravity * Time.deltaTime;
 
-            var displacement = (horizontalVelocity + Vector3.up * verticalVelocity) * Time.deltaTime
-                + (platformCarrier != null ? platformCarrier.ConsumeMotion() : Vector3.zero);
+            var transport = platformCarrier != null ? platformCarrier.ConsumeMotion() : Vector3.zero;
+            var displacement = (horizontalVelocity + Vector3.up * verticalVelocity) * Time.deltaTime + transport;
+            var before = transform.position;
+            unblockedTransport = transport;
+            unblockedOwnMotion = horizontalVelocity * Time.deltaTime;
+            observingMove = true;
             var collision = controller.Move(displacement);
+            observingMove = false;
+            PlanarVelocity = ResolvedPlanarMotion.Measure(transform.position - before,
+                unblockedTransport, unblockedOwnMotion, Time.deltaTime);
+            MotionSampleFrame = Time.frameCount;
             platformCarrier?.CompletePlayerMove();
             if ((collision & CollisionFlags.Above) != 0 && verticalVelocity > 0f)
                 verticalVelocity = 0f;
@@ -102,6 +120,15 @@ namespace Echoryx.Player
                 transform.rotation = Quaternion.RotateTowards(
                     transform.rotation, facing, turnSpeed * Time.deltaTime);
             }
+        }
+
+        private void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            if (!observingMove) return;
+            // Attribute only transport that could pass the same contact planes as Move.
+            // Observing contacts never changes the controller's displacement or collisions.
+            unblockedTransport = ResolvedPlanarMotion.RemoveIntoSurface(unblockedTransport, hit.normal);
+            unblockedOwnMotion = ResolvedPlanarMotion.RemoveIntoSurface(unblockedOwnMotion, hit.normal);
         }
 
         private void OnValidate()
