@@ -1,0 +1,21 @@
+{
+  "name": "Echoryx.Level.Editor",
+  "rootNamespace": "Echoryx.Level.Editor",
+  "references": [
+    "Echoryx.Level",
+    "Echoryx.Game",
+    "Echoryx.Player",
+    "Echoryx.Echo",
+    "Echoryx.Interactions",
+    "Echoryx.Rewind",
+    "Echoryx.Rewind.Input",
+    "Echoryx.Rewind.Platforms",
+    "Unity.InputSystem",
+    "Unity.Cinemachine",
+    "Unity.TextMeshPro",
+    "UnityEngine.UI"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ]
+}

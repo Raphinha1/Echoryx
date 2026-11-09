@@ -1,0 +1,12 @@
+{
+  "name": "Echoryx.Level",
+  "rootNamespace": "Echoryx.Level",
+  "references": [
+    "Echoryx.Game",
+    "Echoryx.Interactions",
+    "Echoryx.Rewind",
+    "Unity.TextMeshPro",
+    "UnityEngine.UI"
+  ],
+  "autoReferenced": true
+}

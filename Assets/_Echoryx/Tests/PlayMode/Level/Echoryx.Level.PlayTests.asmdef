@@ -1,0 +1,19 @@
+{
+  "name": "Echoryx.Level.PlayTests",
+  "rootNamespace": "Echoryx.Level.PlayTests",
+  "references": [
+    "Echoryx.Level",
+    "Echoryx.Game",
+    "Echoryx.Player",
+    "Echoryx.Echo",
+    "Echoryx.Interactions",
+    "Echoryx.Rewind",
+    "Echoryx.Rewind.Platforms",
+    "Echoryx.Rewind.Input",
+    "Unity.InputSystem"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "autoReferenced": false
+}
