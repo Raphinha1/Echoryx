@@ -45,10 +45,10 @@ namespace Echoryx.Player.Editor
             EnsureFolder("Assets/_Echoryx/Art/Animations", "Robot");
             var calibration = Calibrate(clips);
             var controller = BuildController(clips, calibration);
-            BuildPrefabs(controller, calibration.FeetOffset);
+            BuildPrefabs(controller, calibration);
             BuildLabScene();
             Debug.Log($"Robot lab built. Walk~{calibration.WalkSpeed:F2} m/s, Run~{calibration.RunSpeed:F2} m/s, " +
-                $"run timeScale {calibration.RunTimeScale:F2}, feet offset {calibration.FeetOffset:F3}.");
+                $"nominal speeds set on the drivers, feet offset {calibration.FeetOffset:F3}.");
         }
 
         [MenuItem("Echoryx/Robot/2 Integrate Into Player and Echo")]
@@ -172,9 +172,8 @@ namespace Echoryx.Player.Editor
             tree.AddChild(clips.Idle, 0f);
             tree.AddChild(clips.Walk, Mathf.Clamp(calibration.WalkSpeed, 1.5f, 4f));
             tree.AddChild(clips.Run, PlayerMaxSpeed);
-            var children = tree.children;
-            children[2].timeScale = calibration.RunTimeScale;
-            tree.children = children;
+            // Playback speed is matched at runtime by RobotAnimationDriver (real speed / nominal stride speed),
+            // so the blend tree children keep timeScale 1.
             var locomotion = machine.AddState("Locomotion");
             locomotion.motion = tree;
             machine.defaultState = locomotion;
@@ -183,7 +182,7 @@ namespace Echoryx.Player.Editor
             var air = machine.AddState("Jump_Air"); air.motion = clips.JumpAir;
             var landing = machine.AddState("Jump_Landing"); landing.motion = clips.JumpLanding;
 
-            Transition(locomotion, start, 0.05f, false, 0f, ("Grounded", false));
+            Transition(locomotion, start, 0.04f, false, 0f, ("Grounded", false));
             Transition(start, air, 0.05f, true, 0.95f);
             Transition(start, landing, 0.05f, false, 0f, ("Grounded", true));
             Transition(air, landing, 0.05f, false, 0f, ("Grounded", true));
@@ -207,18 +206,18 @@ namespace Echoryx.Player.Editor
 
         // ------------------------------------------------------------ prefabs
 
-        private static void BuildPrefabs(AnimatorController controller, float feetOffset)
+        private static void BuildPrefabs(AnimatorController controller, Calibration calibration)
         {
-            SavePrefab(VisualPath, "RobotVisual", controller, feetOffset, echo: false);
-            SavePrefab(EchoVisualPath, "RobotEchoVisual", controller, feetOffset, echo: true);
+            SavePrefab(VisualPath, "RobotVisual", controller, calibration, echo: false);
+            SavePrefab(EchoVisualPath, "RobotEchoVisual", controller, calibration, echo: true);
         }
 
-        private static void SavePrefab(string path, string name, AnimatorController controller, float feetOffset, bool echo)
+        private static void SavePrefab(string path, string name, AnimatorController controller, Calibration calibration, bool echo)
         {
             var root = new GameObject(name);
             var model = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(Fbx), root.transform);
             model.name = "Model";
-            model.transform.localPosition = new Vector3(0f, feetOffset, 0f);
+            model.transform.localPosition = new Vector3(0f, calibration.FeetOffset, 0f);
             model.transform.localRotation = Quaternion.Euler(0f, ModelYaw, 0f);
             model.transform.localScale = Vector3.one * ModelScale;
             var animator = model.GetComponent<Animator>();
@@ -252,6 +251,9 @@ namespace Echoryx.Player.Editor
             var driver = root.AddComponent<RobotAnimationDriver>();
             var data = new SerializedObject(driver);
             data.FindProperty("animator").objectReferenceValue = animator;
+            // Nominal stride speeds of the Walk/Run clips (estimated from the foot sweep, incl. visual scale).
+            data.FindProperty("walkNominalSpeed").floatValue = Mathf.Round(calibration.WalkSpeed * 100f) / 100f;
+            data.FindProperty("runNominalSpeed").floatValue = Mathf.Round(calibration.RunSpeed * 100f) / 100f;
             data.ApplyModifiedPropertiesWithoutUndo();
             PrefabUtility.SaveAsPrefabAsset(root, path);
             UnityEngine.Object.DestroyImmediate(root);

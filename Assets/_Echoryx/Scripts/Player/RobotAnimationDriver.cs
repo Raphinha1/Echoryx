@@ -19,6 +19,17 @@ namespace Echoryx.Player
         [SerializeField, Min(0f)] private float speedDampTime = 0.08f;
         [SerializeField, Min(0f)] private float stopThreshold = 0.15f;
         [SerializeField, Min(0f)] private float groundedGrace = 0.08f;
+        [Header("Speed matching (no foot sliding)")]
+        [SerializeField] private bool speedMatching = true;
+        [Tooltip("Ground speed (m/s) the Walk clip covers at playback rate 1, including the visual scale.")]
+        [SerializeField, Min(0.01f)] private float walkNominalSpeed = 2f;
+        [Tooltip("Ground speed (m/s) the Run clip covers at playback rate 1, including the visual scale.")]
+        [SerializeField, Min(0.01f)] private float runNominalSpeed = 3.9f;
+        [SerializeField, Min(0.1f)] private float minPlaybackRate = 0.6f;
+        [SerializeField, Min(0.1f)] private float maxPlaybackRate = 1.6f;
+        [Header("Jump takeoff")]
+        [Tooltip("Upward speed above which an airborne controller counts as a jump takeoff, with no grace delay.")]
+        [SerializeField, Min(0f)] private float takeoffVelocity = 0.5f;
 
         private static readonly int SpeedHash = Animator.StringToHash("Speed");
         private static readonly int GroundedHash = Animator.StringToHash("Grounded");
@@ -29,6 +40,7 @@ namespace Echoryx.Player
         private float airborneTime;
 
         public float Speed { get; private set; }
+        public float PlaybackRate { get; private set; } = 1f;
         public bool Grounded { get; private set; } = true;
 
         private void Awake()
@@ -51,6 +63,20 @@ namespace Echoryx.Player
         public static float Smooth(float current, float target, ref float velocity, float dampTime, float deltaTime) =>
             dampTime <= 0f ? target : Mathf.SmoothDamp(current, target, ref velocity, dampTime, Mathf.Infinity, deltaTime);
 
+        /// <summary>
+        /// Playback rate that makes the feet cover the ground at the real speed: real speed divided by the
+        /// nominal stride speed of the clip(s) currently blended (Walk at the walk threshold, Run at the
+        /// run threshold, linear in between, like the 1D blend tree).
+        /// </summary>
+        public static float SpeedMatchRate(float speed, float walkNominal, float runNominal, float runThreshold,
+            float minRate, float maxRate)
+        {
+            if (speed <= 0f) return 1f;
+            var t = Mathf.Clamp01(Mathf.InverseLerp(walkNominal, runThreshold, speed));
+            var nominal = Mathf.Lerp(walkNominal, runNominal, t);
+            return Mathf.Clamp(speed / Mathf.Max(0.01f, nominal), minRate, maxRate);
+        }
+
         private void Update()
         {
             if (animator == null || animator.runtimeAnimatorController == null) return;
@@ -62,10 +88,20 @@ namespace Echoryx.Player
 
             var grounded = controller == null || controller.isGrounded;
             airborneTime = grounded ? 0f : airborneTime + dt;
-            // Brief grace avoids a jump pose on step-offs and one-frame isGrounded drops.
+            // A jump takeoff (leaving the ground while moving up) is airborne at once: PlayerMotor accepted the
+            // jump earlier in this same frame (order 0), so Jump_Start starts in that frame. Step-ups keep
+            // isGrounded true and walk-offs have no upward velocity; both keep the short grace period.
+            if (!grounded && controller.velocity.y > takeoffVelocity) airborneTime = Mathf.Max(airborneTime, groundedGrace + dt);
             Grounded = airborneTime <= groundedGrace;
             animator.SetFloat(SpeedHash, Speed);
             animator.SetBool(GroundedHash, Grounded);
+
+            var rate = 1f;
+            if (speedMatching && Grounded && Speed > stopThreshold
+                && animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion") && !animator.IsInTransition(0))
+                rate = SpeedMatchRate(Speed, walkNominalSpeed, runNominalSpeed, maxSpeed, minPlaybackRate, maxPlaybackRate);
+            PlaybackRate = rate;
+            animator.speed = rate;
         }
 
         private float SampleSpeed(float dt)

@@ -134,6 +134,8 @@ namespace Echoryx.Level.Editor
 
         private static void UpdatePrefabs(Mats m)
         {
+            var beacon = BuildBeaconPrefab();
+
             Edit("PressurePlate", root =>
             {
                 var oldSurface = root.transform.Find("Plate Surface");
@@ -145,6 +147,9 @@ namespace Echoryx.Level.Editor
                 var pad = Spawn(Station, "floor-panel", art, "Plate Top", new Vector3(0f, 0.03f, 0f),
                     Vector3.zero, new Vector3(1.8f, 0.4f, 1.8f), m.Flat);
                 Set(root.GetComponent<PressurePlate>(), "indicator", pad.GetComponentInChildren<Renderer>());
+                // Constant subtle "trail": orange idle / green player / cyan Echo (see PlateBeaconDriver).
+                AddBeacon(art, beacon, new Vector3(0f, 0.17f, 0f), new Vector2(2.7f, 2.7f));
+                if (root.GetComponent<PlateBeaconDriver>() == null) root.AddComponent<PlateBeaconDriver>();
             });
 
             Edit("Door", root =>
@@ -202,7 +207,146 @@ namespace Echoryx.Level.Editor
                 list.arraySize = renderers.Length;
                 for (var i = 0; i < renderers.Length; i++) list.GetArrayElementAtIndex(i).objectReferenceValue = renderers[i];
                 data.ApplyModifiedPropertiesWithoutUndo();
+                // Violet = can be rewound (same violet as the Rewind glow). Child of the moving root: it follows it.
+                AddBeacon(root.transform, beacon, new Vector3(0f, 0.21f, 0f), new Vector2(5.4f, 3.4f));
+                root.AddComponent<RewindBeaconDriver>();
             });
+        }
+
+        // ------------------------------------------------------------ interaction beacon
+
+        private const string BeaconTexturePath = "Assets/_Echoryx/Art/Effects/BeaconGlow.png";
+        private const string BeaconMaterialPath = MaterialFolder + "/ArtBeaconGlow.mat";
+        private const string BeaconPrefabPath = "Assets/_Echoryx/Prefabs/Level/InteractionBeacon.prefab";
+
+        private static GameObject BuildBeaconPrefab()
+        {
+            var texture = BeaconTexture();
+            var material = BeaconMaterial(texture);
+            var root = new GameObject("InteractionBeacon");
+            var halo = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            halo.name = "Halo";
+            UnityEngine.Object.DestroyImmediate(halo.GetComponent<Collider>());
+            halo.transform.SetParent(root.transform, false);
+            halo.transform.localRotation = Quaternion.Euler(90f, 0f, 0f); // lies flat, facing up
+            var haloRenderer = halo.GetComponent<MeshRenderer>();
+            haloRenderer.sharedMaterial = material;
+            haloRenderer.shadowCastingMode = ShadowCastingMode.Off;
+            haloRenderer.receiveShadows = false;
+
+            var trailObject = new GameObject("Trail");
+            trailObject.transform.SetParent(root.transform, false);
+            trailObject.transform.localRotation = Quaternion.Euler(-90f, 0f, 0f); // emits upward
+            var trail = trailObject.AddComponent<ParticleSystem>();
+            trail.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            var main = trail.main;
+            main.loop = true;
+            main.playOnAwake = true;
+            main.duration = 2f;
+            main.startLifetime = 1.6f;
+            main.startSpeed = 0.55f;
+            main.startSize = new ParticleSystem.MinMaxCurve(0.1f, 0.2f);
+            main.startColor = Color.white;
+            main.simulationSpace = ParticleSystemSimulationSpace.Local; // follows a moving platform
+            main.maxParticles = 40;
+            main.gravityModifier = 0f;
+            var emission = trail.emission;
+            emission.rateOverTime = 4f;
+            var shape = trail.shape;
+            shape.shapeType = ParticleSystemShapeType.Rectangle;
+            shape.scale = new Vector3(2f, 2f, 1f);
+            var colorOverLife = trail.colorOverLifetime;
+            colorOverLife.enabled = true;
+            var gradient = new Gradient();
+            gradient.SetKeys(
+                new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+                new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(0.9f, 0.2f), new GradientAlphaKey(0f, 1f) });
+            colorOverLife.color = new ParticleSystem.MinMaxGradient(gradient);
+            var sizeOverLife = trail.sizeOverLifetime;
+            sizeOverLife.enabled = true;
+            sizeOverLife.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.Linear(0f, 1f, 1f, 0.3f));
+            var particleRenderer = trailObject.GetComponent<ParticleSystemRenderer>();
+            particleRenderer.sharedMaterial = material;
+            particleRenderer.renderMode = ParticleSystemRenderMode.Billboard;
+            particleRenderer.shadowCastingMode = ShadowCastingMode.Off;
+            particleRenderer.receiveShadows = false;
+            particleRenderer.lightProbeUsage = LightProbeUsage.Off;
+
+            var beacon = root.AddComponent<InteractionBeacon>();
+            Set(beacon, "halo", haloRenderer);
+            Set(beacon, "trail", trail);
+            beacon.ApplyFootprint(new Vector2(2f, 2f));
+            var saved = PrefabUtility.SaveAsPrefabAsset(root, BeaconPrefabPath);
+            UnityEngine.Object.DestroyImmediate(root);
+            return saved ?? throw new InvalidOperationException("Could not save the beacon prefab.");
+        }
+
+        private static void AddBeacon(Transform parent, GameObject beaconPrefab, Vector3 localPosition, Vector2 footprint)
+        {
+            var old = parent.Find("Beacon");
+            if (old != null) UnityEngine.Object.DestroyImmediate(old.gameObject);
+            var instance = (GameObject)PrefabUtility.InstantiatePrefab(beaconPrefab, parent);
+            instance.name = "Beacon";
+            instance.transform.localPosition = localPosition;
+            instance.GetComponent<InteractionBeacon>().ApplyFootprint(footprint);
+            // Moving objects carry beacons: nothing here may be static (batching would pin it in place).
+            foreach (var t in instance.GetComponentsInChildren<Transform>(true)) GameObjectUtility.SetStaticEditorFlags(t.gameObject, 0);
+        }
+
+        private static Texture2D BeaconTexture()
+        {
+            if (!AssetDatabase.IsValidFolder("Assets/_Echoryx/Art/Effects")) AssetDatabase.CreateFolder("Assets/_Echoryx/Art", "Effects");
+            if (!System.IO.File.Exists(BeaconTexturePath))
+            {
+                // Own procedural asset: white radial falloff, alpha carries the glow.
+                const int size = 64;
+                var generated = new Texture2D(size, size, TextureFormat.RGBA32, false);
+                for (var y = 0; y < size; y++)
+                    for (var x = 0; x < size; x++)
+                    {
+                        var d = Vector2.Distance(new Vector2(x + 0.5f, y + 0.5f), new Vector2(size * 0.5f, size * 0.5f)) / (size * 0.5f);
+                        var a = Mathf.Clamp01(1f - d);
+                        a = a * a * (3f - 2f * a);
+                        generated.SetPixel(x, y, new Color(1f, 1f, 1f, a));
+                    }
+                System.IO.File.WriteAllBytes(BeaconTexturePath, generated.EncodeToPNG());
+                UnityEngine.Object.DestroyImmediate(generated);
+                AssetDatabase.ImportAsset(BeaconTexturePath);
+                var importer = (TextureImporter)AssetImporter.GetAtPath(BeaconTexturePath);
+                importer.alphaIsTransparency = true;
+                importer.mipmapEnabled = false;
+                importer.wrapMode = TextureWrapMode.Clamp;
+                importer.SaveAndReimport();
+            }
+            return AssetDatabase.LoadAssetAtPath<Texture2D>(BeaconTexturePath);
+        }
+
+        private static Material BeaconMaterial(Texture2D texture)
+        {
+            var material = AssetDatabase.LoadAssetAtPath<Material>(BeaconMaterialPath);
+            if (material == null)
+            {
+                material = new Material(Shader.Find("Universal Render Pipeline/Particles/Unlit")
+                    ?? throw new InvalidOperationException("URP Particles/Unlit unavailable.")) { name = "ArtBeaconGlow" };
+                AssetDatabase.CreateAsset(material, BeaconMaterialPath);
+            }
+            material.shader = Shader.Find("Universal Render Pipeline/Particles/Unlit");
+            material.SetTexture("_BaseMap", texture);
+            material.SetColor("_BaseColor", Color.white);
+            // Transparent + additive, double sided, no depth write.
+            material.SetFloat("_Surface", 1f);
+            material.SetFloat("_Blend", 2f);
+            material.SetFloat("_SrcBlend", (float)BlendMode.SrcAlpha);
+            material.SetFloat("_DstBlend", (float)BlendMode.One);
+            material.SetFloat("_SrcBlendAlpha", (float)BlendMode.One);
+            material.SetFloat("_DstBlendAlpha", (float)BlendMode.One);
+            material.SetFloat("_ZWrite", 0f);
+            material.SetFloat("_Cull", 0f);
+            material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+            material.SetOverrideTag("RenderType", "Transparent");
+            material.renderQueue = (int)RenderQueue.Transparent;
+            EditorUtility.SetDirty(material);
+            return material;
         }
 
         private static void Edit(string name, Action<GameObject> modify, bool create = false, Action<GameObject> build = null)
@@ -225,6 +369,8 @@ namespace Echoryx.Level.Editor
                     ClearChildren(root.transform);
                     var feedback = root.GetComponent<RewindMechanismFeedback>();
                     if (feedback != null) UnityEngine.Object.DestroyImmediate(feedback);
+                    var beaconDriver = root.GetComponent<RewindBeaconDriver>();
+                    if (beaconDriver != null) UnityEngine.Object.DestroyImmediate(beaconDriver);
                     build(root);
                     PrefabUtility.SaveAsPrefabAsset(root, path);
                 }

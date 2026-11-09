@@ -52,6 +52,12 @@ MonoBehaviour:
   speedDampTime: 0.08
   stopThreshold: 0.15
   groundedGrace: 0.08
+  speedMatching: 1
+  walkNominalSpeed: 1.99
+  runNominalSpeed: 3.92
+  minPlaybackRate: 0.6
+  maxPlaybackRate: 1.6
+  takeoffVelocity: 0.5
 --- !u!1001 &6139853612995589460
 PrefabInstance:
   m_ObjectHideFlags: 0

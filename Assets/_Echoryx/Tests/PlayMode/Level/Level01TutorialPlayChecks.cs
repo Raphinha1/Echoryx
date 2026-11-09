@@ -126,6 +126,11 @@ namespace Echoryx.Level.PlayTests
             yield return WalkTo(new Vector3(0f, 0f, 21f));
             Assert.That(plate.IsPressed, Is.True);
             Assert.That(plate.PlayerPresent, Is.True);
+            // Interaction beacon: green while the player holds the plate (idle was orange), particles alive.
+            var plateBeacon = plate.GetComponentInChildren<InteractionBeacon>();
+            Assert.That(plateBeacon.TargetColor.g, Is.GreaterThan(plateBeacon.TargetColor.r), "Green when held by the player.");
+            Assert.That(plateBeacon.TargetIntensity, Is.GreaterThan(0.7f));
+            Assert.That(plateBeacon.Trail.isPlaying, Is.True);
 
             // Record on the plate with the production five-second automatic stop, then replay it.
             var recorder = player.GetComponent<EchoRecorder>();
@@ -141,6 +146,8 @@ namespace Echoryx.Level.PlayTests
             Assert.That(echoActor.GetComponentsInChildren<Renderer>().Where(r => r.enabled).All(r => r.sharedMaterial.name == "EchoHologram"), Is.True);
             yield return WalkTo(new Vector3(0f, 0f, 33f));
             Assert.That(player.transform.position.z, Is.GreaterThan(31f), "The Echo held the plate while the player crossed.");
+            Assert.That(plate.EchoPresent && !plate.PlayerPresent, Is.True);
+            Assert.That(plateBeacon.TargetColor.b, Is.GreaterThan(plateBeacon.TargetColor.r), "Cyan when only the Echo holds it.");
             yield return Frames(320);
             Assert.That(recorder.State, Is.EqualTo(EchoState.Ready), "A finished playback keeps the recording for replay.");
             Assert.That(door.IsOpen, Is.False, "Door closes behind the player once the Echo is gone.");
@@ -158,10 +165,17 @@ namespace Echoryx.Level.PlayTests
             Assert.That(display.CurrentText, Does.Contain("rebobinar su movimiento"));
             yield return WalkTo(new Vector3(0f, 0f, 35.2f));
             Assert.That(display.CurrentText, Does.Contain("otra estrategia"));
+            var idleBeacon = platform.GetComponentInChildren<InteractionBeacon>();
+            Assert.That(idleBeacon.TargetIntensity, Is.EqualTo(0.75f).Within(0.01f), "Bright when it can be rewound and the player is in range.");
+            Assert.That(idleBeacon.Trail.isPlaying, Is.True);
             AimFrom(platform, new Vector3(0f, 2.1f, 33f));
             HoldRewind(true);
             yield return Frames(3);
             Assert.That(platform.Mode, Is.EqualTo(RewindMode.Rewinding));
+            var platformBeacon = platform.GetComponentInChildren<InteractionBeacon>();
+            yield return Frames(2);
+            Assert.That(platformBeacon.TargetIntensity, Is.EqualTo(1f), "Strongest while rewinding.");
+            Assert.That(platformBeacon.TargetColor.r, Is.GreaterThan(platformBeacon.TargetColor.g), "Violet.");
             var feedback = platform.GetComponentInChildren<RewindMechanismFeedback>();
             yield return Frames(2);
             Assert.That(feedback.Glowing, Is.True, "Platform glows while being rewound.");

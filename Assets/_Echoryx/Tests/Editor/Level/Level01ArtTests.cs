@@ -92,8 +92,8 @@ namespace Echoryx.Level.Tests
         public void MaterialsAreMatteUrpLit()
         {
             var paths = AssetDatabase.FindAssets("t:Material", new[] { "Assets/_Echoryx/Materials/Art" }).Select(AssetDatabase.GUIDToAssetPath);
-            // Sky and the two translucent effect planes (hazard, goal) are unlit by design.
-            foreach (var path in paths.Where(p => !p.EndsWith("ArtSky.mat") && !p.EndsWith("ArtHazard.mat") && !p.EndsWith("ArtGoalField.mat")))
+            // Sky and the two translucent effect planes (hazard, goal) and the beacon glow are unlit by design.
+            foreach (var path in paths.Where(p => !p.EndsWith("ArtSky.mat") && !p.EndsWith("ArtHazard.mat") && !p.EndsWith("ArtGoalField.mat") && !p.EndsWith("ArtBeaconGlow.mat")))
             {
                 var material = AssetDatabase.LoadAssetAtPath<Material>(path);
                 Assert.That(material.shader.name, Is.EqualTo("Universal Render Pipeline/Lit"), path);
@@ -170,6 +170,55 @@ namespace Echoryx.Level.Tests
                 Assert.That(deoccluder.AvoidObstacles.CameraRadius, Is.GreaterThanOrEqualTo(0.3f));
                 Assert.That(deoccluder.CollideAgainst.value & (1 << 0), Is.Not.EqualTo(0), "Default layer (gameplay colliders)");
                 Assert.That(deoccluder.IgnoreTag, Is.EqualTo("Player"));
+            });
+        }
+
+        [Test]
+        public void BeaconDriversRankStatesAndUseTheGameColorConvention()
+        {
+            Assert.That(RewindBeaconDriver.Evaluate(true, true, false), Is.GreaterThan(RewindBeaconDriver.Evaluate(true, false, true)));
+            Assert.That(RewindBeaconDriver.Evaluate(true, false, true), Is.GreaterThan(RewindBeaconDriver.Evaluate(true, false, false)));
+            Assert.That(RewindBeaconDriver.Evaluate(true, false, false), Is.GreaterThan(RewindBeaconDriver.Evaluate(false, false, true)));
+            Assert.That(PlateBeaconDriver.Evaluate(true, false), Is.GreaterThan(PlateBeaconDriver.Evaluate(false, true)));
+            Assert.That(PlateBeaconDriver.Evaluate(false, true), Is.GreaterThan(PlateBeaconDriver.Evaluate(false, false)));
+            var plate = new SerializedObject(AssetDatabase.LoadAssetAtPath<GameObject>(Prefabs + "PressurePlate.prefab").GetComponent<PlateBeaconDriver>());
+            var idle = plate.FindProperty("idleColor").colorValue;
+            var held = plate.FindProperty("playerColor").colorValue;
+            var echo = plate.FindProperty("echoColor").colorValue;
+            Assert.That(idle.r, Is.GreaterThan(idle.b), "Orange when idle.");
+            Assert.That(held.g, Is.GreaterThan(held.r).And.GreaterThan(held.b), "Green when held by the player.");
+            Assert.That(echo.b, Is.GreaterThan(echo.r), "Cyan for the Echo.");
+            var rewind = new SerializedObject(AssetDatabase.LoadAssetAtPath<GameObject>(Prefabs + "RewindPlatformVisual.prefab").GetComponent<RewindBeaconDriver>());
+            var violet = rewind.FindProperty("color").colorValue;
+            Assert.That(violet.r, Is.GreaterThan(violet.g));
+            Assert.That(violet.b, Is.GreaterThan(violet.g), "Violet for rewindable.");
+        }
+
+        [Test]
+        public void BeaconsAreLightweightFollowTheirObjectAndAreNeverStatic()
+        {
+            var beaconPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(Prefabs + "InteractionBeacon.prefab");
+            var trail = beaconPrefab.GetComponentInChildren<ParticleSystem>();
+            Assert.That(trail.main.simulationSpace, Is.EqualTo(ParticleSystemSimulationSpace.Local), "Follows moving objects.");
+            Assert.That(trail.main.maxParticles, Is.LessThanOrEqualTo(60));
+            Assert.That(beaconPrefab.GetComponentsInChildren<Collider>(true), Is.Empty);
+            foreach (var t in beaconPrefab.GetComponentsInChildren<Transform>(true))
+                Assert.That(GameObjectUtility.GetStaticEditorFlags(t.gameObject), Is.EqualTo((StaticEditorFlags)0), t.name);
+            foreach (var name in new[] { "PressurePlate", "RewindPlatformVisual" })
+            {
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(Prefabs + name + ".prefab");
+                var beacon = prefab.GetComponentInChildren<InteractionBeacon>(true);
+                Assert.That(beacon, Is.Not.Null, name);
+                foreach (var t in beacon.GetComponentsInChildren<Transform>(true))
+                    Assert.That(GameObjectUtility.GetStaticEditorFlags(t.gameObject), Is.EqualTo((StaticEditorFlags)0), name + "/" + t.name);
+            }
+            WithScene(() =>
+            {
+                var platform = Object.FindFirstObjectByType<RewindMovingPlatform>();
+                var beacon = platform.GetComponentInChildren<InteractionBeacon>(true);
+                Assert.That(beacon, Is.Not.Null, "The platform carries its beacon.");
+                Assert.That(beacon.transform.IsChildOf(platform.transform), Is.True);
+                Assert.That(beacon.GetComponentsInChildren<Transform>(true).All(t => !t.gameObject.isStatic), Is.True);
             });
         }
     }

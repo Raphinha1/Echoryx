@@ -107,6 +107,46 @@ namespace Echoryx.Robot.PlayTests
         }
 
         [UnityTest]
+        public IEnumerator JumpTakeoffStartsTheJumpStateInTheSameFrameThePlayerLeavesTheGround()
+        {
+            var controller = player.GetComponent<CharacterController>();
+            Assert.That(controller.isGrounded, Is.True);
+            var startY = player.transform.position.y;
+            Keys(Key.Space);
+            var takeoffFrame = -1;
+            for (var frame = 0; frame < 10; frame++)
+            {
+                yield return null;
+                if (player.transform.position.y > startY + 0.05f) { takeoffFrame = frame; break; }
+            }
+            Keys();
+            Assert.That(takeoffFrame, Is.GreaterThanOrEqualTo(0), "The motor accepted the jump.");
+            Assert.That(driver.Grounded, Is.False, "Airborne in the very frame the motor lifts off (no grace delay).");
+            var inJumpStart = animator.GetCurrentAnimatorStateInfo(0).IsName("Jump_Start") || animator.GetNextAnimatorStateInfo(0).IsName("Jump_Start");
+            for (var extra = 0; extra < 2 && !inJumpStart; extra++)
+            {
+                yield return null;
+                inJumpStart = animator.GetCurrentAnimatorStateInfo(0).IsName("Jump_Start") || animator.GetNextAnimatorStateInfo(0).IsName("Jump_Start");
+            }
+            Assert.That(inJumpStart, Is.True, "Jump_Start is playing or blending in within ~2 frames of takeoff.");
+            yield return Frames(90);
+            Assert.That(driver.Grounded, Is.True);
+        }
+
+        [UnityTest]
+        public IEnumerator FootSpeedFollowsRealSpeedWhileRunning()
+        {
+            Keys(Key.W);
+            yield return Frames(70);
+            Assert.That(driver.Speed, Is.GreaterThan(5f));
+            Assert.That(driver.PlaybackRate, Is.EqualTo(RobotAnimationDriver.SpeedMatchRate(driver.Speed, 1.99f, 3.92f, 6f, 0.6f, 1.6f)).Within(0.15f));
+            Assert.That(animator.speed, Is.EqualTo(driver.PlaybackRate).Within(1e-4f));
+            Keys();
+            yield return Frames(60);
+            Assert.That(animator.speed, Is.EqualTo(1f).Within(1e-4f), "Idle plays at its authored rate.");
+        }
+
+        [UnityTest]
         public IEnumerator PushingAgainstAWallDoesNotAnimateRunning()
         {
             basis.rotation = Quaternion.LookRotation(Vector3.right);

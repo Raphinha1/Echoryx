@@ -99,5 +99,37 @@ namespace Echoryx.Robot.Tests
             velocity = 0f;
             Assert.That(RobotAnimationDriver.Smooth(1f, 4f, ref velocity, 0f, 0.016f), Is.EqualTo(4f), "No damping snaps to the target.");
         }
+
+        [Test]
+        public void PlaybackRateMatchesRealSpeedToTheNominalStrideOfTheBlendedClips()
+        {
+            const float walk = 2f, run = 3.9f, runThreshold = 6f;
+            float Rate(float speed) => RobotAnimationDriver.SpeedMatchRate(speed, walk, run, runThreshold, 0.6f, 1.6f);
+            Assert.That(Rate(0f), Is.EqualTo(1f));
+            Assert.That(Rate(walk), Is.EqualTo(1f).Within(1e-4f), "Walking at the walk stride speed plays at rate 1.");
+            Assert.That(Rate(runThreshold), Is.EqualTo(runThreshold / run).Within(1e-4f), "Max speed stretches Run to the real speed.");
+            Assert.That(Rate(4f), Is.EqualTo(4f / Mathf.Lerp(walk, run, 0.5f)).Within(1e-4f), "Between clips the nominal speed is blended like the tree.");
+            Assert.That(Rate(0.3f), Is.EqualTo(0.6f), "Clamped at the minimum rate.");
+            Assert.That(Rate(20f), Is.EqualTo(1.6f), "Clamped at the maximum rate.");
+            Assert.That(Rate(5f), Is.GreaterThan(Rate(3f)), "Faster movement never plays slower.");
+        }
+
+        [Test]
+        public void JumpTransitionIsImmediateAndRunIsNotStaticallyScaled()
+        {
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
+            var machine = controller.layers[0].stateMachine;
+            var locomotion = machine.defaultState;
+            var tree = (BlendTree)locomotion.motion;
+            Assert.That(tree.children.All(c => Mathf.Approximately(c.timeScale, 1f)), Is.True, "Speed matching is dynamic, not a fixed timeScale.");
+            var toJump = locomotion.transitions.Single(t => t.destinationState != null && t.destinationState.name == "Jump_Start");
+            Assert.That(toJump.hasExitTime, Is.False);
+            Assert.That(toJump.duration, Is.LessThanOrEqualTo(0.05f));
+            Assert.That(toJump.conditions.Single().parameter, Is.EqualTo("Grounded"));
+            Assert.That(toJump.conditions.Single().mode, Is.EqualTo(AnimatorConditionMode.IfNot));
+            var driver = new SerializedObject(AssetDatabase.LoadAssetAtPath<GameObject>(VisualPath).GetComponent<RobotAnimationDriver>());
+            Assert.That(driver.FindProperty("walkNominalSpeed").floatValue, Is.GreaterThan(0.5f));
+            Assert.That(driver.FindProperty("runNominalSpeed").floatValue, Is.GreaterThan(driver.FindProperty("walkNominalSpeed").floatValue));
+        }
     }
 }

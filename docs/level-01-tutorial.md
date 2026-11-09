@@ -108,3 +108,31 @@ Sustituye la cápsula del Player y el visual del Echo con el paquete *Animated L
 ### Otros
 
 - `TutorialHintDisplay` ya no deja la etiqueta vacía al salir de un hint que se solapa con otro todavía activo (muestra el anterior).
+
+## Indicadores de interacción y pulido del robot
+
+### Indicadores ("estela")
+
+- **Prefab** `Prefabs/Level/InteractionBeacon.prefab` (`InteractionBeacon`): disco de brillo plano que pulsa (alpha 0,07–0,5, pulso 30 %) + un `ParticleSystem` pequeño en espacio **local** (máx. 40 partículas, 1,5–9 /s) que asciende y sigue al objeto. Material aditivo `ArtBeaconGlow` (URP Particles/Unlit) con una textura radial generada (`Art/Effects/BeaconGlow.png`, propia). Solo presenta: un *driver* le da color e intensidad (0 apagado, 1 disponible) y la suaviza.
+- **Convención de color:** violeta = rebobinable (mismo violeta que `RewindMechanismFeedback`); naranja/verde = placa (naranja libre, verde si la sujeta el jugador); cian = Echo (placa sujeta solo por el Echo).
+- **Placa** (`PlateBeaconDriver`, en el prefab `PressurePlate`): intensidad 0,3 en reposo, 0,5 si el jugador está a ≤6 m, 0,85 si está pulsada. Lee solo `PressurePlate`.
+- **Plataforma** (`RewindBeaconDriver`, en `RewindPlatformVisual`; el beacon cuelga del objeto que se mueve): 1,0 mientras se rebobina, 0,75 si se puede rebobinar y el jugador está a ≤10 m, 0,25 si está más lejos, 0,1 si no hay historial. Lee solo `RewindableMechanism.CanRewind/Mode`.
+- Nada es *Static* (test); ningún collider; dos instancias en el nivel. Se integra en `Apply Art Pass`.
+
+### Robot: patinaje y salto
+
+- **Speed matching:** `RobotAnimationDriver` fija `animator.speed` = velocidad real / velocidad nominal de zancada de los clips mezclados (Walk en su umbral, Run en 6 m/s, interpolado como el blend tree), limitado a 0,6–1,6; solo en `Locomotion`, 1 en idle y en saltos. Velocidades nominales visibles en el Inspector (`walkNominalSpeed`, `runNominalSpeed`, ≈1,99 y ≈3,92 m/s, estimadas del barrido del pie de cada clip). El `timeScale` fijo del blend tree desapareció.
+- **Salto sin retraso:** el despegue (`!isGrounded` y velocidad vertical > 0,5 m/s, de `CharacterController.velocity`, solo lectura) marca `Grounded=false` en el mismo fotograma en que `PlayerMotor` acepta el salto (el driver corre después del motor); el periodo de gracia (0,08 s) queda solo para bajar de un borde. Subir un escalón mantiene `isGrounded` y no dispara salto. La transición `Locomotion → Jump_Start` no tiene *exit time* y dura 0,04 s. No se modificó `PlayerMotor`: coyote time y buffer siguen como antes.
+- Tests: `PlaybackRateMatchesRealSpeedToTheNominalStride…`, `JumpTransitionIsImmediate…` (EditMode); `JumpTakeoffStartsTheJumpStateInTheSameFrame…`, `FootSpeedFollowsRealSpeedWhileRunning` (PlayMode, lab); y los de beacons en `Level01ArtTests` y en la ruta completa del nivel.
+
+### Qué NO se pudo verificar visualmente (Unity sin gráficos)
+
+- El pulso animado, el seguimiento de las partículas a la plataforma en movimiento y los cambios de color en vivo (solo se renderizó un fotograma estático con partículas simuladas; en la placa el halo naranja queda oculto sobre el blanco del modo edición).
+- Si desaparece el patinaje de pies y cómo se ve la transición al salto: solo hay aserciones sobre parámetros, `animator.speed` y estados, no se vio la animación.
+- Rendimiento real (la configuración es mínima: 2 sistemas de ≤40 partículas).
+
+### Revisar a mano
+
+- Intensidad del halo: `activeHaloAlpha`/`idleHaloAlpha` y la tasa de partículas en el prefab `InteractionBeacon`; rangos `nearRange`/`aimRange` en los drivers.
+- Patinaje: ajusta `walkNominalSpeed`/`runNominalSpeed` en `RobotVisual.prefab` (y `RobotEchoVisual`) y `minPlaybackRate`/`maxPlaybackRate`.
+- Latencia del salto: `takeoffVelocity` y la duración de la transición `Locomotion → Jump_Start` en `PlayerLocomotion.controller`.
