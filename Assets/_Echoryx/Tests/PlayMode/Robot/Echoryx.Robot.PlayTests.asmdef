@@ -1,0 +1,12 @@
+{
+  "name": "Echoryx.Robot.PlayTests",
+  "rootNamespace": "Echoryx.Robot.PlayTests",
+  "references": [
+    "Echoryx.Player",
+    "Unity.InputSystem"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "autoReferenced": false
+}

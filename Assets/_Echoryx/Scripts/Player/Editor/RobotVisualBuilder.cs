@@ -1,0 +1,349 @@
+using System;
+using System.Linq;
+using UnityEditor;
+using UnityEditor.Animations;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+namespace Echoryx.Player.Editor
+{
+    /// <summary>
+    /// Builds the gameplay locomotion controller, the RobotVisual / RobotEchoVisual prefabs and a lab scene
+    /// from the "Animated Low Poly Robot Free" package (referenced in place, never copied).
+    /// Step 1 builds and validates in a lab without touching Player.prefab; step 2 integrates.
+    /// </summary>
+    public static class RobotVisualBuilder
+    {
+        private const string Fbx = "Assets/FreeLowPolyRobot/Meshes_and_Animations/ModularRobots.fbx";
+        private const string AnimFolder = "Assets/_Echoryx/Art/Animations/Robot";
+        public const string ControllerPath = AnimFolder + "/PlayerLocomotion.controller";
+        public const string VisualPath = "Assets/_Echoryx/Prefabs/Characters/RobotVisual.prefab";
+        public const string EchoVisualPath = "Assets/_Echoryx/Prefabs/Characters/RobotEchoVisual.prefab";
+        public const string LabPath = "Assets/_Echoryx/Scenes/RobotIntegrationLab.unity";
+        private const string PlayerPath = "Assets/_Echoryx/Prefabs/Player.prefab";
+        private const string EchoPath = "Assets/_Echoryx/Prefabs/EchoActor.prefab";
+        private const string HologramPath = "Assets/_Echoryx/Materials/EchoHologram.mat";
+        private const string OffsetMaterialPath = "Assets/FreeLowPolyRobot/Materials/M_AtlasOffset.mat";
+        private const string BasePath = "Assets/FreeLowPolyRobot/Materials/M_AtlasBase.mat";
+        /// <summary>Atlas row (0.03125 per row) that tints the robot accents orange-brown, close to the level accents.
+        /// The black metal shell is part of the package's design and stays.</summary>
+        private const int PlayerColorRow = 16;
+
+        /// <summary>Authored visual scale: ~1.85 m tall, matching the 2 m capsule collider.</summary>
+        public const float ModelScale = 1.1f;
+        /// <summary>The model faces +Z in the FBX; yaw correction if a lab render shows otherwise.</summary>
+        public const float ModelYaw = 0f;
+        public const float PlayerMaxSpeed = 6f;
+
+        [MenuItem("Echoryx/Robot/1 Build Controller, Prefabs and Lab")]
+        public static void BuildLab()
+        {
+            if (!Application.isBatchMode && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            var clips = LoadClips();
+            EnsureFolder("Assets/_Echoryx/Art", "Animations");
+            EnsureFolder("Assets/_Echoryx/Art/Animations", "Robot");
+            var calibration = Calibrate(clips);
+            var controller = BuildController(clips, calibration);
+            BuildPrefabs(controller, calibration.FeetOffset);
+            BuildLabScene();
+            Debug.Log($"Robot lab built. Walk~{calibration.WalkSpeed:F2} m/s, Run~{calibration.RunSpeed:F2} m/s, " +
+                $"run timeScale {calibration.RunTimeScale:F2}, feet offset {calibration.FeetOffset:F3}.");
+        }
+
+        [MenuItem("Echoryx/Robot/2 Integrate Into Player and Echo")]
+        public static void Integrate()
+        {
+            Replace(PlayerPath, "VisualRoot", "Capsule Placeholder", VisualPath, "Robot Visual");
+            Replace(EchoPath, null, "Hologram Visual", EchoVisualPath, "Robot Echo Visual");
+            HideRobotInSuperSoldierLab();
+            AssetDatabase.SaveAssets();
+            Debug.Log("Robot integrated into Player and Echo prefabs.");
+        }
+
+        /// <summary>
+        /// PlayerAnimationIntegrationLab validates the SuperSoldier presentation and looks up the Player's
+        /// single Animator; it keeps that visual by hiding the (now shared) robot in its Player instance.
+        /// </summary>
+        private static void HideRobotInSuperSoldierLab()
+        {
+            const string labPath = "Assets/_Echoryx/Scenes/PlayerAnimationIntegrationLab.unity";
+            var scene = EditorSceneManager.OpenScene(labPath, OpenSceneMode.Single);
+            var changed = false;
+            foreach (var root in scene.GetRootGameObjects())
+            {
+                var robot = root.name == "Player" ? root.transform.Find("VisualRoot/Robot Visual") : null;
+                if (robot == null || !robot.gameObject.activeSelf) continue;
+                robot.gameObject.SetActive(false);
+                changed = true;
+            }
+            if (!changed) return;
+            EditorSceneManager.MarkSceneDirty(scene);
+            if (!EditorSceneManager.SaveScene(scene)) throw new InvalidOperationException("Could not save " + labPath);
+        }
+
+        // ------------------------------------------------------------ clips and calibration
+
+        private sealed class Clips { public AnimationClip Idle, Walk, Run, JumpStart, JumpAir, JumpLanding; }
+        private sealed class Calibration { public float WalkSpeed, RunSpeed, RunTimeScale, WalkTimeScale, FeetOffset; }
+
+        private static Clips LoadClips()
+        {
+            var all = AssetDatabase.LoadAllAssetsAtPath(Fbx).OfType<AnimationClip>().Where(c => !c.name.StartsWith("__")).ToArray();
+            AnimationClip Get(string name) => all.FirstOrDefault(c => c.name == name)
+                ?? throw new InvalidOperationException("Clip missing in package: " + name);
+            return new Clips
+            {
+                Idle = Get("StaticIdle"), Walk = Get("Walk"), Run = Get("Run"),
+                JumpStart = Get("Jump_Start"), JumpAir = Get("Jump_Air"), JumpLanding = Get("Jump_Landing"),
+            };
+        }
+
+        private static Calibration Calibrate(Clips clips)
+        {
+            var model = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(Fbx));
+            try
+            {
+                var calibration = new Calibration();
+                // Feet on the floor: lowest skinned vertex in the idle pose.
+                clips.Idle.SampleAnimation(model, 0f);
+                var minY = float.MaxValue;
+                foreach (var skin in model.GetComponentsInChildren<SkinnedMeshRenderer>())
+                {
+                    var baked = new Mesh();
+                    skin.BakeMesh(baked, true);
+                    foreach (var vertex in baked.vertices) minY = Mathf.Min(minY, model.transform.InverseTransformPoint(skin.transform.TransformPoint(vertex)).y);
+                    UnityEngine.Object.DestroyImmediate(baked);
+                }
+                calibration.FeetOffset = -minY * ModelScale;
+                // Ground speed that matches the foot sweep during stance (about half the cycle).
+                calibration.WalkSpeed = EstimateGroundSpeed(model, clips.Walk) * ModelScale;
+                calibration.RunSpeed = EstimateGroundSpeed(model, clips.Run) * ModelScale;
+                calibration.WalkTimeScale = 1f;
+                // Run is authored for ~RunSpeed; the player tops out at 6 m/s, so scale playback to match.
+                calibration.RunTimeScale = Mathf.Clamp(PlayerMaxSpeed / Mathf.Max(0.1f, calibration.RunSpeed), 0.8f, 1.5f);
+                return calibration;
+            }
+            finally { UnityEngine.Object.DestroyImmediate(model); }
+        }
+
+        private static float EstimateGroundSpeed(GameObject model, AnimationClip clip)
+        {
+            var left = FindDeep(model.transform, "DEF_Foot.L");
+            var right = FindDeep(model.transform, "DEF_Foot.R");
+            var best = 0f;
+            foreach (var foot in new[] { left, right })
+            {
+                float minX = float.MaxValue, maxX = float.MinValue, minZ = float.MaxValue, maxZ = float.MinValue;
+                for (var i = 0; i < 32; i++)
+                {
+                    clip.SampleAnimation(model, clip.length * i / 32f);
+                    var local = model.transform.InverseTransformPoint(foot.position);
+                    minX = Mathf.Min(minX, local.x); maxX = Mathf.Max(maxX, local.x);
+                    minZ = Mathf.Min(minZ, local.z); maxZ = Mathf.Max(maxZ, local.z);
+                }
+                best = Mathf.Max(best, Mathf.Max(maxX - minX, maxZ - minZ));
+            }
+            return best / (0.5f * clip.length);
+        }
+
+        private static Transform FindDeep(Transform root, string name)
+        {
+            foreach (var t in root.GetComponentsInChildren<Transform>(true)) if (t.name == name) return t;
+            throw new InvalidOperationException("Bone not found: " + name);
+        }
+
+        // ------------------------------------------------------------ controller
+
+        private static AnimatorController BuildController(Clips clips, Calibration calibration)
+        {
+            AssetDatabase.DeleteAsset(ControllerPath);
+            var controller = AnimatorController.CreateAnimatorControllerAtPath(ControllerPath);
+            controller.AddParameter("Speed", AnimatorControllerParameterType.Float);
+            controller.AddParameter("Grounded", AnimatorControllerParameterType.Bool);
+            var parameters = controller.parameters;
+            parameters[1].defaultBool = true;
+            controller.parameters = parameters;
+            var machine = controller.layers[0].stateMachine;
+
+            // 1D blend tree on Speed: Idle -> Walk -> Run (Run calibrated to the 6 m/s player maximum).
+            var tree = new BlendTree { name = "Locomotion", blendType = BlendTreeType.Simple1D, blendParameter = "Speed", useAutomaticThresholds = false };
+            AssetDatabase.AddObjectToAsset(tree, controller);
+            tree.AddChild(clips.Idle, 0f);
+            tree.AddChild(clips.Walk, Mathf.Clamp(calibration.WalkSpeed, 1.5f, 4f));
+            tree.AddChild(clips.Run, PlayerMaxSpeed);
+            var children = tree.children;
+            children[2].timeScale = calibration.RunTimeScale;
+            tree.children = children;
+            var locomotion = machine.AddState("Locomotion");
+            locomotion.motion = tree;
+            machine.defaultState = locomotion;
+
+            var start = machine.AddState("Jump_Start"); start.motion = clips.JumpStart;
+            var air = machine.AddState("Jump_Air"); air.motion = clips.JumpAir;
+            var landing = machine.AddState("Jump_Landing"); landing.motion = clips.JumpLanding;
+
+            Transition(locomotion, start, 0.05f, false, 0f, ("Grounded", false));
+            Transition(start, air, 0.05f, true, 0.95f);
+            Transition(start, landing, 0.05f, false, 0f, ("Grounded", true));
+            Transition(air, landing, 0.05f, false, 0f, ("Grounded", true));
+            Transition(landing, start, 0.05f, false, 0f, ("Grounded", false));
+            Transition(landing, locomotion, 0.1f, true, 0.9f);
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            return controller;
+        }
+
+        private static void Transition(AnimatorState from, AnimatorState to, float duration, bool exitTime, float exit, (string name, bool value)? condition = null)
+        {
+            var transition = from.AddTransition(to);
+            transition.duration = duration;
+            transition.hasExitTime = exitTime;
+            transition.exitTime = exit;
+            transition.hasFixedDuration = true;
+            if (condition.HasValue)
+                transition.AddCondition(condition.Value.value ? AnimatorConditionMode.If : AnimatorConditionMode.IfNot, 0f, condition.Value.name);
+        }
+
+        // ------------------------------------------------------------ prefabs
+
+        private static void BuildPrefabs(AnimatorController controller, float feetOffset)
+        {
+            SavePrefab(VisualPath, "RobotVisual", controller, feetOffset, echo: false);
+            SavePrefab(EchoVisualPath, "RobotEchoVisual", controller, feetOffset, echo: true);
+        }
+
+        private static void SavePrefab(string path, string name, AnimatorController controller, float feetOffset, bool echo)
+        {
+            var root = new GameObject(name);
+            var model = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(Fbx), root.transform);
+            model.name = "Model";
+            model.transform.localPosition = new Vector3(0f, feetOffset, 0f);
+            model.transform.localRotation = Quaternion.Euler(0f, ModelYaw, 0f);
+            model.transform.localScale = Vector3.one * ModelScale;
+            var animator = model.GetComponent<Animator>();
+            if (animator == null) animator = model.AddComponent<Animator>();
+            animator.runtimeAnimatorController = controller;
+            animator.avatar = AssetDatabase.LoadAllAssetsAtPath(Fbx).OfType<Avatar>().FirstOrDefault();
+            animator.applyRootMotion = false;
+            animator.updateMode = AnimatorUpdateMode.Normal;
+            if (!echo)
+            {
+                // Color variant: the package selects colors by atlas UV offset (_UV_Offset) on M_AtlasOffset.
+                // The package materials are Metallic 1 (render black without reflection probes), so both
+                // slots get matte copies; the emissive eyes (M_AtlasEmissive) are kept as authored.
+                var accent = new Vector2(0f, PlayerColorRow * 0.03125f);
+                var baseMatte = Matte("RobotPlayerBase", BasePath, 0.15f, accent);
+                var variant = Matte("RobotPlayerOrange", OffsetMaterialPath, 0.25f, accent);
+                foreach (var renderer in model.GetComponentsInChildren<Renderer>())
+                    renderer.sharedMaterials = renderer.sharedMaterials.Select(m =>
+                        m == null ? m : m.name == "M_AtlasOffset" ? variant : m.name == "M_AtlasBase" ? baseMatte : m).ToArray();
+            }
+            if (echo)
+            {
+                // Same model, cyan translucent hologram (the project's Echo look). Echo never casts shadows.
+                var hologram = AssetDatabase.LoadAssetAtPath<Material>(HologramPath) ?? throw new InvalidOperationException("EchoHologram material missing.");
+                foreach (var renderer in model.GetComponentsInChildren<Renderer>())
+                {
+                    renderer.sharedMaterials = Enumerable.Repeat(hologram, renderer.sharedMaterials.Length).ToArray();
+                    renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                }
+            }
+            var driver = root.AddComponent<RobotAnimationDriver>();
+            var data = new SerializedObject(driver);
+            data.FindProperty("animator").objectReferenceValue = animator;
+            data.ApplyModifiedPropertiesWithoutUndo();
+            PrefabUtility.SaveAsPrefabAsset(root, path);
+            UnityEngine.Object.DestroyImmediate(root);
+        }
+
+        private static Material Matte(string name, string sourcePath, float smoothness, Vector2? uvOffset)
+        {
+            EnsureFolder("Assets/_Echoryx/Materials", "Robot");
+            var path = "Assets/_Echoryx/Materials/Robot/" + name + ".mat";
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material == null)
+            {
+                var source = AssetDatabase.LoadAssetAtPath<Material>(sourcePath) ?? throw new InvalidOperationException(sourcePath + " missing.");
+                material = new Material(source) { name = name };
+                AssetDatabase.CreateAsset(material, path);
+            }
+            material.SetFloat("_Metallic", 0f);
+            material.SetFloat("_Smoothness", smoothness);
+            material.SetFloat("_Glossiness", smoothness);
+            if (uvOffset.HasValue)
+            {
+                // Lit atlas material: tiling/offset picks the color; the ShaderGraph one exposes _UV_Offset instead.
+                if (material.shader.name.Contains("Lit")) material.SetTextureOffset("_BaseMap", uvOffset.Value);
+                else if (material.HasProperty("_UV_Offset")) material.SetVector("_UV_Offset", new Vector4(uvOffset.Value.x, uvOffset.Value.y, 0f, 0f));
+                else throw new InvalidOperationException("Robot offset shader lost its _UV_Offset property.");
+            }
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
+        // ------------------------------------------------------------ lab scene
+
+        private static void BuildLabScene()
+        {
+            var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
+            var floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            floor.name = "Lab Floor";
+            floor.transform.position = new Vector3(0f, -0.5f, 10f);
+            floor.transform.localScale = new Vector3(14f, 1f, 40f);
+            var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            wall.name = "Lab Wall";
+            wall.transform.position = new Vector3(4f, 1.5f, 6f);
+            wall.transform.localScale = new Vector3(0.5f, 3f, 12f);
+
+            var player = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(PlayerPath));
+            player.name = "Player";
+            player.transform.position = new Vector3(0f, 0.05f, 0f);
+            // Scene-only integration: the shared Player.prefab is untouched in the lab.
+            var visualRoot = player.transform.Find("VisualRoot");
+            visualRoot.Find("Capsule Placeholder").gameObject.SetActive(false);
+            // (If the shared prefab already carries the robot, the lab simply reuses it.)
+            if (visualRoot.Find("Robot Visual") == null)
+            {
+                var visual = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(VisualPath), visualRoot);
+                visual.name = "Robot Visual";
+                visual.transform.localPosition = Vector3.zero;
+                visual.transform.localRotation = Quaternion.identity;
+            }
+
+            var camera = Camera.main;
+            camera.transform.position = new Vector3(0f, 3f, -5f);
+            camera.transform.rotation = Quaternion.Euler(18f, 0f, 0f);
+            EditorSceneManager.MarkSceneDirty(scene);
+            if (!EditorSceneManager.SaveScene(scene, LabPath)) throw new InvalidOperationException("Could not save the lab scene.");
+        }
+
+        // ------------------------------------------------------------ integration
+
+        private static void Replace(string prefabPath, string parentName, string placeholder, string visualPath, string visualName)
+        {
+            var root = PrefabUtility.LoadPrefabContents(prefabPath);
+            try
+            {
+                var parent = parentName == null ? root.transform : root.transform.Find(parentName)
+                    ?? throw new InvalidOperationException(prefabPath + " has no " + parentName);
+                var old = parent.Find(placeholder) ?? throw new InvalidOperationException(prefabPath + " has no " + placeholder);
+                var existing = parent.Find(visualName);
+                if (existing != null) UnityEngine.Object.DestroyImmediate(existing.gameObject);
+                var visual = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(visualPath), parent);
+                visual.name = visualName;
+                visual.transform.localPosition = Vector3.zero;
+                visual.transform.localRotation = Quaternion.identity;
+                // Keep the old placeholder (hidden) so scene overrides on it never break; colliders/logic untouched.
+                old.gameObject.SetActive(false);
+                PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
+            }
+            finally { PrefabUtility.UnloadPrefabContents(root); }
+        }
+
+        private static void EnsureFolder(string parent, string name)
+        {
+            if (!AssetDatabase.IsValidFolder(parent + "/" + name)) AssetDatabase.CreateFolder(parent, name);
+        }
+    }
+}

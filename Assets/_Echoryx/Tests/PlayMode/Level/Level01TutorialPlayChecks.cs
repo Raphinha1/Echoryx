@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using Echoryx.Echo;
 using Echoryx.Game;
 using Echoryx.Interactions;
@@ -133,6 +134,11 @@ namespace Echoryx.Level.PlayTests
             Assert.That(recorder.State, Is.EqualTo(EchoState.Ready));
             yield return Pulse(Key.E);
             Assert.That(recorder.State, Is.EqualTo(EchoState.Playing));
+            // The Echo is the same robot in the cyan hologram variant, still without colliders.
+            var echoActor = player.GetComponent<EchoPlayback>().ActiveActor;
+            Assert.That(echoActor.GetComponentInChildren<RobotAnimationDriver>(), Is.Not.Null);
+            Assert.That(echoActor.GetComponentsInChildren<Collider>(), Is.Empty);
+            Assert.That(echoActor.GetComponentsInChildren<Renderer>().Where(r => r.enabled).All(r => r.sharedMaterial.name == "EchoHologram"), Is.True);
             yield return WalkTo(new Vector3(0f, 0f, 33f));
             Assert.That(player.transform.position.z, Is.GreaterThan(31f), "The Echo held the plate while the player crossed.");
             yield return Frames(320);
@@ -166,6 +172,7 @@ namespace Echoryx.Level.PlayTests
             Assert.That(Vector3.Distance(platform.transform.position, platformEnd), Is.LessThan(0.1f));
             Assert.That(player.GetComponent<CharacterController>().isGrounded, Is.True);
             Assert.That(Vector3.Distance(player.transform.position, platform.transform.position), Is.LessThan(2.2f));
+            Assert.That(player.GetComponentInChildren<RobotAnimationDriver>().Speed, Is.LessThan(0.3f), "Riding the platform standing still is not animated as walking.");
 
             // Goal.
             yield return WalkTo(new Vector3(0f, 0f, 51f));

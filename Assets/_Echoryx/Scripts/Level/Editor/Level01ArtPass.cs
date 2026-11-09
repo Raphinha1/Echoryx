@@ -344,8 +344,8 @@ namespace Echoryx.Level.Editor
             obstacles.CameraRadius = 0.4f; // larger than the near-plane corner offset, so it never clips a wall
             follow.AvoidObstacles = obstacles;
 
-            var deoccluder = cm.GetComponent<Unity.Cinemachine.CinemachineDeoccluder>()
-                ?? cm.gameObject.AddComponent<Unity.Cinemachine.CinemachineDeoccluder>();
+            var deoccluder = cm.GetComponent<Unity.Cinemachine.CinemachineDeoccluder>();
+            if (deoccluder == null) deoccluder = cm.gameObject.AddComponent<Unity.Cinemachine.CinemachineDeoccluder>();
             deoccluder.CollideAgainst = LayerMask.GetMask("Default");
             deoccluder.IgnoreTag = "Player";
             deoccluder.MinimumDistanceFromTarget = 0.3f;

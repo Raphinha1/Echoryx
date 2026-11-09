@@ -1,0 +1,13 @@
+{
+  "name": "Echoryx.Robot.Tests",
+  "rootNamespace": "Echoryx.Robot.Tests",
+  "references": [
+    "Echoryx.Player"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ]
+}

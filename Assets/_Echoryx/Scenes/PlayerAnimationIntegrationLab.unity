@@ -351,6 +351,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 858895904201724815, guid: f4a75a140b8089201a16b158c4783b91, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2409646121286119712, guid: f4a75a140b8089201a16b158c4783b91, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4302768998443957979, guid: f4a75a140b8089201a16b158c4783b91, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -395,11 +403,23 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5172957481544970523, guid: f4a75a140b8089201a16b158c4783b91, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5409330341968709301, guid: f4a75a140b8089201a16b158c4783b91, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7856034756479784342, guid: f4a75a140b8089201a16b158c4783b91, type: 3}
       propertyPath: cameraReference
       value: 
       objectReference: {fileID: 837622394}
     - target: {fileID: 7975730793036574461, guid: f4a75a140b8089201a16b158c4783b91, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387932342507632572, guid: f4a75a140b8089201a16b158c4783b91, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}

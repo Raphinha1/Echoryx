@@ -69,3 +69,20 @@ Pase visual con los kits CC0 de Kenney (ver [credits](credits.md)); no toca lóg
 - **Parpadeo del suelo:** el `CinemachineCamera` tenía near 0,1 / far 5000 (relación 50 000:1, poca precisión de profundidad). Ahora near 0,25 / far 300. Además, las piezas planas apoyadas en el suelo se separan 1–1,5 cm y el casco bajo el suelo queda 3 cm por debajo de las baldosas.
 - **Cámara atravesando paredes:** se añadió `CinemachineDeoccluder` (capa Default: paredes, suelos, panel de puerta y plataforma, que ya tienen collider; el arte no lleva colliders) y `CameraRadius` 0,4 en `ThirdPersonFollow` y Deoccluder (mayor que el desplazamiento de las esquinas del near plane). Con la hoja de la puerta inmóvil el jugador y la cámara parecían atravesar una puerta cerrada: era el mismo bug del batching.
 - Tests: `MovingVisualsAreNeverStatic`, `CameraHasSaneDepthRange…` (EditMode) y `DoorLeafAndPlatformVisualsFollowTheirLogicalObjects`, `CameraDoesNotPassThroughWallsOrTheClosedDoor` (PlayMode).
+
+## Personaje: robot animado
+
+Sustituye la cápsula del Player y el visual del Echo con el paquete *Animated Low Poly Robot Free* (ver [credits](credits.md)); no se tocó `PlayerMotor`, Rewind, checkpoints ni colliders.
+
+- **Paquete:** rig *Generic* (sin Humanoid), 10 clips sin root motion. Usados: `StaticIdle`, `Walk`, `Run`, `Jump_Start`, `Jump_Air`, `Jump_Landing`. No usados: `CombatIdle`, `BasicAttack`, `GetHit`, `Death`. Los materiales ya son URP Lit / ShaderGraph; las versiones con Metallic 1 se veían negras, por lo que hay copias mate en `Materials/Robot/`. La variante de color se elige con el desplazamiento del atlas (`RobotPlayerBase`/`RobotPlayerOrange`, fila 16: acentos naranja-marrón); el casco/torso negro es el diseño del robot.
+- **Controller** `Art/Animations/Robot/PlayerLocomotion.controller`: Blend Tree 1D por `Speed` (Idle 0, Walk ≈2 m/s, Run 6 m/s con `timeScale` calibrado ≈1,5 según la zancada del clip) y estados `Jump_Start → Jump_Air → Jump_Landing` por `Grounded`. Apply Root Motion desactivado. La calibración (zancada estimada del pie en el clip) es una aproximación: ajusta el *threshold*/`timeScale` si ves patinaje.
+- **`RobotAnimationDriver`** (puente de solo lectura, en el prefab `RobotVisual`): usa `PlayerMotor.PlanarSpeed`, que ya es el desplazamiento resuelto del `CharacterController` descontando el transporte de plataformas y el movimiento bloqueado por paredes (reutilizado en lugar de recalcularlo, y sin tocar el motor); suaviza con SmoothDamp (`speedDampTime`, `stopThreshold`, `groundedGrace` expuestos). El driver del SuperSoldier (`PlayerAnimationDriver`) sigue intacto.
+- **Prefabs** (`Prefabs/Characters/`): `RobotVisual` (escala 1,1 ≈ 1,85 m, pies en el suelo, mira a +Z) y `RobotEchoVisual` (mismo modelo con `EchoHologram`, cian semitransparente, sin sombras). `Player.prefab` y `EchoActor.prefab` los instancian; la cápsula y el `Hologram Visual` antiguos quedan **desactivados** (no borrados) para no romper overrides en escenas.
+- **Echo:** se anima con su propio desplazamiento (sin saltos: siempre "en suelo").
+- **Validación previa:** `RobotIntegrationLab.unity` (Player sin modificar + robot en escena). Se probó caminar/correr/parar, salto, pared y plataforma antes de integrar. `PlayerAnimationIntegrationLab` (SuperSoldier) oculta el robot en su instancia de Player, y una aserción antigua ("el Player compartido no tiene Animator") se actualizó: ahora los únicos Animators del Player son los del robot.
+- **Reconstruir:** `Echoryx > Robot > 1 Build Controller, Prefabs and Lab` y `2 Integrate Into Player and Echo`.
+
+### Revisar a mano
+
+- Patinaje de pies al caminar/correr, brazos que sobresalen (±0,5 m) al rozar paredes y el aspecto del Echo (cian) en Play.
+- El robot es negro con acentos de color; si prefieres otro color cambia `PlayerColorRow` en `RobotVisualBuilder` y reconstruye.

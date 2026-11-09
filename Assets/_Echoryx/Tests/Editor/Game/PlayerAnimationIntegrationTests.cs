@@ -78,7 +78,12 @@ namespace Echoryx.Game.Tests
                 var driver = new SerializedObject(player.GetComponent<PlayerAnimationDriver>());
                 Assert.That(driver.FindProperty("motor").objectReferenceValue, Is.SameAs(player.GetComponent<PlayerMotor>()));
                 Assert.That(driver.FindProperty("animator").objectReferenceValue, Is.SameAs(player.GetComponentInChildren<Animator>()));
-                Assert.That(original.GetComponentInChildren<Animator>(), Is.Null, "Shared Player remains unchanged.");
+                // The shared Player now carries the Robot visual (its own Animator); it still has no SuperSoldier
+                // driver, and this lab keeps its single SuperSoldier Animator by hiding the robot in the instance.
+                Assert.That(original.GetComponent<PlayerAnimationDriver>(), Is.Null, "Shared Player has no SuperSoldier driver.");
+                var robot = original.transform.Find("VisualRoot/Robot Visual");
+                Assert.That(original.GetComponentsInChildren<Animator>(true).All(a => robot != null && a.transform.IsChildOf(robot)),
+                    Is.True, "The only Animators on the shared Player belong to the Robot visual.");
             }
             finally
             {
