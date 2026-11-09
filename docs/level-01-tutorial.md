@@ -62,3 +62,10 @@ Pase visual con los kits CC0 de Kenney (ver [credits](credits.md)); no toca lóg
 - Recorrer el nivel en Play y ajustar a gusto intensidad de Bloom, niebla (`Lighting > Environment`) y colores del skybox (`Materials/Art/ArtSky.mat`).
 - Las pantallas de pared y los bloques del fondo son decoración estática sin collider: moverlos/quitarlos no afecta al juego.
 - El jugador sigue siendo la cápsula placeholder.
+
+### Correcciones visuales (post-revisión en el Editor)
+
+- **Hoja de puerta y plataforma sin movimiento / brillo ausente:** el pase de arte marcaba todas las piezas como *Batching Static*; el batching estático hornea la malla en su posición inicial, así que el visual no se movía aunque la lógica sí. Ahora `Level01ArtPass.Spawn` limpia los flags estáticos y solo el decorado puro bajo `Level Art` se marca estático (`MarkScenery`). Esto también arregla el color de la placa y del marcador de checkpoint (MaterialPropertyBlock).
+- **Parpadeo del suelo:** el `CinemachineCamera` tenía near 0,1 / far 5000 (relación 50 000:1, poca precisión de profundidad). Ahora near 0,25 / far 300. Además, las piezas planas apoyadas en el suelo se separan 1–1,5 cm y el casco bajo el suelo queda 3 cm por debajo de las baldosas.
+- **Cámara atravesando paredes:** se añadió `CinemachineDeoccluder` (capa Default: paredes, suelos, panel de puerta y plataforma, que ya tienen collider; el arte no lleva colliders) y `CameraRadius` 0,4 en `ThirdPersonFollow` y Deoccluder (mayor que el desplazamiento de las esquinas del near plane). Con la hoja de la puerta inmóvil el jugador y la cámara parecían atravesar una puerta cerrada: era el mismo bug del batching.
+- Tests: `MovingVisualsAreNeverStatic`, `CameraHasSaneDepthRange…` (EditMode) y `DoorLeafAndPlatformVisualsFollowTheirLogicalObjects`, `CameraDoesNotPassThroughWallsOrTheClosedDoor` (PlayMode).

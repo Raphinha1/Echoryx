@@ -179,7 +179,7 @@ namespace Echoryx.Level.Editor
                 Hide(root.transform.Find("Goal Pillar"));
                 ClearArt(root.transform);
                 var art = NewChild(root.transform, VisualName).transform;
-                Spawn(Station, "floor-panel", art, "Goal Pad", new Vector3(0f, 0f, 0f), Vector3.zero, new Vector3(3.6f, 0.4f, 3f), m.GoalPad);
+                Spawn(Station, "floor-panel", art, "Goal Pad", new Vector3(0f, 0.015f, 0f), Vector3.zero, new Vector3(3.6f, 0.4f, 3f), m.GoalPad);
                 Spawn(Modular, "gate", art, "Goal Frame", new Vector3(0f, 0f, 1.6f), new Vector3(0f, 180f, 0f), new Vector3(1.0f, 0.95f, 0.8f), m.Wall);
                 var field = GameObject.CreatePrimitive(PrimitiveType.Quad);
                 field.name = "Goal Field";
@@ -259,7 +259,7 @@ namespace Echoryx.Level.Editor
             Floor(art, "Floor 2", 10.5f, 36f, m);
             Floor(art, "Floor 3", 45f, endZ, m);
 
-            Spawn(Station, "floor", art, "Low Step Art", new Vector3(-1.2f, 0f, 4.5f), Vector3.zero, new Vector3(2.4f, 0.7f / 0.3f, 1.2f), m.Accent);
+            Spawn(Station, "floor", art, "Low Step Art", new Vector3(-1.2f, 0.01f, 4.5f), Vector3.zero, new Vector3(2.4f, 0.7f / 0.3f, 1.2f), m.Accent);
 
             // Side walls (face toward the corridor), end walls, tiled along the existing wall colliders.
             var length = endZ - startZ;
@@ -306,15 +306,61 @@ namespace Echoryx.Level.Editor
                 filter.sharedMesh = MeshOf(Station, "floor-panel");
                 var renderer = marker.GetComponent<Renderer>();
                 renderer.sharedMaterial = m.Flat;
-                marker.localPosition = Vector3.zero;
+                marker.localPosition = new Vector3(0f, 0.015f, 0f);
                 marker.localScale = new Vector3(5f, 0.2f, 1.5f);
             }
 
             PatchHint("Hint Rewind Platform", Level01TutorialBuilder.RewindPlatformHint);
             PatchHint("Hint Rewind Retry", Level01TutorialBuilder.RewindRetryHint);
+            MarkScenery(art);
+            ConfigureCamera();
             Atmosphere(scene, m);
             EditorSceneManager.MarkSceneDirty(scene);
             if (!EditorSceneManager.SaveScene(scene)) throw new InvalidOperationException("Could not save scene.");
+        }
+
+        private static void MarkScenery(Transform art)
+        {
+            foreach (var t in art.GetComponentsInChildren<Transform>(true))
+                GameObjectUtility.SetStaticEditorFlags(t.gameObject, StaticEditorFlags.BatchingStatic);
+        }
+
+        // Camera: sane depth range (near 0.1 / far 5000 caused depth z-fighting on the floor) and obstacle
+        // avoidance against the gameplay colliders (Default layer: walls, floors, door panel, platform).
+        private static void ConfigureCamera()
+        {
+            var cm = UnityEngine.Object.FindFirstObjectByType<Unity.Cinemachine.CinemachineCamera>()
+                ?? throw new InvalidOperationException("Cinemachine camera missing.");
+            var lens = cm.Lens;
+            lens.NearClipPlane = 0.25f;
+            lens.FarClipPlane = 300f;
+            cm.Lens = lens;
+            Camera.main.nearClipPlane = 0.25f;
+            Camera.main.farClipPlane = 300f;
+
+            var follow = cm.GetComponent<Unity.Cinemachine.CinemachineThirdPersonFollow>();
+            var obstacles = follow.AvoidObstacles;
+            obstacles.Enabled = true;
+            obstacles.CameraRadius = 0.4f; // larger than the near-plane corner offset, so it never clips a wall
+            follow.AvoidObstacles = obstacles;
+
+            var deoccluder = cm.GetComponent<Unity.Cinemachine.CinemachineDeoccluder>()
+                ?? cm.gameObject.AddComponent<Unity.Cinemachine.CinemachineDeoccluder>();
+            deoccluder.CollideAgainst = LayerMask.GetMask("Default");
+            deoccluder.IgnoreTag = "Player";
+            deoccluder.MinimumDistanceFromTarget = 0.3f;
+            var avoid = deoccluder.AvoidObstacles;
+            avoid.Enabled = true;
+            avoid.CameraRadius = 0.4f;
+            avoid.Strategy = Unity.Cinemachine.CinemachineDeoccluder.ObstacleAvoidance.ResolutionStrategy.PullCameraForward;
+            avoid.MaximumEffort = 4;
+            avoid.SmoothingTime = 0.05f;
+            avoid.Damping = 0.2f;
+            avoid.DampingWhenOccluded = 0.02f;
+            avoid.UseFollowTarget.Enabled = true; // the vcam has a Follow target only
+            avoid.UseFollowTarget.YOffset = 0f;
+            deoccluder.AvoidObstacles = avoid;
+            EditorUtility.SetDirty(cm);
         }
 
         private static void PatchHint(string name, string text)
@@ -339,7 +385,7 @@ namespace Echoryx.Level.Editor
                 Spawn(Modular, "template-floor-layer", art, name + " Tile " + i, new Vector3(0f, -0.4f, from + (i + 0.5f) * tile),
                     Vector3.zero, new Vector3(1.571f, 1f, tile / 4.2f), m.Floor);
             // Hull block under the walkway so the level reads as a floating station section.
-            Spawn(Station, "floor", art, name + " Hull", new Vector3(0f, -3.2f, (from + to) * 0.5f), Vector3.zero,
+            Spawn(Station, "floor", art, name + " Hull", new Vector3(0f, -3.23f, (from + to) * 0.5f), Vector3.zero,
                 new Vector3(5.6f, 2.8f / 0.3f, Mathf.Max(1f, length - 0.8f)), m.Hull);
         }
 
@@ -434,7 +480,9 @@ namespace Echoryx.Level.Editor
                 for (var i = 0; i < materials.Length; i++) materials[i] = material;
                 renderer.sharedMaterials = materials;
             }
-            GameObjectUtility.SetStaticEditorFlags(go, StaticEditorFlags.BatchingStatic);
+            // Static batching bakes the mesh at its authored position: anything that moves (door leaf,
+            // platform, plate indicator) must stay non-static. Pure scenery is marked in MarkScenery.
+            foreach (var t in go.GetComponentsInChildren<Transform>(true)) GameObjectUtility.SetStaticEditorFlags(t.gameObject, 0);
             return go;
         }
 

@@ -203,6 +203,82 @@ namespace Echoryx.Level.PlayTests
             Assert.That(Vector3.Distance(platform.transform.position, start), Is.LessThan(0.5f));
         }
 
+        [UnityTest]
+        public IEnumerator DoorLeafAndPlatformVisualsFollowTheirLogicalObjects()
+        {
+            // Platform (it only travels during the first seconds after load): the visual is a child of the moving root, non-static, and tracks its collider while it travels.
+            var platform = Object.FindFirstObjectByType<RewindMovingPlatform>();
+            var mesh = platform.GetComponentInChildren<RewindMechanismFeedback>().GetComponentInChildren<MeshRenderer>();
+            var collider = platform.GetComponentInChildren<BoxCollider>();
+            Assert.That(mesh.gameObject.isStatic, Is.False);
+            var start = collider.bounds.center;
+            yield return Frames(30);
+            Assert.That(Vector3.Distance(collider.bounds.center, start), Is.GreaterThan(0.5f), "Platform moved.");
+            Assert.That(Vector3.Distance(mesh.transform.position, platform.transform.position + Vector3.down * 0.2f), Is.LessThan(0.01f), "Visual keeps its authored offset from the moving root.");
+            Assert.That(Mathf.Abs(mesh.bounds.center.z - collider.bounds.center.z), Is.LessThan(0.3f));
+
+            var door = Object.FindFirstObjectByType<DoorController>();
+            var follower = door.GetComponentInChildren<SmoothVisualFollow>();
+            var panel = door.transform.Find("Door Panel");
+            var offset = (Vector3)typeof(SmoothVisualFollow).GetField("offset", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(follower);
+            Vector3 Expected() => panel.position + panel.rotation * offset;
+            Assert.That(follower.gameObject.isStatic, Is.False);
+            var closedY = follower.transform.position.y;
+            Assert.That(Vector3.Distance(follower.transform.position, Expected()), Is.LessThan(0.05f));
+
+            // Standing on the plate opens the door; the visual leaf must travel with the logical panel.
+            player.Respawn(new Vector3(0f, 0.05f, 21f), Quaternion.identity);
+            var maxLag = 0f;
+            for (var frame = 0; frame < 120; frame++)
+            {
+                maxLag = Mathf.Max(maxLag, Vector3.Distance(follower.transform.position, Expected()));
+                yield return null;
+            }
+            Assert.That(door.IsOpen, Is.True);
+            Assert.That(follower.transform.position.y, Is.GreaterThan(closedY + 5f), "Leaf visibly rose.");
+            Assert.That(Vector3.Distance(follower.transform.position, Expected()), Is.LessThan(0.05f), "Leaf settles on the panel.");
+            Assert.That(maxLag, Is.LessThan(2.5f), "Easing lag stays bounded.");
+
+            // Step off: the door closes and the leaf follows it back down.
+            player.Respawn(new Vector3(0f, 0.05f, 12f), Quaternion.identity);
+            yield return Frames(120);
+            Assert.That(door.IsOpen, Is.False);
+            Assert.That(follower.transform.position.y, Is.EqualTo(closedY).Within(0.05f));
+        }
+
+        [UnityTest]
+        public IEnumerator CameraDoesNotPassThroughWallsOrTheClosedDoor()
+        {
+            var orbit = Object.FindFirstObjectByType<PlayerCameraOrbit>();
+            var yaw = typeof(PlayerCameraOrbit).GetField("yaw", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            var camera = Camera.main;
+            Assert.That(camera.GetComponent<Unity.Cinemachine.CinemachineBrain>(), Is.Not.Null);
+
+            // Backed against the right wall (collider inner face x = 3.0): camera would sit at x = 6.4 without avoidance.
+            player.Respawn(new Vector3(2.4f, 0.05f, 12f), Quaternion.identity);
+            yaw.SetValue(orbit, -90f);
+            orbit.SnapToAnchor();
+            var worst = float.MinValue;
+            for (var frame = 0; frame < 120; frame++) { yield return null; if (frame > 40) worst = Mathf.Max(worst, camera.transform.position.x); }
+            Assert.That(worst, Is.LessThan(3.0f), "Camera stays inside the right wall.");
+
+            // Same on the left wall.
+            player.Respawn(new Vector3(-2.4f, 0.05f, 12f), Quaternion.identity);
+            yaw.SetValue(orbit, 90f);
+            orbit.SnapToAnchor();
+            worst = float.MaxValue;
+            for (var frame = 0; frame < 120; frame++) { yield return null; if (frame > 40) worst = Mathf.Min(worst, camera.transform.position.x); }
+            Assert.That(worst, Is.GreaterThan(-3.0f), "Camera stays inside the left wall.");
+
+            // In front of the closed door (panel collider face z = 29.7): the camera must not end up behind it.
+            player.Respawn(new Vector3(0f, 0.05f, 28.9f), Quaternion.identity);
+            yaw.SetValue(orbit, 180f);
+            orbit.SnapToAnchor();
+            worst = float.MinValue;
+            for (var frame = 0; frame < 120; frame++) { yield return null; if (frame > 40) worst = Mathf.Max(worst, camera.transform.position.z); }
+            Assert.That(worst, Is.LessThan(29.7f), "Camera does not pass through the closed door.");
+        }
+
         // ---------------------------------------------------------------- helpers
 
         private void AimFrom(RewindMovingPlatform platform, Vector3 position)

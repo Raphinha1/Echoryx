@@ -131,5 +131,46 @@ namespace Echoryx.Level.Tests
                 Assert.That(hints.Where(h => h.Contains("plataforma")).All(h => h.Contains("¿")), Is.True, "Room 3 hints are guiding questions.");
             });
         }
+
+        [Test]
+        public void MovingVisualsAreNeverStatic()
+        {
+            // Static batching bakes meshes at their authored position, so nothing that moves may be static.
+            foreach (var name in new[] { "Door", "RewindPlatformVisual", "PressurePlate" })
+            {
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(Prefabs + name + ".prefab");
+                foreach (var t in prefab.GetComponentsInChildren<Transform>(true))
+                    Assert.That(GameObjectUtility.GetStaticEditorFlags(t.gameObject), Is.EqualTo((StaticEditorFlags)0), name + "/" + t.name);
+            }
+            WithScene(() =>
+            {
+                var platform = Object.FindFirstObjectByType<RewindMovingPlatform>();
+                foreach (var t in platform.GetComponentsInChildren<Transform>(true))
+                    Assert.That(t.gameObject.isStatic, Is.False, "platform/" + t.name);
+                var door = Object.FindFirstObjectByType<DoorController>();
+                foreach (var t in door.GetComponentsInChildren<Transform>(true))
+                    Assert.That(t.gameObject.isStatic, Is.False, "door/" + t.name);
+                var scenery = GameObject.Find("Level Art").GetComponentsInChildren<MeshRenderer>(true);
+                Assert.That(scenery.All(r => r.gameObject.isStatic), Is.True, "Pure scenery stays batched.");
+            });
+        }
+
+        [Test]
+        public void CameraHasSaneDepthRangeAndObstacleAvoidanceAgainstGameplayColliders()
+        {
+            WithScene(() =>
+            {
+                var cm = Object.FindFirstObjectByType<Unity.Cinemachine.CinemachineCamera>();
+                Assert.That(cm.Lens.NearClipPlane, Is.InRange(0.2f, 0.5f));
+                Assert.That(cm.Lens.FarClipPlane, Is.LessThanOrEqualTo(500f));
+                Assert.That(cm.Lens.FarClipPlane / cm.Lens.NearClipPlane, Is.LessThan(5000f), "Depth precision");
+                var deoccluder = cm.GetComponent<Unity.Cinemachine.CinemachineDeoccluder>();
+                Assert.That(deoccluder, Is.Not.Null);
+                Assert.That(deoccluder.AvoidObstacles.Enabled, Is.True);
+                Assert.That(deoccluder.AvoidObstacles.CameraRadius, Is.GreaterThanOrEqualTo(0.3f));
+                Assert.That(deoccluder.CollideAgainst.value & (1 << 0), Is.Not.EqualTo(0), "Default layer (gameplay colliders)");
+                Assert.That(deoccluder.IgnoreTag, Is.EqualTo("Player"));
+            });
+        }
     }
 }

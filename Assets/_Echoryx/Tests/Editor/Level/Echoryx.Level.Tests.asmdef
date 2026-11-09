@@ -8,7 +8,8 @@
     "Echoryx.Interactions",
     "Echoryx.Rewind",
     "Echoryx.Rewind.Platforms",
-    "Unity.RenderPipelines.Core.Runtime"
+    "Unity.RenderPipelines.Core.Runtime",
+    "Unity.Cinemachine"
   ],
   "optionalUnityReferences": [
     "TestAssemblies"

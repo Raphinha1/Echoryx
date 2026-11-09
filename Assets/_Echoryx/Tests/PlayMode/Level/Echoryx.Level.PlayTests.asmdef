@@ -10,7 +10,8 @@
     "Echoryx.Rewind",
     "Echoryx.Rewind.Platforms",
     "Echoryx.Rewind.Input",
-    "Unity.InputSystem"
+    "Unity.InputSystem",
+    "Unity.Cinemachine"
   ],
   "optionalUnityReferences": [
     "TestAssemblies"
