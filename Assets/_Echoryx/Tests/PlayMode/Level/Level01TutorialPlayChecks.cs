@@ -143,19 +143,26 @@ namespace Echoryx.Level.PlayTests
 
             // Room 3: the platform already left; Rewind brings it back, then it carries the player.
             Assert.That(Vector3.Distance(platform.transform.position, platformEnd), Is.LessThan(0.05f));
+            yield return WalkTo(new Vector3(0f, 0f, 33f));
+            Assert.That(display.CurrentText, Does.Contain("rebobinar su movimiento"));
             yield return WalkTo(new Vector3(0f, 0f, 35.2f));
-            Assert.That(display.CurrentText, Does.Contain("Rewind"));
+            Assert.That(display.CurrentText, Does.Contain("otra estrategia"));
             AimFrom(platform, new Vector3(0f, 2.1f, 33f));
             HoldRewind(true);
             yield return Frames(3);
             Assert.That(platform.Mode, Is.EqualTo(RewindMode.Rewinding));
-            yield return Frames(110);
+            var feedback = platform.GetComponentInChildren<RewindMechanismFeedback>();
+            yield return Frames(2);
+            Assert.That(feedback.Glowing, Is.True, "Platform glows while being rewound.");
+            yield return Frames(108);
             Assert.That(Vector3.Distance(platform.transform.position, platformStart), Is.LessThan(0.05f));
             yield return WalkTo(platformStart);
             HoldRewind(false);
             yield return Frames(3);
             Assert.That(platform.Mode, Is.EqualTo(RewindMode.Normal));
-            yield return Frames(170);
+            yield return Frames(2);
+            Assert.That(feedback.Glowing, Is.False, "Glow stops when Rewind is released.");
+            yield return Frames(168);
             Assert.That(Vector3.Distance(platform.transform.position, platformEnd), Is.LessThan(0.1f));
             Assert.That(player.GetComponent<CharacterController>().isGrounded, Is.True);
             Assert.That(Vector3.Distance(player.transform.position, platform.transform.position), Is.LessThan(2.2f));

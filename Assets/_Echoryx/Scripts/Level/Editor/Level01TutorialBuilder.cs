@@ -32,6 +32,10 @@ namespace Echoryx.Level.Editor
             "Packages/com.unity.ugui/Package Resources/TMP Essential Resources.unitypackage";
 
         // Layout (meters, +Z is forward, floor top is y = 0). Corridor width is 6 (x in [-3, 3]).
+        // Rewind rewinds a mechanism, not the player: hints are guiding questions, not the solution.
+        public const string RewindPlatformHint = "La plataforma se fue sin ti. ¿Y si pudieras rebobinar su movimiento? Mantén clic derecho apuntando a ella (Rewind).";
+        public const string RewindRetryHint = "Si la plataforma se te escapa o caes, ¿puedes hacer que empiece su recorrido de nuevo y probar otra estrategia?";
+
         private const float WallX = 3.15f;
         private const float PitOneStart = 8f, PitOneEnd = 10.5f;
         private const float DoorZ = 30f, PlateZ = 21f;
@@ -183,9 +187,9 @@ namespace Echoryx.Level.Editor
             NewHint(hintPrefab, hints, hintDisplay, "Hint Echo Plate", new Vector3(0f, 2f, 22.5f), new Vector3(6f, 4f, 4.5f),
                 "¿Y si algo pudiera repetir tus pasos por ti? Q graba y detiene, E reproduce tu Echo.");
             NewHint(hintPrefab, hints, hintDisplay, "Hint Rewind Platform", new Vector3(0f, 2f, 32.25f), new Vector3(6f, 4f, 4.5f),
-                "La plataforma ya se fue. Mantén clic derecho apuntando a ella: Rewind retrocede su movimiento.");
+                RewindPlatformHint);
             NewHint(hintPrefab, hints, hintDisplay, "Hint Rewind Retry", new Vector3(0f, 2f, 35.25f), new Vector3(6f, 4f, 1.5f),
-                "Rewind deshace un error: si la plataforma se va o caes, retrocédela y prueba otra estrategia.");
+                RewindRetryHint);
 
             EditorSceneManager.MarkSceneDirty(scene);
             if (!EditorSceneManager.SaveScene(scene, ScenePath)) throw new InvalidOperationException("Could not save " + ScenePath);

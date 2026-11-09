@@ -1,6 +1,6 @@
 # Level_01_Tutorial
 
-Escena: `Assets/_Echoryx/Scenes/Level_01_Tutorial.unity` (añadida a Build Settings tras `Prototype`). Nivel de tres salas en línea (+Z) que enseña Echo y Rewind. Se regenera con `Echoryx > Level 01 > Build Tutorial` (requiere TMP Essentials, ver abajo).
+Escena: `Assets/_Echoryx/Scenes/Level_01_Tutorial.unity` (con pase de arte, ver [Arte](#arte)) (añadida a Build Settings tras `Prototype`). Nivel de tres salas en línea (+Z) que enseña Echo y Rewind. Se regenera con `Echoryx > Level 01 > Build Tutorial` (requiere TMP Essentials, ver abajo).
 
 ## Controles reales
 
@@ -36,7 +36,7 @@ Scripts nuevos en `Assets/_Echoryx/Scripts/Level/` (asmdef `Echoryx.Level`): `Le
 
 - EditMode: 99/99 (incluye `LevelStatsTrackerTests` y `Level01WiringTests`).
 - PlayMode: 27/27. `Level01TutorialPlayChecks` juega la ruta completa con input real (caída y R cuentan como intentos, salto, Q/E con puerta, Rewind + plataforma, meta + panel) y comprueba que caer en el foso 2 reinicia la plataforma.
-- Batchmode con `-nographics`: no valida aspecto visual, cámara ni encuadre.
+- Batchmode con `-nographics` no valida el aspecto; para el arte se renderizaron capturas reales (OpenGL Core) y se revisaron a mano (ver Arte).
 
 ## Qué falta / a revisar a mano
 
@@ -45,3 +45,20 @@ Scripts nuevos en `Assets/_Echoryx/Scripts/Level/` (asmdef `Echoryx.Level`): `Le
 - TMP Essential Resources se importó en `Assets/TextMesh Pro/` (necesario para los textos).
 - Sin audio, sin menú ni botón de reintento tras la meta, sin persistencia.
 - La plataforma parte al cargar la escena; tras un respawn en la sala 3 vuelve a partir de inmediato (el Rewind siempre es un recurso válido).
+
+## Arte
+
+Pase visual con los kits CC0 de Kenney (ver [credits](credits.md)); no toca lógica ni colliders (los bloques de juego conservan su `BoxCollider` y solo se desactiva su `MeshRenderer`). Se aplica sobre la escena ya generada con `Echoryx > Level 01 > Apply Art Pass` (`Level01ArtPass`); reejecutarlo reconstruye el arte sin duplicar.
+
+- **Paleta:** paredes lila/lavanda con acento naranja, pisos gris azulado oscuro, cian solo para el Echo (`EchoHologram.mat`, cian semitransparente, sin cambios).
+- **Materiales** (`Materials/Art/`): URP Lit mate (Smoothness 0,08, Metallic 0, sin brillos especulares ni reflejos). Los materiales importados de los FBX ya eran `Universal Render Pipeline/Lit`, por lo que no hizo falta el Render Pipeline Converter; se crearon materiales propios con el `colormap` de cada kit y un tinte de paleta.
+- **Prefabs con visuales nuevos** (`Prefabs/Level/`): `PressurePlate` (pieza del kit; mantiene el cambio de color naranja→verde del script), `Door` (marco + hoja del kit; la hoja sigue al panel lógico con suavizado `SmoothVisualFollow`, el panel y su collider no cambian), `Hazard` (campo emisivo rojo), `Goal` (portal con marco y campo verde), `RewindPlatformVisual` (nuevo; pieza del kit + `RewindMechanismFeedback`: la plataforma brilla en violeta mientras se rebobina, leyendo `RewindableMechanism.Mode`).
+- **Salas:** pisos, paredes, cierres y bloques de casco bajo el suelo con piezas del kit; 5 pantallas de pared por encima de la cabeza (sin obstruir el carril) y fondo con secciones de estación, asteroides y contenedores flotando.
+- **Atmósfera:** skybox con degradado y estrellas (`EchoryxGradientSkybox`), luz direccional cálida con sombras suaves, niebla exponencial suave, `Global Volume` (`Settings/Level01VolumeProfile.asset`) con Bloom suave, Color Adjustments (saturación +14) y Vignette ligero. Un solo Volume y una luz con sombras: pensado para rendimiento.
+- **Hints de la sala 3** reescritos como preguntas guiadas: Rewind retrocede el movimiento de un mecanismo, no al jugador.
+
+### Revisar a mano en el Editor
+
+- Recorrer el nivel en Play y ajustar a gusto intensidad de Bloom, niebla (`Lighting > Environment`) y colores del skybox (`Materials/Art/ArtSky.mat`).
+- Las pantallas de pared y los bloques del fondo son decoración estática sin collider: moverlos/quitarlos no afecta al juego.
+- El jugador sigue siendo la cápsula placeholder.

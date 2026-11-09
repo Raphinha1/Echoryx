@@ -7,7 +7,8 @@
     "Echoryx.Player",
     "Echoryx.Interactions",
     "Echoryx.Rewind",
-    "Echoryx.Rewind.Platforms"
+    "Echoryx.Rewind.Platforms",
+    "Unity.RenderPipelines.Core.Runtime"
   ],
   "optionalUnityReferences": [
     "TestAssemblies"
