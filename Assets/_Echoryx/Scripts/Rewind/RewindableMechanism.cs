@@ -58,6 +58,18 @@ namespace Echoryx.Rewind
             history.AdvanceNormal(Time.deltaTime, CapturePose());
         }
 
+        /// <summary>
+        /// Advances the normal timeline by an explicit step instead of Time.deltaTime. Lets a derived
+        /// mechanism fast-forward to a known state (e.g. a platform parked at its destination after a
+        /// room reset) while keeping a consistent Rewind history. No effect during Rewind or reset.
+        /// </summary>
+        protected void StepNormalTimeline(float deltaTime)
+        {
+            if (history == null || resetPending || history.Mode != RewindMode.Normal) return;
+            AdvanceNormal(deltaTime);
+            history.AdvanceNormal(deltaTime, CapturePose());
+        }
+
         public bool BeginRewind()
         {
             if (resetPending || history == null || (activeMechanism != null && activeMechanism != this)

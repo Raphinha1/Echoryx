@@ -3190,9 +3190,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 548881461}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fc40cad79bd2904590f0043f8bd5750, type: 3}
+  m_Script: {fileID: 11500000, guid: 127ab57e08b13e50582c6976001a9b58, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Echoryx.Game::Echoryx.Game.RewindMechanismAttemptReset
+  m_EditorClassIdentifier: Echoryx.Level::Echoryx.Level.ParkedPlatformAttemptReset
 --- !u!1 &552163300
 GameObject:
   m_ObjectHideFlags: 0

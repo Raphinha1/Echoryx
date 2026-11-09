@@ -249,7 +249,7 @@ namespace Echoryx.Game.PlayTests
                 yield return WalkTo(room.TransformPoint(new Vector3(0f, 0f, 15.5f)));
                 yield return Frames(310);
                 Assert.That(player.transform.position.z, Is.GreaterThan(13.5f));
-                Assert.That(recorder.State, Is.EqualTo(EchoState.Available));
+                Assert.That(recorder.State, Is.EqualTo(EchoState.Ready), "A finished playback keeps the recording for replay.");
                 Assert.That(door.IsOpen, Is.False, "Safe middle surface permits waiting after Echo expires.");
 
                 // Echo alone: run up at full speed and jump just beyond the edge (coyote time).
@@ -271,7 +271,7 @@ namespace Echoryx.Game.PlayTests
                     Assert.That(jumpPeak, Is.GreaterThan(1f), "The edge/coyote attempt must actually jump, not merely walk off.");
                     Assert.That(Vector3.Distance(player.transform.position, checkpoint.SpawnPoint.position), Is.LessThan(0.3f),
                         "Jump-only falls into the room hazard and respawns; cannot reach the far dock.");
-                    Assert.That(recorder.ReadyRecording, Is.Null);
+                    Assert.That(recorder.ReadyRecording, Is.Not.Null, "Respawn keeps the finished recording.");
                     Debug.Log("S04C CHECK: no Echo, Rewind only, repeated R and Echo-only jumping failed to complete the room.");
                     continue;
                 }
@@ -300,7 +300,7 @@ namespace Echoryx.Game.PlayTests
             yield return Pulse(Key.R);
             Assert.That(Vector3.Distance(player.transform.position, checkpoint.SpawnPoint.position), Is.LessThan(0.2f));
             Assert.That(player.GetComponent<EchoPlayback>().ActiveActor, Is.Null);
-            Assert.That(player.GetComponent<EchoRecorder>().ReadyRecording, Is.Null);
+            Assert.That(player.GetComponent<EchoRecorder>().ReadyRecording, Is.Not.Null, "Respawn keeps the finished recording.");
             Assert.That(plate.IsPressed, Is.False);
             Assert.That(door.IsOpen, Is.False);
         }
@@ -338,8 +338,8 @@ namespace Echoryx.Game.PlayTests
             Assert.That(platform.Mode, Is.EqualTo(RewindMode.Rewinding));
             yield return Pulse(Key.R);
             Assert.That(playback.ActiveActor, Is.Null);
-            Assert.That(recorder.State, Is.EqualTo(EchoState.Available));
-            Assert.That(recorder.ReadyRecording, Is.Null);
+            Assert.That(recorder.State, Is.EqualTo(EchoState.Ready), "R removes the clone but keeps the recording.");
+            Assert.That(recorder.ReadyRecording, Is.Not.Null);
             Assert.That(plate.IsPressed, Is.False);
             Assert.That(platform.Mode, Is.EqualTo(RewindMode.Normal));
             Assert.That(History(platform).Time, Is.LessThan(0.2d));
@@ -355,8 +355,8 @@ namespace Echoryx.Game.PlayTests
             yield return Frames(10);
             player.Respawn(room.TransformPoint(new Vector3(0f, -5.2f, 22f)), Quaternion.identity);
             yield return Frames(4);
-            Assert.That(recorder.State, Is.EqualTo(EchoState.Available), "Room fall volume cancels the active recording.");
-            Assert.That(recorder.SampleCount, Is.Zero);
+            Assert.That(recorder.State, Is.EqualTo(EchoState.Ready), "Room fall volume aborts the new capture and restores the previous recording.");
+            Assert.That(recorder.ReadyRecording, Is.Not.Null);
             Assert.That(Vector3.Distance(player.transform.position, checkpoint.SpawnPoint.position), Is.LessThan(0.2f));
             Assert.That(foreign.transform.position, Is.EqualTo(foreignPosition));
             Assert.That(foreignHistory.Time, Is.EqualTo(foreignTime));

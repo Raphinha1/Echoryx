@@ -30,7 +30,7 @@ Scripts nuevos en `Assets/_Echoryx/Scripts/Level/` (asmdef `Echoryx.Level`): `Le
 
 1. **Movimiento** (z −2…18). Hint con controles. Escalón bajo, hueco de 2,5 m sobre un foso (`Hazard`). *Ruta:* caminar, saltar el hueco, llegar al checkpoint del fondo (z 15,5).
 2. **Echo** (z 18…36). Placa (z 21) abre una puerta (z 30). Hints en forma de pregunta (“¿Cómo puedes mantener la placa presionada y cruzar al mismo tiempo?”). *Ruta:* pararse en la placa → **Q** (esperar los 5 s del auto-stop o pulsar Q de nuevo) → **E** (el Echo reaparece en la placa y la mantiene presionada) → correr hasta la puerta y cruzar antes de que el Echo termine → checkpoint (z 34,5).
-3. **Rewind** (z 36…56). Foso de 9 m, imposible de saltar. La plataforma parte sola al cargar el nivel y queda estacionada en el extremo lejano. *Ruta:* acercarse al borde → mantener **clic derecho** apuntando a la plataforma (retrocede a su inicio) → subirse **sin soltar** → soltar → viajar → bajar en la meta (z 51). *Si se falla* (se suelta antes de subir, se cae): caer al foso reinicia en el checkpoint y la plataforma vuelve a partir; basta repetir el Rewind.
+3. **Rewind** (z 36…56). Foso de 9 m, imposible de saltar. La plataforma parte sola al cargar el nivel y queda estacionada en el extremo lejano. *Ruta:* acercarse al borde → mantener **clic derecho** apuntando a la plataforma (retrocede a su inicio) → subirse **sin soltar** → soltar → viajar → bajar en la meta (z 51). *Si se falla* (se suelta antes de subir, se cae): caer al foso reinicia en el checkpoint y la plataforma vuelve a quedar aparcada lejos; basta repetir el Rewind.
 
 ## Validación ejecutada
 
@@ -44,7 +44,7 @@ Scripts nuevos en `Assets/_Echoryx/Scripts/Level/` (asmdef `Echoryx.Level`): `Le
 - Jugador con cápsula placeholder (el prefab `Player` no incluye todavía el personaje animado) y bloques con color plano; reemplazar arte después.
 - TMP Essential Resources se importó en `Assets/TextMesh Pro/` (necesario para los textos).
 - Sin audio, sin menú ni botón de reintento tras la meta, sin persistencia.
-- La plataforma parte al cargar la escena; tras un respawn en la sala 3 vuelve a partir de inmediato (el Rewind siempre es un recurso válido).
+- La plataforma parte al cargar la escena y queda aparcada lejos; tras un respawn en la sala 3 se restaura **aparcada** en el mismo estado (ver *Plataforma y respawn*), así que siempre hace falta Rewind.
 
 ## Arte
 
@@ -86,3 +86,25 @@ Sustituye la cápsula del Player y el visual del Echo con el paquete *Animated L
 
 - Patinaje de pies al caminar/correr, brazos que sobresalen (±0,5 m) al rozar paredes y el aspecto del Echo (cian) en Play.
 - El robot es negro con acentos de color; si prefieres otro color cambia `PlayerColorRow` en `RobotVisualBuilder` y reconstruye.
+
+## Echo reutilizable y plataforma tras el respawn
+
+### Echo: la grabación se conserva
+
+- **Antes:** al terminar una reproducción (y al reaparecer) la grabación se descartaba; `E` solo valía una vez.
+- **Ahora:** una grabación se puede reproducir con `E` tantas veces como se quiera; `Q` graba una nueva que **reemplaza** a la anterior solo cuando termina (si la captura nueva se aborta, p. ej. al caer, vuelve la anterior). `EchoCapture.CompletePlayback` pasa a `Ready` y `ReleaseActivity()` (nuevo) hace lo propio al respawn: quita el clon, aborta una captura inacabada y conserva la grabación. `Cancel()` sigue vaciando todo.
+- **`E` con un Echo activo:** se **ignora** (el mismo clon sigue; nada se reinicia). `Q` durante la reproducción también se ignora (comportamiento previo).
+- **Respawn (R o caída):** la grabación **se conserva**; no hay razón técnica para borrarla (el clon se limpia aparte).
+- Tests: `ARecordingPlaysRepeatedlyWithTheSameResult`, `ANewRecordingReplacesThePreviousOneOnlyWhenItCompletes` (EditMode) y `RecordingReplaysRepeatedlyWithTheSameResultAndIsReplacedByANewOne` (PlayMode: tres reproducciones idénticas, `E` ignorado en curso, R conserva, la nueva reemplaza). Se actualizaron los tests antiguos que asumían "consumir" la grabación.
+
+### Plataforma y respawn
+
+- **Causa raíz:** `RewindMechanismAttemptReset.ResetForAttempt` devuelve el mecanismo a su pose **inicial** (el inicio del recorrido, pegado al borde del checkpoint) con una línea de tiempo nueva en t=0, y `RewindMovingPlatform` parte de inmediato. Tras caer, el jugador reaparecía a ~1,5 m de una plataforma que estaba en el inicio o a mitad de viaje (2,4 s), alcanzable andando sin Rewind. Al cargar el nivel pasa lo mismo, pero el jugador está a 30 m y cuando llega ya está aparcada.
+- **Invariante:** tras cualquier respawn la plataforma queda **aparcada en su destino** (lejos, quieta, con historial de Rewind válido), igual que cuando se llega a la sala. El salto máximo desde el borde (≈5,2 m) no alcanza el borde cercano de la plataforma aparcada (5,9 m).
+- **Cambio:** `RewindableMechanism.StepNormalTimeline(dt)` (método protegido nuevo, aditivo; no cambia el comportamiento existente) avanza la línea de tiempo con un paso explícito; `RewindMovingPlatform.ParkAtDestination()` lo usa para llevar el viaje a su fin sin transportar pasajeros; `ParkedPlatformAttemptReset` (en el ámbito de la sala 3) restaura y aparca. Migración de escenas existentes: `Echoryx > Level 01 > Apply Parked Platform Reset`; el builder ya lo incluye.
+- **Placa y puerta:** viven en el ámbito de la sala 2; tras un respawn en el checkpoint de la sala 3 no hay nadie en la placa y el clon se limpia, así que la placa queda libre y la puerta cerrada (comprobado en el test), sin tocar la ruta de solución.
+- Tests PlayMode: `AfterFallingTheRewindPlatformIsParkedOutOfReachAtEveryMoment` (dos caídas seguidas; la plataforma permanece en su destino cada uno de 300 fotogramas y su borde queda fuera del alcance de salto calculado a partir del motor) y la ruta completa, que ahora incluye una caída en la sala 3 antes de resolverla con Rewind.
+
+### Otros
+
+- `TutorialHintDisplay` ya no deja la etiqueta vacía al salir de un hint que se solapa con otro todavía activo (muestra el anterior).

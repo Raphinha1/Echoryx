@@ -84,6 +84,20 @@ namespace Echoryx.Echo
             return true;
         }
 
+        /// <summary>Respawn/disable path: ends recording or playback but keeps the player's recording.</summary>
+        public bool ReleaseActivity()
+        {
+            var previousState = State;
+            if (capture == null || !capture.ReleaseActivity())
+                return false;
+
+            if (logTransitions)
+                Debug.Log(previousState == EchoState.Playing
+                    ? "Echo playback released; recording kept."
+                    : "Echo recording aborted; previous recording kept.", this);
+            return true;
+        }
+
         [ContextMenu("Cancel Echo Recording")]
         public void Cancel()
         {

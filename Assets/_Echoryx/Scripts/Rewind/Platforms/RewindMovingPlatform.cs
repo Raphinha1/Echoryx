@@ -47,10 +47,31 @@ namespace Echoryx.Rewind.Platforms
             transform.rotation = pose.Rotation;
         }
 
+        private bool parking;
+
+        /// <summary>
+        /// Fast-forwards the one-way trip to its destination and leaves a normal Rewind history behind,
+        /// exactly as if the platform had arrived by itself. Used after a room reset so the platform is
+        /// out of reach and reaching it always requires Rewind. Never carries a rider while parking.
+        /// </summary>
+        public void ParkAtDestination()
+        {
+            if (startPoint == null || endPoint == null) return;
+            parking = true;
+            try
+            {
+                const float step = 0.05f;
+                for (var i = 0; i < 2000 && MovingPlatformPath.HasRemainingTravel(
+                    startPoint.position, endPoint.position, speed, TimelineTime); i++)
+                    StepNormalTimeline(step);
+            }
+            finally { parking = false; }
+        }
+
         private void MoveTo(Vector3 destination)
         {
             var before = transform.position;
-            var riding = passenger != null && passenger.IsStandingOn(surface);
+            var riding = !parking && passenger != null && passenger.IsStandingOn(surface);
             transform.position = destination;
             var delta = destination - before;
             if (delta.sqrMagnitude <= 1e-10f) return;

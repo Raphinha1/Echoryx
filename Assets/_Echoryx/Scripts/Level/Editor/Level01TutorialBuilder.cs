@@ -56,6 +56,43 @@ namespace Echoryx.Level.Editor
             Debug.Log("TMP Essential Resources imported.");
         }
 
+        /// <summary>
+        /// Migrates an existing Level_01_Tutorial: the room 3 platform resets parked at its destination
+        /// (out of reach) instead of at its start next to the checkpoint. Idempotent.
+        /// </summary>
+        [MenuItem("Echoryx/Level 01/Apply Parked Platform Reset")]
+        public static void ApplyParkedPlatformReset()
+        {
+            if (!Application.isBatchMode && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            var platform = UnityEngine.Object.FindFirstObjectByType<RewindMovingPlatform>()
+                ?? throw new InvalidOperationException("Level has no RewindMovingPlatform.");
+            var room = platform.GetComponentInParent<RoomResetScope>();
+            var parked = platform.GetComponent<ParkedPlatformAttemptReset>();
+            if (parked == null) parked = platform.gameObject.AddComponent<ParkedPlatformAttemptReset>();
+            var old = platform.GetComponent<RewindMechanismAttemptReset>();
+            var data = new SerializedObject(room);
+            var list = data.FindProperty("participants");
+            var replaced = false;
+            for (var i = 0; i < list.arraySize; i++)
+                if (old != null && list.GetArrayElementAtIndex(i).objectReferenceValue == old)
+                {
+                    list.GetArrayElementAtIndex(i).objectReferenceValue = parked;
+                    replaced = true;
+                }
+            if (!replaced)
+            {
+                var present = false;
+                for (var i = 0; i < list.arraySize; i++) present |= list.GetArrayElementAtIndex(i).objectReferenceValue == parked;
+                if (!present) { list.arraySize++; list.GetArrayElementAtIndex(list.arraySize - 1).objectReferenceValue = parked; }
+            }
+            data.ApplyModifiedPropertiesWithoutUndo();
+            if (old != null) UnityEngine.Object.DestroyImmediate(old);
+            EditorSceneManager.MarkSceneDirty(scene);
+            if (!EditorSceneManager.SaveScene(scene)) throw new InvalidOperationException("Could not save " + ScenePath);
+            Debug.Log("Room 3 platform now resets parked at its destination.");
+        }
+
         [MenuItem("Echoryx/Level 01/Build Tutorial")]
         public static void Build()
         {
@@ -164,7 +201,7 @@ namespace Echoryx.Level.Editor
 
             // Room 3: rewindable platform across the second pit.
             var platform = BuildPlatform(room3.transform, m, player.GetComponent<PlayerPlatformCarrier>());
-            Append(room3, platform.GetComponent<RewindMechanismAttemptReset>());
+            Append(room3, platform.GetComponent<ParkedPlatformAttemptReset>());
             var statsData = new SerializedObject(stats);
             var watched = statsData.FindProperty("watchedMechanisms");
             watched.arraySize = 1;
@@ -361,7 +398,7 @@ namespace Echoryx.Level.Editor
             data.FindProperty("speed").floatValue = 2.4f;
             data.FindProperty("rewindSpeed").floatValue = 1.5f;
             data.ApplyModifiedPropertiesWithoutUndo();
-            root.AddComponent<RewindMechanismAttemptReset>();
+            root.AddComponent<ParkedPlatformAttemptReset>(); // restores and parks the platform out of reach after a reset
             return root;
         }
 

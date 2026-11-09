@@ -5,6 +5,7 @@
     "Echoryx.Game",
     "Echoryx.Interactions",
     "Echoryx.Rewind",
+    "Echoryx.Rewind.Platforms",
     "Unity.TextMeshPro",
     "UnityEngine.UI"
   ],

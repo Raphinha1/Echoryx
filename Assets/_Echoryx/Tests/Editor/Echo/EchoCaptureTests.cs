@@ -1,3 +1,4 @@
+using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -81,7 +82,7 @@ namespace Echoryx.Echo.Tests
         }
 
         [Test]
-        public void PlaybackIsExclusiveAndCompletionClearsTheRecording()
+        public void PlaybackIsExclusiveAndCompletionKeepsTheRecordingForReplay()
         {
             var capture = new EchoCapture();
             Assert.That(capture.TryBeginPlayback(), Is.False);
@@ -94,10 +95,71 @@ namespace Echoryx.Echo.Tests
             Assert.That(capture.TryBeginPlayback(), Is.False);
             Assert.That(capture.Begin(1d, Vector3.zero, Quaternion.identity), Is.False);
             Assert.That(capture.CompletePlayback(), Is.True);
-            Assert.That(capture.State, Is.EqualTo(EchoState.Available));
-            Assert.That(capture.ReadyRecording, Is.Null);
-            Assert.That(capture.SampleCount, Is.Zero);
+            Assert.That(capture.State, Is.EqualTo(EchoState.Ready), "The recording is kept to be replayed.");
+            Assert.That(capture.ReadyRecording, Is.Not.Null);
             Assert.That(capture.CompletePlayback(), Is.False);
+        }
+
+        [Test]
+        public void ARecordingPlaysRepeatedlyWithTheSameResult()
+        {
+            var capture = new EchoCapture();
+            capture.Begin(0d, Vector3.zero, Quaternion.identity);
+            capture.Advance(0.5d, new Vector3(2f, 0f, 1f), Quaternion.Euler(0f, 30f, 0f));
+            capture.Stop(1d, new Vector3(4f, 0f, 2f), Quaternion.Euler(0f, 60f, 0f));
+            var recording = capture.ReadyRecording;
+            var expected = new[] { 0d, 0.3d, 0.77d, 1d }.Select(t => { recording.TryEvaluate(t, out var pose); return pose.Position; }).ToArray();
+
+            for (var run = 0; run < 3; run++)
+            {
+                Assert.That(capture.TryBeginPlayback(), Is.True, "run " + run);
+                Assert.That(capture.ReadyRecording, Is.SameAs(recording));
+                var actual = new[] { 0d, 0.3d, 0.77d, 1d }.Select(t => { capture.ReadyRecording.TryEvaluate(t, out var pose); return pose.Position; }).ToArray();
+                Assert.That(actual, Is.EqualTo(expected), "run " + run);
+                Assert.That(capture.CompletePlayback(), Is.True);
+                Assert.That(capture.State, Is.EqualTo(EchoState.Ready));
+            }
+        }
+
+        [Test]
+        public void ANewRecordingReplacesThePreviousOneOnlyWhenItCompletes()
+        {
+            var capture = new EchoCapture();
+            capture.Begin(0d, Vector3.zero, Quaternion.identity);
+            capture.Stop(0.5d, Vector3.right, Quaternion.identity);
+            var first = capture.ReadyRecording;
+
+            // Aborting the new capture (e.g. respawn) keeps the old recording.
+            Assert.That(capture.Begin(10d, Vector3.zero, Quaternion.identity), Is.True);
+            Assert.That(capture.ReleaseActivity(), Is.True);
+            Assert.That(capture.State, Is.EqualTo(EchoState.Ready));
+            Assert.That(capture.ReadyRecording, Is.SameAs(first));
+
+            // Completing it replaces the old one for good.
+            capture.Begin(20d, Vector3.zero, Quaternion.identity);
+            capture.Stop(20.3d, Vector3.up, Quaternion.identity);
+            Assert.That(capture.ReadyRecording, Is.Not.SameAs(first));
+            Assert.That(capture.ReadyRecording.Duration, Is.EqualTo(0.3d).Within(1e-6));
+            Assert.That(capture.Begin(30d, Vector3.zero, Quaternion.identity), Is.True);
+            Assert.That(capture.ReleaseActivity(), Is.True);
+            Assert.That(capture.ReadyRecording.Duration, Is.EqualTo(0.3d).Within(1e-6), "Only the newest recording is kept.");
+        }
+
+        [Test]
+        public void ReleasingPlaybackKeepsTheRecordingAndReleasingWithoutRecordingDoesNothing()
+        {
+            var capture = new EchoCapture();
+            Assert.That(capture.ReleaseActivity(), Is.False);
+            capture.Begin(0d, Vector3.zero, Quaternion.identity);
+            Assert.That(capture.ReleaseActivity(), Is.True);
+            Assert.That(capture.State, Is.EqualTo(EchoState.Available), "Nothing to restore.");
+            capture.Begin(0d, Vector3.zero, Quaternion.identity);
+            capture.Stop(0.2d, Vector3.right, Quaternion.identity);
+            capture.TryBeginPlayback();
+            Assert.That(capture.ReleaseActivity(), Is.True);
+            Assert.That(capture.State, Is.EqualTo(EchoState.Ready));
+            Assert.That(capture.ReadyRecording, Is.Not.Null);
+            Assert.That(capture.ReleaseActivity(), Is.False);
         }
 
         [Test]

@@ -67,21 +67,21 @@ namespace Echoryx.Game.Tests
         [TestCase(EchoState.Recording)]
         [TestCase(EchoState.Ready)]
         [TestCase(EchoState.Playing)]
-        public void RequestImmediatelyClearsEchoBeforeQueuedTeleport(EchoState state)
+        public void RequestImmediatelyReleasesEchoBeforeQueuedTeleport(EchoState state)
         {
             PrepareEcho(state);
             var actor = playback.ActiveActor;
             motor.transform.position = Vector3.forward * 4f;
             manager.RequestRespawn();
             Assert.That(motor.transform.position, Is.EqualTo(Vector3.forward * 4f));
-            AssertEchoAvailable();
+            AssertEchoReleased(state);
             Assert.That(actor == null, Is.True, "EditMode destroys the actor immediately; PlayMode deactivates it immediately.");
             Invoke(recorder, "Update");
             Invoke(playback, "Update");
-            AssertEchoAvailable();
+            AssertEchoReleased(state);
             Invoke(manager, "LateUpdate");
             Invoke(recorder, "Update");
-            AssertEchoAvailable();
+            AssertEchoReleased(state);
             Assert.That(recorder.Begin(), Is.True);
         }
 
@@ -93,20 +93,20 @@ namespace Echoryx.Game.Tests
             Set(hazard, "manager", manager);
             hazard.GetComponent<BoxCollider>().size = Vector3.one * 4f;
             hazard.CheckPlayer();
-            AssertEchoAvailable();
+            AssertEchoReleased(EchoState.Recording);
             Invoke(manager, "LateUpdate");
             Assert.That(motor.transform.position, Is.EqualTo(Vector3.right * 20f));
         }
 
         [Test]
-        public void DirectAndRepeatedRespawnCleanCloneAndRecording()
+        public void DirectAndRepeatedRespawnCleanCloneAndKeepRecording()
         {
             PrepareEcho(EchoState.Playing);
             Assert.That(manager.RespawnNow(), Is.True);
             Assert.That(manager.RespawnNow(), Is.True);
             echoReset.ReleaseForReset();
             echoReset.ResetForAttempt();
-            AssertEchoAvailable();
+            AssertEchoReleased(EchoState.Playing);
             Assert.That(recorder.Begin(), Is.True);
         }
 
@@ -292,12 +292,20 @@ namespace Echoryx.Game.Tests
             if (state == EchoState.Playing) Assert.That(playback.TryStart(), Is.True);
         }
 
-        private void AssertEchoAvailable()
+        /// <summary>A reset removes the clone and aborts an unfinished capture, but keeps a finished recording.</summary>
+        private void AssertEchoReleased(EchoState before)
         {
-            Assert.That(recorder.State, Is.EqualTo(EchoState.Available));
-            Assert.That(recorder.SampleCount, Is.Zero);
-            Assert.That(recorder.ReadyRecording, Is.Null);
             Assert.That(playback.ActiveActor, Is.Null);
+            if (before == EchoState.Recording)
+            {
+                Assert.That(recorder.State, Is.EqualTo(EchoState.Available));
+                Assert.That(recorder.SampleCount, Is.Zero);
+                Assert.That(recorder.ReadyRecording, Is.Null);
+                return;
+            }
+            Assert.That(recorder.State, Is.EqualTo(EchoState.Ready), "The finished recording survives the respawn.");
+            Assert.That(recorder.ReadyRecording, Is.Not.Null);
+            Assert.That(recorder.ReadyRecording.SampleCount, Is.GreaterThan(0));
         }
 
         private RewindTestRotor MakeRotor(RoomResetScope scope)

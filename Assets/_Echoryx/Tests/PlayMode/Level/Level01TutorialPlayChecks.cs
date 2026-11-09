@@ -142,13 +142,18 @@ namespace Echoryx.Level.PlayTests
             yield return WalkTo(new Vector3(0f, 0f, 33f));
             Assert.That(player.transform.position.z, Is.GreaterThan(31f), "The Echo held the plate while the player crossed.");
             yield return Frames(320);
-            Assert.That(recorder.State, Is.EqualTo(EchoState.Available));
+            Assert.That(recorder.State, Is.EqualTo(EchoState.Ready), "A finished playback keeps the recording for replay.");
             Assert.That(door.IsOpen, Is.False, "Door closes behind the player once the Echo is gone.");
             yield return WalkTo(new Vector3(0f, 0f, 34.5f));
             Assert.That(manager.ActiveCheckpoint.name, Is.EqualTo("Checkpoint End Room 2"));
 
-            // Room 3: the platform already left; Rewind brings it back, then it carries the player.
+            // Room 3: the platform already left. Falling once and respawning must leave it parked and
+            // out of reach again: the only way across is still Rewind.
             Assert.That(Vector3.Distance(platform.transform.position, platformEnd), Is.LessThan(0.05f));
+            yield return RunAndJumpAtTheEdge(3);
+            Assert.That(Vector3.Distance(platform.transform.position, platformEnd), Is.LessThan(0.02f), "Parked again after the respawn.");
+            Assert.That(manager.ActiveCheckpoint.name, Is.EqualTo("Checkpoint End Room 2"));
+            Assert.That(recorder.State, Is.EqualTo(EchoState.Ready), "The recording survives the respawn.");
             yield return WalkTo(new Vector3(0f, 0f, 33f));
             Assert.That(display.CurrentText, Does.Contain("rebobinar su movimiento"));
             yield return WalkTo(new Vector3(0f, 0f, 35.2f));
@@ -179,35 +184,113 @@ namespace Echoryx.Level.PlayTests
             yield return Frames(3);
             Assert.That(stats.IsCompleted, Is.True);
             Assert.That(panel.IsVisible, Is.True);
-            Assert.That(stats.Attempts, Is.EqualTo(2));
+            Assert.That(stats.Attempts, Is.EqualTo(3));
             Assert.That(stats.RewindUses, Is.EqualTo(1));
             Assert.That(stats.ElapsedSeconds, Is.GreaterThan(10d));
         }
 
         [UnityTest]
-        public IEnumerator Room3WithoutRewindCannotBeCrossedAndFallRestartsPlatform()
+        public IEnumerator AfterFallingTheRewindPlatformIsParkedOutOfReachAtEveryMoment()
         {
             var platform = Object.FindFirstObjectByType<RewindMovingPlatform>();
+            var surface = platform.GetComponentInChildren<BoxCollider>();
+            var end = platform.transform.parent.Find("Platform End").position;
+            var door = Object.FindFirstObjectByType<DoorController>();
+            var plate = Object.FindFirstObjectByType<PressurePlate>();
             var second = GameObject.Find("Checkpoint End Room 2").GetComponent<CheckpointTrigger>();
             player.Respawn(second.SpawnPoint.position, second.SpawnPoint.rotation);
             yield return Frames(200);
             Assert.That(manager.ActiveCheckpoint, Is.SameAs(second));
+            Assert.That(Vector3.Distance(platform.transform.position, end), Is.LessThan(0.02f), "Level state: platform parked far away.");
 
-            // Running jump from the edge cannot reach the far dock: the pit hazard sends the player back.
+            // Maximum horizontal reach of a jump from the lobby edge (run speed, air time and coyote time).
+            var edge = GameObject.Find("Floor 2 Main").GetComponent<BoxCollider>().bounds.max.z;
+            var gap = surface.bounds.min.z - edge;
+            Assert.That(gap, Is.GreaterThan(MaximumJumpReach() + 0.25f), "The parked platform is beyond any jump.");
+
+            for (var attempt = 1; attempt <= 2; attempt++)
+            {
+                yield return RunAndJumpAtTheEdge(attempt);
+                Assert.That(Vector3.Distance(player.transform.position, second.SpawnPoint.position), Is.LessThan(0.6f));
+                Assert.That(stats.Attempts, Is.EqualTo(attempt), "A fall counts as one attempt.");
+                Assert.That(stats.IsCompleted, Is.False);
+                // After the reset the platform is in the SAME state as when the level loaded: far, idle, rewindable.
+                Assert.That(platform.Mode, Is.EqualTo(RewindMode.Normal));
+                Assert.That(platform.CanRewind, Is.True, "Rewind can bring it back.");
+                for (var frame = 0; frame < 300; frame++)
+                {
+                    Assert.That(Vector3.Distance(platform.transform.position, end), Is.LessThan(0.02f), "frame " + frame + ": it never enters the reachable zone.");
+                    yield return null;
+                }
+                Assert.That(surface.bounds.min.z - edge, Is.GreaterThan(MaximumJumpReach() + 0.25f));
+                // The other mechanisms of the route are coherent: plate idle, door closed, no clone.
+                Assert.That(plate.IsPressed, Is.False);
+                Assert.That(door.IsOpen, Is.False);
+                Assert.That(player.GetComponent<EchoPlayback>().ActiveActor, Is.Null);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator RecordingReplaysRepeatedlyWithTheSameResultAndIsReplacedByANewOne()
+        {
+            var recorder = player.GetComponent<EchoRecorder>();
+            var playback = player.GetComponent<EchoPlayback>();
+            basis.rotation = Quaternion.identity;
+            yield return Pulse(Key.Q);
             Keys(Key.W);
-            for (var frame = 0; frame < 120 && player.transform.position.z < 35.3f; frame++) yield return null;
-            Keys(Key.W, Key.Space);
-            yield return Frames(1);
-            Keys(Key.W);
-            for (var frame = 0; frame < 300 && stats.Attempts < 1; frame++) yield return null;
+            yield return Frames(90);
             Keys();
-            yield return Frames(3);
-            Assert.That(Vector3.Distance(player.transform.position, second.SpawnPoint.position), Is.LessThan(0.6f));
-            Assert.That(stats.Attempts, Is.EqualTo(1), "A fall counts as one attempt.");
-            Assert.That(stats.IsCompleted, Is.False);
-            // The room reset restarts the platform timeline from its start pose.
-            var start = platform.transform.parent.Find("Platform Start").position;
-            Assert.That(Vector3.Distance(platform.transform.position, start), Is.LessThan(0.5f));
+            yield return Pulse(Key.Q);
+            Assert.That(recorder.State, Is.EqualTo(EchoState.Ready));
+            var first = recorder.ReadyRecording;
+            var origin = first[0].Position;
+
+            var samples = new System.Collections.Generic.List<Vector3[]>();
+            for (var run = 0; run < 3; run++)
+            {
+                Keys(Key.E);
+                yield return null;
+                Keys();
+                Assert.That(recorder.State, Is.EqualTo(EchoState.Playing), "run " + run);
+                var actor = playback.ActiveActor;
+                var points = new Vector3[3];
+                points[0] = actor.transform.position;
+                yield return Frames(20);
+                points[1] = actor.transform.position;
+                // E while the Echo is active is ignored: the same clone keeps playing, nothing restarts.
+                yield return Pulse(Key.E);
+                Assert.That(playback.ActiveActor, Is.SameAs(actor), "run " + run);
+                points[2] = actor.transform.position;
+                samples.Add(points);
+                yield return Frames(Mathf.CeilToInt((float)first.Duration * 60f) + 20);
+                Assert.That(recorder.State, Is.EqualTo(EchoState.Ready), "Recording kept after run " + run);
+                Assert.That(recorder.ReadyRecording, Is.SameAs(first));
+                Assert.That(playback.ActiveActor, Is.Null);
+            }
+            for (var run = 1; run < 3; run++)
+                for (var i = 0; i < 3; i++)
+                    Assert.That(Vector3.Distance(samples[run][i], samples[0][i]), Is.LessThan(0.001f), "run " + run + " point " + i);
+            Assert.That(Vector3.Distance(samples[0][0], origin), Is.LessThan(0.05f), "Starts at the recorded origin.");
+            Assert.That(samples[0][1].z, Is.GreaterThan(samples[0][0].z + 0.1f), "It follows the recorded path.");
+
+            // Respawn keeps the recording.
+            yield return Pulse(Key.R);
+            Assert.That(recorder.ReadyRecording, Is.SameAs(first));
+
+            // A new recording (elsewhere, other direction) replaces it; E now plays the new one.
+            yield return WalkTo(new Vector3(1.5f, 0f, 2f));
+            yield return Pulse(Key.Q);
+            basis.rotation = Quaternion.LookRotation(Vector3.right);
+            Keys(Key.W);
+            yield return Frames(40);
+            Keys();
+            yield return Pulse(Key.Q);
+            var second = recorder.ReadyRecording;
+            Assert.That(second, Is.Not.SameAs(first));
+            Assert.That(second.Duration, Is.Not.EqualTo(first.Duration).Within(0.05d));
+            yield return Pulse(Key.E);
+            Assert.That(Vector3.Distance(playback.ActiveActor.transform.position, second[0].Position), Is.LessThan(0.05f));
+            Assert.That(Vector3.Distance(playback.ActiveActor.transform.position, origin), Is.GreaterThan(1f), "The old recording is gone.");
         }
 
         [UnityTest]
@@ -284,6 +367,27 @@ namespace Echoryx.Level.PlayTests
             worst = float.MinValue;
             for (var frame = 0; frame < 120; frame++) { yield return null; if (frame > 40) worst = Mathf.Max(worst, camera.transform.position.z); }
             Assert.That(worst, Is.LessThan(29.7f), "Camera does not pass through the closed door.");
+        }
+
+        private IEnumerator RunAndJumpAtTheEdge(int expectedAttempts)
+        {
+            basis.rotation = Quaternion.identity;
+            Keys(Key.W);
+            for (var frame = 0; frame < 120 && player.transform.position.z < 35.3f; frame++) yield return null;
+            Keys(Key.W, Key.Space);
+            yield return Frames(1);
+            Keys(Key.W);
+            for (var frame = 0; frame < 300 && stats.Attempts < expectedAttempts; frame++) yield return null;
+            Keys();
+            yield return Frames(3);
+        }
+
+        private float MaximumJumpReach()
+        {
+            float Field(string name) => (float)typeof(PlayerMotor).GetField(name, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(player);
+            var gravity = Mathf.Abs(Field("gravity"));
+            var airTime = 2f * Mathf.Sqrt(2f * Field("jumpHeight") * gravity) / gravity;
+            return Field("moveSpeed") * (airTime + Field("coyoteTime"));
         }
 
         // ---------------------------------------------------------------- helpers

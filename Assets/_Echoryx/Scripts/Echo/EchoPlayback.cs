@@ -17,11 +17,12 @@ namespace Echoryx.Echo
 
         public EchoActor ActiveActor => activeActor;
 
-        /// <summary>Immediately clears capture and actor before the player can be relocated.</summary>
+        /// <summary>Immediately stops capture/playback and removes the actor before the player can be relocated.
+        /// The player's finished recording is kept: it can be replayed after respawning.</summary>
         public void ResetForAttempt()
         {
             if (recorder == null) recorder = GetComponent<EchoRecorder>();
-            recorder?.Cancel();
+            recorder?.ReleaseActivity();
             CleanupActor();
         }
 
@@ -66,7 +67,7 @@ namespace Echoryx.Echo
             if (activeActor == null)
             {
                 if (recorder != null && recorder.State == EchoState.Playing)
-                    recorder.Cancel();
+                    recorder.ReleaseActivity();
                 activeRecording = null;
                 return;
             }
@@ -101,7 +102,7 @@ namespace Echoryx.Echo
         private void CancelPlayback()
         {
             if (recorder != null && recorder.State == EchoState.Playing)
-                recorder.Cancel();
+                recorder.ReleaseActivity();
             CleanupActor();
         }
 

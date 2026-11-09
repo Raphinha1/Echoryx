@@ -17,6 +17,8 @@ namespace Echoryx.Echo
         private Quaternion previousRotation;
         private int nextSampleIndex;
         private int count;
+        // The recording kept while a replacement is being captured; restored if that capture is aborted.
+        private EchoRecording replaced;
 
         public EchoCapture(float maximumSeconds = HardMaximumSeconds, int samplesPerSecond = 20)
         {
@@ -40,6 +42,8 @@ namespace Echoryx.Echo
             if (State == EchoState.Recording || State == EchoState.Playing)
                 return false;
 
+            // A new recording replaces the previous one only once it completes.
+            replaced = State == EchoState.Ready ? ReadyRecording : null;
             ReadyRecording = null;
             startedAt = previousTime = time;
             previousPosition = position;
@@ -108,14 +112,34 @@ namespace Echoryx.Echo
             return true;
         }
 
+        /// <summary>Playback finished: the recording is kept, so it can be played again.</summary>
         public bool CompletePlayback()
         {
             if (State != EchoState.Playing)
                 return false;
 
-            ReadyRecording = null;
-            count = 0;
-            State = EchoState.Available;
+            State = EchoState.Ready;
+            return true;
+        }
+
+        /// <summary>
+        /// Stops the current activity without discarding what the player already has:
+        /// Playing returns to Ready; an unfinished Recording is dropped and the previous recording (if any) returns.
+        /// </summary>
+        public bool ReleaseActivity()
+        {
+            if (State == EchoState.Playing)
+            {
+                State = EchoState.Ready;
+                return true;
+            }
+            if (State != EchoState.Recording)
+                return false;
+
+            ReadyRecording = replaced;
+            replaced = null;
+            count = ReadyRecording != null ? ReadyRecording.SampleCount : 0;
+            State = ReadyRecording != null ? EchoState.Ready : EchoState.Available;
             return true;
         }
 
@@ -125,6 +149,7 @@ namespace Echoryx.Echo
                 return false;
 
             ReadyRecording = null;
+            replaced = null;
             count = 0;
             State = EchoState.Available;
             return true;
@@ -146,6 +171,7 @@ namespace Echoryx.Echo
             var snapshot = new EchoSample[count];
             Array.Copy(buffer, snapshot, count);
             ReadyRecording = new EchoRecording(snapshot, duration);
+            replaced = null;
             State = EchoState.Ready;
         }
     }

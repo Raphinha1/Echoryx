@@ -82,7 +82,8 @@ namespace Echoryx.Level.Tests
                 Assert.That(rewindRoom, Is.Not.SameAs(echoRoom));
                 Assert.That(Participants(echoRoom), Does.Contain(plate.GetComponent<PressurePlateAttemptReset>()));
                 Assert.That(Participants(echoRoom), Does.Contain(door.GetComponent<DoorAttemptReset>()));
-                Assert.That(Participants(rewindRoom), Does.Contain(platform.GetComponent<RewindMechanismAttemptReset>()));
+                Assert.That(Participants(rewindRoom), Does.Contain(platform.GetComponent<ParkedPlatformAttemptReset>()), "Platform resets parked at its destination.");
+                Assert.That(platform.GetComponent<RewindMechanismAttemptReset>(), Is.Null, "No second reset path that would leave it at the start.");
                 foreach (var room in Object.FindObjectsByType<RoomResetScope>(FindObjectsSortMode.None))
                     Assert.That(Participants(room).Any(p => p is LevelStatsAttemptCounter), Is.True, room.name + " counts attempts");
             });
