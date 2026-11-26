@@ -56,30 +56,8 @@ namespace Echoryx.Player.Editor
         {
             Replace(PlayerPath, "VisualRoot", "Capsule Placeholder", VisualPath, "Robot Visual");
             Replace(EchoPath, null, "Hologram Visual", EchoVisualPath, "Robot Echo Visual");
-            HideRobotInSuperSoldierLab();
             AssetDatabase.SaveAssets();
             Debug.Log("Robot integrated into Player and Echo prefabs.");
-        }
-
-        /// <summary>
-        /// PlayerAnimationIntegrationLab validates the SuperSoldier presentation and looks up the Player's
-        /// single Animator; it keeps that visual by hiding the (now shared) robot in its Player instance.
-        /// </summary>
-        private static void HideRobotInSuperSoldierLab()
-        {
-            const string labPath = "Assets/_Echoryx/Scenes/PlayerAnimationIntegrationLab.unity";
-            var scene = EditorSceneManager.OpenScene(labPath, OpenSceneMode.Single);
-            var changed = false;
-            foreach (var root in scene.GetRootGameObjects())
-            {
-                var robot = root.name == "Player" ? root.transform.Find("VisualRoot/Robot Visual") : null;
-                if (robot == null || !robot.gameObject.activeSelf) continue;
-                robot.gameObject.SetActive(false);
-                changed = true;
-            }
-            if (!changed) return;
-            EditorSceneManager.MarkSceneDirty(scene);
-            if (!EditorSceneManager.SaveScene(scene)) throw new InvalidOperationException("Could not save " + labPath);
         }
 
         // ------------------------------------------------------------ clips and calibration
