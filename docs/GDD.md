@@ -46,7 +46,7 @@ Preparación del proyecto, estructura, escenas vacías creadas desde Editor, doc
 
 ## Dirección visual confirmada para S05
 
-Ciencia ficción temporal estilizada, con acabado 3D de detalle medio. Estructura de grafito/titanio y señales cian para Echo y violeta para Rewind. S05-A1 prepara un subconjunto gratuito CC0 de Quaternius y materiales URP en una galería independiente; el arte final del nivel y del humanoide todavía no se reemplaza. Ver [biblioteca visual](visual-assets.md).
+Ciencia ficción temporal estilizada, con acabado 3D de detalle medio. Estructura de grafito/titanio y señales cian para Echo y violeta para Rewind. S05-A1 prepara un subconjunto gratuito CC0 de Quaternius y materiales URP en una galería independiente; el arte final del nivel y del humanoide todavía no se reemplaza. Ver [biblioteca visual](archivo/visual-assets.md). *(Actualización: el subconjunto Quaternius y su galería se retiraron; `Level_01_Tutorial` usa los kits CC0 de Kenney.)*
 
 ## Fuera de decisiones confirmadas
 

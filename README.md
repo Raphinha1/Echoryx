@@ -70,7 +70,7 @@ Integra ambas habilidades en secuencia coordinada:
 
 ## Pipeline Visual y Animación Humanoide
 
-- **Entorno Sci-Fi Modular:** Biblioteca de piezas estructurales CC0 (Quaternius) con materiales URP en paleta grafito/titanio y detalles emisivos cian y violeta.
+- **Entorno Sci-Fi Modular:** Piezas CC0 de Kenney (Modular Space Kit y Space Station Kit) con materiales URP propios; ver [créditos](docs/credits.md).
 - **Protagonista:** Robot animado (paquete *Animated Low Poly Robot Free*, rig Generic); ver [créditos](docs/credits.md).
 - **Locomoción y Física Desacopladas:** [`PlayerMotor`](Assets/_Echoryx/Scripts/Player/PlayerMotor.cs) mantiene la autoridad absoluta del movimiento físico, mientras que [`RobotAnimationDriver`](Assets/_Echoryx/Scripts/Player/RobotAnimationDriver.cs) y [`ResolvedPlanarMotion`](Assets/_Echoryx/Scripts/Player/ResolvedPlanarMotion.cs) calculan la cadencia y transiciones del Animator aislando el transporte de plataformas móviles, evitando que el personaje camine en falso cuando la plataforma lo transporta.
 
@@ -83,7 +83,6 @@ Las escenas principales se encuentran en `Assets/_Echoryx/Scenes/`:
 - **`Level_01_Tutorial.unity`:** Nivel tutorial de tres salas que enseña Echo y Rewind ([detalle](docs/level-01-tutorial.md)).
 - **`Prototype.unity`:** Circuito de pruebas de movimiento, puzzle de Echo, cruce con Rewind y sala combinada S04-C.
 - **`RobotIntegrationLab.unity`:** Laboratorio del robot; lo usan las pruebas PlayMode de locomoción.
-- **`VisualReferenceRoom.unity`:** Sala ambientada con arquitectura sci-fi definitiva, iluminación URP y cámara orbital.
 
 ---
 
@@ -114,5 +113,5 @@ Para más detalles, consulta la [documentación de pruebas](docs/testing.md).
 - 🏛️ [Arquitectura de Software y Ensamblados](docs/architecture.md)
 - 📅 [Plan de Desarrollo y Roadmap](docs/development-plan.md)
 - 🧪 [Guía de Pruebas y Validación](docs/testing.md)
-- 🎨 [Pipeline de Assets Visuales](docs/visual-assets.md)
+- 🎨 [Archivo: pipeline de assets Quaternius (retirado)](docs/archivo/visual-assets.md)
 - 🚶 [Archivo: locomoción del SuperSoldier (retirado)](docs/archivo/supersoldier-locomotion.md)

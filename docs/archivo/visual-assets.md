@@ -16,7 +16,7 @@ Antes de importar, Git estaba limpio en `2cd3002` (`feat: integrate temporal abi
 - CC0 permite copiar, modificar y distribuir, también para fines comerciales, sin solicitar permiso; la atribución no es un requisito de copyright. Conservamos voluntariamente la procedencia: “Modular Sci-Fi MegaKit by Quaternius — CC0 1.0”. Esto no representa aprobación de Echoryx por su autor.
 - **No se utilizó Pro ni Source.** Standard no trae el proyecto URP ni los shaders personalizados/colliders optimizados de Source; los materiales de Echoryx se crearon localmente mediante Unity.
 
-El manifiesto [provenance.json](../Assets/_Echoryx/Art/Environment/Quaternius/ModularSciFiMegaKitStandard/provenance.json) registra edición, enlaces, ruta interna del ZIP, tamaño y SHA-256 de cada archivo copiado. Los FBX y PNG originales no fueron editados.
+El manifiesto provenance.json (retirado; en el historial de Git) registra edición, enlaces, ruta interna del ZIP, tamaño y SHA-256 de cada archivo copiado. Los FBX y PNG originales no fueron editados.
 
 ## Subconjunto importado
 
@@ -85,9 +85,9 @@ Menús:
 
 `RebuildLab` es una entrada explícita de CLI que reconstruye **solo VisualAssetLab**; sobrescribe cambios manuales de presentación de esa galería y no es necesaria para usar los assets. No ejecutarla sobre una galería personalizada sin conservar esos cambios.
 
-El resultado observado y los pasos pendientes se registran en [testing](testing.md#s05-a1-importación-y-galería-visual). Esta escena no está en Build Settings y no incluye Player, Echo, Rewind, checkpoints ni navegación. Permite comprobar los recursos antes de integrarlos.
+El resultado observado y los pasos pendientes se registran en [testing](../testing.md#s05-a1-importación-y-galería-visual). Esta escena no está en Build Settings y no incluye Player, Echo, Rewind, checkpoints ni navegación. Permite comprobar los recursos antes de integrarlos.
 
-![Galería de validación URP](archivo/images/s05-a1-visual-lab.png)
+![Galería de validación URP](images/s05-a1-visual-lab.png)
 
 ## Montaje posterior: S05-A2
 
@@ -97,9 +97,9 @@ S05-A2 incorpora esta sala y cinco wrappers en una escena separada y está aprob
 
 ## Registro S05-B1
 
-El candidato Cybernet Warrior fue evaluado y retirado por falta de rig y su densidad. El registro histórico conserva autoría/licencia; sus recursos ya no forman parte de Assets: [evaluación archivada](character-visual-assets.md).
+El candidato Cybernet Warrior fue evaluado y retirado por falta de rig y su densidad. El registro histórico conserva autoría/licencia; sus recursos ya no forman parte de Assets: [evaluación archivada](../character-visual-assets.md).
 
 
 ## Personaje S05-B2
 
-SCI-FI SuperSoldier se conserva separado de la biblioteca Quaternius. Su FBX incluye rig/skinning y su Avatar Humanoid y locomoción están aprobados en laboratorio; procedencia, mapas, costes y captura: [informe S05-B2](archivo/supersoldier-validation.md).
+SCI-FI SuperSoldier se conserva separado de la biblioteca Quaternius. Su FBX incluye rig/skinning y su Avatar Humanoid y locomoción están aprobados en laboratorio; procedencia, mapas, costes y captura: [informe S05-B2](supersoldier-validation.md).

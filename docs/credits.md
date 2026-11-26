@@ -9,7 +9,7 @@
 
 Licencia completa de cada pack: archivo `License.txt` dentro de su carpeta; texto legal en <https://creativecommons.org/publicdomain/zero/1.0/>. CC0 no exige atribución; se acredita igualmente por cortesía.
 
-El pack Quaternius presente en `Art/Environment/Quaternius/` **no** se usa en `Level_01_Tutorial`.
+El pack Quaternius (CC0), usado solo en laboratorios visuales, fue retirado; sigue en el historial de Git.
 
 ## Personaje (Unity Asset Store)
 

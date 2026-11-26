@@ -51,8 +51,8 @@ Los controles, métricas concretas, plataformas destino y criterios artísticos 
 | S05-B3 (aprobado) | Locomoción Humanoid aislada, Animator y correcciones de clips/transiciones. | Idle/Walk/Run/Jump/Fall/Land aprobados técnica y visualmente; motor y física fuera de alcance. |
 | S05-B4 (siguiente, pendiente) | Integrar presentación visual con PlayerMotor y validar locomoción en juego. | PlayerMotor conserva autoridad sobre movimiento/raíz; probar sincronía de salto/caída, escala y cámara. Echo/clon queda sujeto a alcance acordado para B4. |
 
-Las decisiones y evidencia S05-A1 se conservan en [visual-assets](visual-assets.md); esta preparación no cierra por sí sola el vertical slice S05.
+Las decisiones y evidencia S05-A1 se conservan en [visual-assets](archivo/visual-assets.md); esta preparación no cierra por sí sola el vertical slice S05.
 
-S05-A2 creó VisualReferenceRoom y cinco prefabs de estructura; la verificación automatizada y las capturas están documentadas en [sala de referencia](visual-reference-room.md). El usuario confirmó su cierre/validación al iniciar S05-B1. S05-B1 evaluó y retiró Cybernet Warrior; su registro y hashes se conservan. S05-B2/B3 aprobaron técnica y visualmente el SuperSoldier y su locomoción en laboratorios aislados. S05-B4 integrará el aspecto visual con PlayerMotor; todavía no comienza.
+S05-A2 creó VisualReferenceRoom y cinco prefabs de estructura; la verificación automatizada y las capturas están documentadas en [sala de referencia](archivo/visual-reference-room.md). El usuario confirmó su cierre/validación al iniciar S05-B1. S05-B1 evaluó y retiró Cybernet Warrior; su registro y hashes se conservan. S05-B2/B3 aprobaron técnica y visualmente el SuperSoldier y su locomoción en laboratorios aislados. S05-B4 integrará el aspecto visual con PlayerMotor; todavía no comienza.
 
 Evidencia B3 y pasos para reproducir la validación manual: [laboratorio de locomoción](archivo/supersoldier-locomotion.md).
