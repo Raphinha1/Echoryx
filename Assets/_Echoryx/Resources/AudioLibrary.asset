@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e741a52448343035d8e9c57af63702c2, type: 3}
+  m_Name: AudioLibrary
+  m_EditorClassIdentifier: Echoryx.Audio::Echoryx.Audio.AudioLibrary
+  musicGroup: {fileID: -8728706109564718258, guid: d41cd193ed1ef6f7bb4522faf21a8c83, type: 2}
+  sfxGroup: {fileID: 4491795211669915781, guid: d41cd193ed1ef6f7bb4522faf21a8c83, type: 2}
+  footsteps:
+    clips: []
+    volume: 1
+  jump:
+    clips: []
+    volume: 1
+  land:
+    clips: []
+    volume: 1
+  pressurePlate:
+    clips: []
+    volume: 1
+  door:
+    clips: []
+    volume: 1
+  checkpoint:
+    clips: []
+    volume: 1
+  goal:
+    clips: []
+    volume: 1
+  echoRecord:
+    clips: []
+    volume: 1
+  echoPlay:
+    clips: []
+    volume: 1
+  echoEnd:
+    clips: []
+    volume: 1
+  rewind:
+    clips: []
+    volume: 1
+  uiClick:
+    clips: []
+    volume: 1
+  uiHover:
+    clips: []
+    volume: 1
+  menuMusic:
+    clips: []
+    volume: 1
+  levelMusic:
+    clips: []
+    volume: 1
