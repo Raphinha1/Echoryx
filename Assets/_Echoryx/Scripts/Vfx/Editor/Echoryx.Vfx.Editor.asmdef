@@ -1,0 +1,6 @@
+{
+  "name": "Echoryx.Vfx.Editor",
+  "rootNamespace": "Echoryx.Vfx.Editor",
+  "references": ["Echoryx.Vfx"],
+  "includePlatforms": ["Editor"]
+}
