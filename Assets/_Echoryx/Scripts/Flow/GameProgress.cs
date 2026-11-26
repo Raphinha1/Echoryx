@@ -12,12 +12,16 @@ namespace Echoryx.Flow
 
     public sealed class PlayerPrefsProgressStorage : IProgressStorage
     {
-        public const string Key = "Echoryx.Progress";
-        public string Read() => PlayerPrefs.GetString(Key, string.Empty);
+        public const string DefaultKey = "Echoryx.Progress";
+        private readonly string key;
+
+        public PlayerPrefsProgressStorage(string key = DefaultKey) => this.key = key;
+
+        public string Read() => PlayerPrefs.GetString(key, string.Empty);
 
         public void Write(string json)
         {
-            PlayerPrefs.SetString(Key, json);
+            PlayerPrefs.SetString(key, json);
             PlayerPrefs.Save();
         }
     }

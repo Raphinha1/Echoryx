@@ -101,6 +101,26 @@ namespace Echoryx.Flow.Tests
             Assert.That(new GameProgress(storage).IsCompleted("a"), Is.False);
         }
 
+        [Test]
+        public void ProgressRoundTripsThroughPlayerPrefs()
+        {
+            // A throw-away key: the player's real progress is never read or written.
+            const string key = "Echoryx.Progress.EditModeTest";
+            try
+            {
+                PlayerPrefs.DeleteKey(key);
+                new GameProgress(new PlayerPrefsProgressStorage(key)).RecordCompletion("a", 1, 2, 3.5d);
+                var record = new GameProgress(new PlayerPrefsProgressStorage(key)).Find("a");
+                Assert.That(record, Is.Not.Null);
+                Assert.That(record.bestSeconds, Is.EqualTo(3.5d));
+            }
+            finally
+            {
+                PlayerPrefs.DeleteKey(key);
+                PlayerPrefs.Save();
+            }
+        }
+
         private bool[] Unlocked(GameProgress progress) =>
             new[] { progress.IsUnlocked(catalog, 0), progress.IsUnlocked(catalog, 1), progress.IsUnlocked(catalog, 2) };
     }
