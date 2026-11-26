@@ -5,7 +5,7 @@
 [![Tests](https://img.shields.io/badge/Tests-116%20Passed%20(100%25)-brightgreen.svg)](docs/testing.md)
 [![License](https://img.shields.io/badge/License-Academic%20Project-lightgrey.svg)]()
 
-**Echoryx** es un videojuego 3D de plataformas y resolución de rompecabezas temporales desarrollado en **Unity 6** con **Universal Render Pipeline (URP)**. El jugador controla a un soldado tecnológico (*SuperSoldier*) y utiliza dos habilidades temporales complementarias —la grabación y reproducción de acciones pasadas (**Echo**) y la reversión cinemática de objetos interactivos (**Rewind**)— para navegar salas modulares y superar obstáculos sincronizados.
+**Echoryx** es un videojuego 3D de plataformas y resolución de rompecabezas temporales desarrollado en **Unity 6** con **Universal Render Pipeline (URP)**. El jugador controla a un robot y utiliza dos habilidades temporales complementarias —la grabación y reproducción de acciones pasadas (**Echo**) y la reversión cinemática de objetos interactivos (**Rewind**)— para navegar salas modulares y superar obstáculos sincronizados.
 
 ---
 
@@ -69,8 +69,8 @@ Integra ambas habilidades en secuencia coordinada:
 ## Pipeline Visual y Animación Humanoide
 
 - **Entorno Sci-Fi Modular:** Biblioteca de piezas estructurales CC0 (Quaternius) con materiales URP en paleta grafito/titanio y detalles emisivos cian y violeta.
-- **Protagonista:** Modelo *SCI-FI SuperSoldier* con rig Humanoid de 66 huesos y IK en pies.
-- **Locomoción y Física Desacopladas:** [`PlayerMotor`](file:///home/raphinha/Proyectos/Universidad/ISC%207/Desarrollo%20de%20entretenimiento/Echoryx/Assets/_Echoryx/Scripts/Player/PlayerMotor.cs) mantiene la autoridad absoluta del movimiento físico, mientras que [`PlayerAnimationDriver`](file:///home/raphinha/Proyectos/Universidad/ISC%207/Desarrollo%20de%20entretenimiento/Echoryx/Assets/_Echoryx/Scripts/Player/PlayerAnimationDriver.cs) y [`ResolvedPlanarMotion`](file:///home/raphinha/Proyectos/Universidad/ISC%207/Desarrollo%20de%20entretenimiento/Echoryx/Assets/_Echoryx/Scripts/Player/ResolvedPlanarMotion.cs) calculan la cadencia y transiciones del Animator aislando el transporte de plataformas móviles, evitando que el personaje camine en falso cuando la plataforma lo transporta.
+- **Protagonista:** Robot animado (paquete *Animated Low Poly Robot Free*, rig Generic); ver [créditos](docs/credits.md).
+- **Locomoción y Física Desacopladas:** [`PlayerMotor`](Assets/_Echoryx/Scripts/Player/PlayerMotor.cs) mantiene la autoridad absoluta del movimiento físico, mientras que [`RobotAnimationDriver`](Assets/_Echoryx/Scripts/Player/RobotAnimationDriver.cs) y [`ResolvedPlanarMotion`](Assets/_Echoryx/Scripts/Player/ResolvedPlanarMotion.cs) calculan la cadencia y transiciones del Animator aislando el transporte de plataformas móviles, evitando que el personaje camine en falso cuando la plataforma lo transporta.
 
 ---
 
@@ -78,10 +78,10 @@ Integra ambas habilidades en secuencia coordinada:
 
 Las escenas principales se encuentran en `Assets/_Echoryx/Scenes/`:
 
-- **`Prototype.unity`:** Escena de juego principal con el circuito de pruebas de movimiento, el puzzle de Echo, el cruce con Rewind y la sala combinada S04-C.
+- **`Level_01_Tutorial.unity`:** Nivel tutorial de tres salas que enseña Echo y Rewind ([detalle](docs/level-01-tutorial.md)).
+- **`Prototype.unity`:** Circuito de pruebas de movimiento, puzzle de Echo, cruce con Rewind y sala combinada S04-C.
+- **`RobotIntegrationLab.unity`:** Laboratorio del robot; lo usan las pruebas PlayMode de locomoción.
 - **`VisualReferenceRoom.unity`:** Sala ambientada con arquitectura sci-fi definitiva, iluminación URP y cámara orbital.
-- **`PlayerAnimationIntegrationLab.unity`:** Laboratorio de integración entre físicas de movimiento, transporte de plataformas y animación del SuperSoldier.
-- **`SuperSoldierLocomotionLab.unity`:** Laboratorio de calibración y análisis de clips de locomoción Mixamo (Walk, Run, Jump, Fall, Land).
 
 ---
 
