@@ -19,6 +19,21 @@ El pack Quaternius presente en `Art/Environment/Quaternius/` **no** se usa en `L
 
 El paquete no incluye archivo de licencia ni de créditos; consulta la ficha del Asset Store para el autor y los términos vigentes. **No se versiona en Git**: el repositorio es público y la EULA del Asset Store no permite redistribuir los archivos fuente. Para abrir el proyecto, importa el paquete desde el Asset Store en `Assets/FreeLowPolyRobot/` (los prefabs lo referencian por GUID). No se usan sus scripts (`ModularRobotRandomizer` y `MatOffset` leen el Input antiguo) ni sus escenas.
 
+## Assets retirados
+
+### SCI-FI SuperSoldier (retirado)
+
+Se usó durante el desarrollo como protagonista de prueba y **fue retirado** del proyecto; el juego usa ahora el robot descrito en *Personaje*. Sus archivos **siguen en el historial de Git**, y las capturas y vídeos de la evidencia de desarrollo muestran el modelo, por lo que la atribución se mantiene.
+
+| Obra | Autor | Licencia |
+|---|---|---|
+| [SCI-FI SuperSoldier - Game-ready [ANIMATED]](https://sketchfab.com/3d-models/sci-fi-supersoldier-game-ready-animated-09e0bd9c9715463584cd847d9b30a140) | SihaGames | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
+| [Sci-Fi Helmet](https://sketchfab.com/3d-models/sci-fi-helmet-785f5cfd848940b1a4a0b8ddeefc9ef1) (casco del modelo, retexturizado según el autor del conjunto) | Udon-San | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
+
+Cambios hechos en Echoryx: ajustes de importación Humanoid en Unity, remapeo de materiales a URP, escala y orientación de presentación, y escenas y controller de validación. El FBX y los cuatro PNG originales se conservaron byte a byte. La atribución no implica que los autores respalden este proyecto.
+
+Estuvo en `Assets/_Echoryx/Art/Characters/SihaGamesSuperSoldier/`; esa carpeta incluía `ATTRIBUTION.md` y `provenance.json` (enlaces y SHA-256 por archivo), recuperables desde el historial.
+
 ## Código propio del pase de arte
 
 - `Assets/_Echoryx/Art/Shaders/EchoryxGradientSkybox.shader`: skybox con degradado y estrellas, escrito para este proyecto (sin texturas de terceros).
