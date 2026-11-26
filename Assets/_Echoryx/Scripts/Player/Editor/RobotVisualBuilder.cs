@@ -31,6 +31,12 @@ namespace Echoryx.Player.Editor
         /// It tints the atlas' light-to-dark ramp, so light parts show the colour and dark parts stay dark.
         /// </summary>
         public static readonly Color AccentColor = new Color(1f, 0.79f, 0.20f);
+        /// <summary>The Player robot's eyes: warm white (cyan stays exclusive to the Echo). Same menu applies it.</summary>
+        public static readonly Color EyeColor = new Color(1f, 0.95f, 0.85f);
+        /// <summary>HDR strength of the eyes: enough to glow without burning out.</summary>
+        private const float EyeGlow = 1.15f;
+        private const string PackageEyes = "M_AtlasEmissive";
+        private const string EyesName = "RobotPlayerEyes";
         /// <summary>Soft self-light so the colour still reads as gold on faces in shadow.</summary>
         private const float AccentGlow = 0.45f;
 
@@ -211,9 +217,10 @@ namespace Echoryx.Player.Editor
             if (!echo)
             {
                 var (baseMatte, variant) = AccentMaterials();
+                var eyes = EyeMaterial();
                 foreach (var renderer in model.GetComponentsInChildren<Renderer>())
                     renderer.sharedMaterials = renderer.sharedMaterials.Select(m =>
-                        m == null ? m : m.name == "M_AtlasOffset" ? variant : m.name == "M_AtlasBase" ? baseMatte : m).ToArray();
+                        m == null ? m : m.name == "M_AtlasOffset" ? variant : m.name == "M_AtlasBase" ? baseMatte : m.name == PackageEyes ? eyes : m).ToArray();
             }
             if (echo)
             {
@@ -236,17 +243,60 @@ namespace Echoryx.Player.Editor
             UnityEngine.Object.DestroyImmediate(root);
         }
 
-        /// <summary>Re-tints the two Player materials without rebuilding prefabs, controller or lab. The Echo uses its own.</summary>
+        /// <summary>Re-tints the Player body and eyes without rebuilding controller or lab. The Echo uses its own material.</summary>
         [MenuItem("Echoryx/Robot/Apply Accent Color")]
         public static void ApplyAccentColor()
         {
             AccentMaterials();
+            AssignEyes(EyeMaterial());
             AssetDatabase.SaveAssets();
             Debug.Log("Robot accent applied.");
         }
 
+        // The package's eye material takes its cyan from the atlas, so ours has no texture: only the colour.
+        private static Material EyeMaterial()
+        {
+            EnsureFolder("Assets/_Echoryx/Materials", "Robot");
+            var path = "Assets/_Echoryx/Materials/Robot/" + EyesName + ".mat";
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material == null)
+            {
+                var source = AssetDatabase.LoadAssetAtPath<Material>(BasePath) ?? throw new InvalidOperationException(BasePath + " missing.");
+                material = new Material(source.shader) { name = EyesName };
+                AssetDatabase.CreateAsset(material, path);
+            }
+            material.SetColor("_BaseColor", EyeColor);
+            material.SetColor("_Color", EyeColor);
+            material.SetColor("_EmissionColor", EyeColor * EyeGlow);
+            material.EnableKeyword("_EMISSION");
+            material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+            material.SetFloat("_Metallic", 0f);
+            material.SetFloat("_Smoothness", 0.2f);
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
+        // Swaps the eye slots of RobotVisual only; saved just when something changes.
+        private static void AssignEyes(Material eyes)
+        {
+            var root = PrefabUtility.LoadPrefabContents(VisualPath);
+            try
+            {
+                var changed = false;
+                foreach (var renderer in root.GetComponentsInChildren<Renderer>(true))
+                {
+                    var materials = renderer.sharedMaterials;
+                    for (var i = 0; i < materials.Length; i++)
+                        if (materials[i] != null && materials[i].name == PackageEyes) { materials[i] = eyes; changed = true; }
+                    renderer.sharedMaterials = materials;
+                }
+                if (changed) PrefabUtility.SaveAsPrefabAsset(root, VisualPath);
+            }
+            finally { PrefabUtility.UnloadPrefabContents(root); }
+        }
+
         // The package materials are Metallic 1 (render black without reflection probes), so both slots get matte
-        // URP Lit copies; the package's offset shader has no tint, so it is not used. Emissive eyes are kept.
+        // URP Lit copies; the package's offset shader has no tint, so it is not used.
         private static (Material baseSlot, Material offsetSlot) AccentMaterials() =>
             (Matte("RobotPlayerBase", 0.15f), Matte("RobotPlayerOrange", 0.25f));
 

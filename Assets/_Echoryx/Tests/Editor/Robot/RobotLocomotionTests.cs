@@ -90,7 +90,7 @@ namespace Echoryx.Robot.Tests
             var visual = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Echoryx/Prefabs/Characters/RobotVisual.prefab");
             var tinted = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Distinct(System.Linq.Enumerable.Where(
                 System.Linq.Enumerable.SelectMany(visual.GetComponentsInChildren<Renderer>(true), r => r.sharedMaterials),
-                m => m.name.StartsWith("RobotPlayer"))));
+                m => m.name.StartsWith("RobotPlayer") && m.name != "RobotPlayerEyes")));
             Assert.That(tinted.Length, Is.EqualTo(2));
             foreach (var material in tinted)
             {
@@ -106,6 +106,23 @@ namespace Echoryx.Robot.Tests
             foreach (var renderer in echo.GetComponentsInChildren<Renderer>(true))
                 foreach (var material in renderer.sharedMaterials)
                     Assert.That(material.name, Is.EqualTo("EchoHologram"));
+        }
+
+        [Test]
+        public void ThePlayerEyesAreWarmWhiteAndOnlyTheEchoStaysCyan()
+        {
+            var visual = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Echoryx/Prefabs/Characters/RobotVisual.prefab");
+            var materials = new System.Collections.Generic.List<Material>();
+            foreach (var renderer in visual.GetComponentsInChildren<Renderer>(true)) materials.AddRange(renderer.sharedMaterials);
+            Assert.That(materials.Exists(m => m.name == "M_AtlasEmissive"), Is.False, "No cyan package eyes left.");
+            var eyes = materials.Find(m => m.name == "RobotPlayerEyes");
+            Assert.That(eyes, Is.Not.Null);
+            var expected = Echoryx.Player.Editor.RobotVisualBuilder.EyeColor;
+            Assert.That(((Vector4)(eyes.GetColor("_BaseColor") - expected)).magnitude, Is.LessThan(0.001f));
+            Assert.That(eyes.IsKeywordEnabled("_EMISSION"), Is.True);
+            Assert.That(eyes.GetColor("_EmissionColor").r, Is.GreaterThanOrEqualTo(eyes.GetColor("_EmissionColor").b), "Warm, not cyan.");
+            var hologram = AssetDatabase.LoadAssetAtPath<Material>("Assets/_Echoryx/Materials/EchoHologram.mat").GetColor("_BaseColor");
+            Assert.That(hologram.b > hologram.r && hologram.g > hologram.r, Is.True, "The Echo keeps its cyan.");
         }
 
         [Test]
