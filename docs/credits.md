@@ -42,12 +42,14 @@ Autor: **MintoDog**, en OpenGameArt.
 
 | Archivo (`Assets/_Echoryx/Audio/`) | Uso | Fuente | Licencia |
 |---|---|---|---|
-| `sci-fi_puzzle_title_bpm120.ogg` | Menú | <https://opengameart.org/content/sci-fi-puzzle-title> | **Pendiente de confirmar** (CC0 o CC BY 4.0, según la página) |
-| `sci-fi_puzzle_in-game_2_bpm95.ogg` | Niveles | <https://opengameart.org/node/180660> | **Pendiente de confirmar** (CC0 o CC BY 4.0, según la página) |
+| `sci-fi_puzzle_title_bpm120.ogg` | Menú | <https://opengameart.org/content/sci-fi-puzzle-title> | CC0 |
+| `sci-fi_puzzle_in-game_2_bpm95.ogg` | Niveles | <https://opengameart.org/node/180660> | CC0 |
 
 ### Efectos
 
-El resto de los `.ogg` de esa carpeta. Indicados como CC0. **Pendiente:** packs de origen y autores.
+El resto de los `.ogg` de esa carpeta, de **Kenney Vleugels** ([Kenney.nl](https://kenney.nl)), packs **Digital Audio**, **Impact Sounds**, **Interface Sounds**, **Sci-Fi Sounds** y **UI Audio**. Licencia **CC0**, confirmada en el `License.txt` de cada pack.
+
+CC0 no exige atribución; se acredita igualmente por cortesía (música y efectos).
 
 ## Código propio del pase de arte
 
