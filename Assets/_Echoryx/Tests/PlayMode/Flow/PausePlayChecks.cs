@@ -202,6 +202,8 @@ namespace Echoryx.Flow.PlayTests
             Assert.That(platform.Mode, Is.EqualTo(RewindMode.Normal), "Pause lets go of Rewind.");
             var frozen = platform.transform.position;
             var time = Timeline(platform);
+            var interactor = player.GetComponent<RewindInteractor>();
+            Assert.That(interactor.enabled, Is.False, "No aiming reticle is drawn over the pause menu.");
             // Releasing and pressing the button behind the menu must not start anything.
             HoldRewind(false);
             yield return Frames(5);
@@ -214,6 +216,7 @@ namespace Echoryx.Flow.PlayTests
 
             yield return Pulse(Key.Escape);
             yield return Frames(20);
+            Assert.That(interactor.enabled, Is.True);
             Assert.That(platform.Mode, Is.EqualTo(RewindMode.Normal), "A button held through the pause needs a new press.");
             Assert.That(stats.RewindUses, Is.EqualTo(1), "Pausing never adds a Rewind use.");
             Assert.That(platform.transform.position.z, Is.GreaterThan(frozen.z), "Normal travel continues from the recovered time.");

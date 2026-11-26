@@ -16,8 +16,8 @@ namespace Echoryx.Flow
     /// on the existing completion panel). Added at run time to every scene listed in the LevelCatalog.
     ///
     /// Pausing freezes the game with timeScale 0 and also stops what timeScale does not: gameplay input is
-    /// suspended, the camera orbit is disabled and a held Rewind is released exactly as if the button had
-    /// been let go. The pause frame still has a non-zero deltaTime, so it is simulated in full; the motor is
+    /// suspended, the camera orbit and Rewind aiming are disabled and a held Rewind is released exactly as
+    /// if the button had been let go. The pause frame still has a non-zero deltaTime, so it is simulated in full; the motor is
     /// disabled (keeping its state) only once time stops, and enabled again on the first frame where time
     /// advances. Any other frame loses one frame of platform transport per pause.
     /// Keys still held after resuming must be pressed again (same rule as a respawn).
@@ -42,6 +42,7 @@ namespace Echoryx.Flow
         private GameObject pauseMenu;
         private bool motorWasEnabled;
         private bool orbitWasEnabled;
+        private bool rewindWasEnabled;
         private bool leaving;
 
         public LevelFlowState State { get; private set; }
@@ -144,6 +145,7 @@ namespace Echoryx.Flow
             {
                 motorWasEnabled = motor != null && motor.enabled;
                 orbitWasEnabled = orbit != null && orbit.enabled;
+                rewindWasEnabled = rewind != null && rewind.enabled;
             }
             State = LevelFlowState.Paused;
             Time.timeScale = 0f;
@@ -172,14 +174,19 @@ namespace Echoryx.Flow
             }
             RestoreMotor();
             if (orbit != null) orbit.enabled = orbitWasEnabled;
+            if (rewind != null) rewind.enabled = rewindWasEnabled;
             State = LevelFlowState.Playing;
         }
 
-        /// <summary>Stops gameplay input and the camera, lets go of Rewind and frees the cursor.</summary>
+        /// <summary>Stops gameplay input, the camera and Rewind aiming, and frees the cursor.</summary>
         private void SuspendInteraction()
         {
             if (input != null) input.Suspended = true;
-            if (rewind != null) rewind.ReleaseForRespawn();
+            if (rewind != null)
+            {
+                rewind.ReleaseForRespawn(); // ends a held Rewind the same way letting go does
+                rewind.enabled = false;     // and stops its IMGUI reticle, which would draw over the menus
+            }
             if (orbit != null) orbit.enabled = false;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
