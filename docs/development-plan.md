@@ -18,6 +18,8 @@ Los controles, métricas concretas, plataformas destino y criterios artísticos 
 
 ## Estado actual
 
+> **Nota (limpieza del proyecto):** la escena `Laboratory` exigida en S00 se retiró después, igual que los laboratorios, personaje y kit visual de S05 que se citan abajo. Se conservan en el historial de Git.
+
 - S00 cerrado en `aa2f2c5`.
 - S01 cerrado según el estado informado por el usuario.
 - S02-A implementó captura Echo y Q; el usuario informó validación manual (hasta 101 muestras).
