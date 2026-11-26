@@ -5,12 +5,13 @@ using UnityEngine;
 namespace Echoryx.Audio
 {
     /// <summary>
-    /// Persistent player of one-shot effects, faded loops and crossfaded music. Fades use unscaled
+    /// Persistent player of one-shot effects, faded loops and music with fades. Fades use unscaled
     /// time so they work while paused. A missing library or clip is silently ignored.
     /// </summary>
     public sealed class AudioManager : MonoBehaviour
     {
-        public const float CrossfadeSeconds = 1.2f;
+        public const float MusicFadeOutSeconds = 1.5f;
+        public const float MusicFadeInSeconds = 2f;
         /// <summary>Music level while paused. Applied to the sources, leaving mixer volumes untouched.</summary>
         public const float PausedMusicLevel = 0.35f;
         private const float DuckSeconds = 0.25f;
@@ -32,6 +33,7 @@ namespace Echoryx.Audio
         private readonly float[] baseVolume = new float[2];
         private AudioSource sfx;
         private int current;
+        private bool silencing;
         private float duck = 1f;
 
         public static AudioManager Instance { get; private set; }
@@ -150,7 +152,9 @@ namespace Echoryx.Audio
             }
         }
 
-        /// <summary>Crossfades to a music entry. Asking for the one already playing keeps it running.</summary>
+        /// <summary>
+        /// Fades the previous track out and the new one in. Asking for the one already playing keeps it running.
+        /// </summary>
         public void PlayMusic(SoundId id)
         {
             if (CurrentMusic == id) return;
@@ -163,9 +167,17 @@ namespace Echoryx.Audio
             weight[current] = 0f;
             baseVolume[current] = sound != null ? sound.volume : 0f;
             source.volume = 0f;
+            silencing = false;
             if (source.clip == null) return; // the previous track still fades out
             source.outputAudioMixerGroup = Library.musicGroup;
             source.Play();
+        }
+
+        /// <summary>Starts fading the music out ahead of a scene change.</summary>
+        public void FadeOutMusic()
+        {
+            CurrentMusic = null;
+            silencing = true;
         }
 
         private void Update()
@@ -173,11 +185,15 @@ namespace Echoryx.Audio
             var delta = Time.unscaledDeltaTime;
             UpdateLoops(delta);
             duck = Mathf.MoveTowards(duck, Paused ? PausedMusicLevel : 1f, delta / DuckSeconds);
+            // A loading hitch must not turn a fade into a jump.
+            var fade = Mathf.Min(delta, 1f / 30f);
             for (var i = 0; i < music.Length; i++)
             {
-                weight[i] = Mathf.MoveTowards(weight[i], i == current ? 1f : 0f, delta / CrossfadeSeconds);
+                var rising = i == current && !silencing;
+                weight[i] = Mathf.MoveTowards(weight[i], rising ? 1f : 0f,
+                    fade / (rising ? MusicFadeInSeconds : MusicFadeOutSeconds));
                 music[i].volume = weight[i] * baseVolume[i] * duck;
-                if (i != current && weight[i] <= 0f && music[i].isPlaying) music[i].Stop();
+                if (!rising && weight[i] <= 0f && music[i].isPlaying) music[i].Stop();
             }
         }
 

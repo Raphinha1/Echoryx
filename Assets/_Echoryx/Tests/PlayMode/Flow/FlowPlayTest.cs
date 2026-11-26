@@ -74,7 +74,8 @@ namespace Echoryx.Flow.PlayTests
 
         protected static IEnumerator WaitForScene(string scene)
         {
-            for (var frame = 0; frame < 120 && SceneManager.GetActiveScene().path != scene; frame++) yield return null;
+            var deadline = Time.realtimeSinceStartup + 10f; // menu changes fade to black first
+            while (SceneManager.GetActiveScene().path != scene && Time.realtimeSinceStartup < deadline) yield return null;
             Assert.That(SceneManager.GetActiveScene().path, Is.EqualTo(scene));
             yield return Frames(3);
         }

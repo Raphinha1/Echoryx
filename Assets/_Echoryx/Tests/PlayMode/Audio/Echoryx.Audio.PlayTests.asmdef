@@ -1,7 +1,7 @@
 {
   "name": "Echoryx.Audio.PlayTests",
   "rootNamespace": "Echoryx.Audio.PlayTests",
-  "references": ["Echoryx.Audio", "Echoryx.Flow", "Echoryx.Level", "Echoryx.Echo", "Echoryx.Game", "Echoryx.Player"],
+  "references": ["Echoryx.Audio", "Echoryx.Flow", "Echoryx.Level", "Echoryx.Echo", "Echoryx.Game", "Echoryx.Player", "Echoryx.Rewind", "Echoryx.Rewind.Platforms", "Unity.TextMeshPro", "UnityEngine.UI"],
   "optionalUnityReferences": ["TestAssemblies"],
   "autoReferenced": false
 }

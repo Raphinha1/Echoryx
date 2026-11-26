@@ -43,6 +43,7 @@ namespace Echoryx.Flow
                 return;
             }
             Show(current, GameProgress.Load());
+            gameObject.AddComponent<MenuMotion>();
         }
 
         /// <summary>(Re)builds the menu for a list of levels and a saved progress.</summary>
@@ -67,7 +68,7 @@ namespace Echoryx.Flow
         public void LoadLevel(int index)
         {
             if (leaving || !progress.IsUnlocked(catalog, index)) return;
-            leaving = SceneNavigator.Load(catalog.Levels[index].ScenePath);
+            leaving = SceneTransition.To(catalog.Levels[index].ScenePath);
         }
 
         public void OpenLevelSelect()
@@ -99,8 +100,11 @@ namespace Echoryx.Flow
             var canvas = UiKit.CreateCanvas(transform, "Menu Canvas", 0);
             canvasRoot = canvas.gameObject;
             var center = new Vector2(0.5f, 0.5f);
-            UiKit.Label(canvas.transform, "Game Title", "ECHORYX", 150f, UiKit.Lilac, center,
-                new Vector2(0f, 400f), new Vector2(1400f, 190f)).characterSpacing = 12f;
+            var title = UiKit.Label(canvas.transform, "Game Title", "ECHORYX", 150f, UiKit.Lilac, center,
+                new Vector2(0f, 400f), new Vector2(1400f, 190f));
+            title.characterSpacing = 12f;
+            UiFonts.ApplyTitle(title);
+            title.gameObject.AddComponent<TitleEffect>();
 
             mainPanel = UiKit.Stretched(canvas.transform, "Main Panel").gameObject;
             UiKit.Label(mainPanel.transform, "Subtitle", "Usa el pasado para abrirte camino", 38f, UiKit.Orange, center,
