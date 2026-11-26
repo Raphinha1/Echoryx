@@ -51,6 +51,17 @@ El resto de los `.ogg` de esa carpeta, de **Kenney Vleugels** ([Kenney.nl](https
 
 CC0 no exige atribución; se acredita igualmente por cortesía (música y efectos).
 
+`rewind-audible.ogg` es una versión derivada de `rewind.ogg` (CC0): recorte de graves, ganancia y limitador para que se oiga en altavoces pequeños.
+
+## Fuentes
+
+| Fuente | Autor | Licencia | Uso |
+|---|---|---|---|
+| [Orbitron](https://github.com/theleagueof/orbitron) | Matt McInerney. Copyright 2018 The Orbitron Project Authors, con Reserved Font Name «Orbitron» | [SIL Open Font License 1.1](https://openfontlicense.org) | Títulos del menú, la pausa y el fin de nivel |
+| [Exo 2](https://github.com/googlefonts/Exo-2.0) | Natanael Gama. Copyright 2013 The Exo 2 Project Authors | [SIL Open Font License 1.1](https://openfontlicense.org) | Resto del texto de esos menús |
+
+Datos tomados de los metadatos de los propios `.ttf`, que están en `Assets/_Echoryx/Fonts/`. Los TMP Font Assets de `Assets/_Echoryx/Resources/Fonts/` se generan a partir de ellos (`Echoryx/Fonts/Create TMP Fonts`).
+
 ## Código propio del pase de arte
 
 - `Assets/_Echoryx/Art/Shaders/EchoryxGradientSkybox.shader`: skybox con degradado y estrellas, escrito para este proyecto (sin texturas de terceros).

@@ -206,13 +206,18 @@ namespace Echoryx.Flow
         public void GoToNextLevel()
         {
             var next = catalog.NextAfter(levelIndex);
-            if (State == LevelFlowState.Completed && next != null) Leave(next.ScenePath);
+            if (State == LevelFlowState.Completed && next != null) FadeTo(next.ScenePath);
         }
 
         /// <summary>Restarts the whole level from scratch (R only returns to the last checkpoint).</summary>
         public void Retry() => Leave(gameObject.scene.path);
 
-        public void GoToMenu() => Leave(catalog.MainMenuScenePath);
+        public void GoToMenu() => FadeTo(catalog.MainMenuScenePath);
+
+        private void FadeTo(string scenePath)
+        {
+            if (!leaving) leaving = SceneTransition.To(scenePath);
+        }
 
         private void Leave(string scenePath)
         {
@@ -232,8 +237,13 @@ namespace Echoryx.Flow
             panel.anchoredPosition = new Vector2(0f, 25f);
             var background = panel.GetComponent<Image>();
             if (background != null) background.color = UiKit.PanelColor;
+            foreach (var text in panel.GetComponentsInChildren<TMP_Text>(true)) UiFonts.ApplyBody(text);
             var title = panel.Find("Title");
-            if (title != null && title.TryGetComponent<TMP_Text>(out var heading)) heading.color = UiKit.Orange;
+            if (title != null && title.TryGetComponent<TMP_Text>(out var heading))
+            {
+                heading.color = UiKit.Orange;
+                heading.font = UiFonts.Title;
+            }
 
             var hasNext = catalog.NextAfter(levelIndex) != null;
             var bottom = new Vector2(0.5f, 0f);
@@ -259,7 +269,7 @@ namespace Echoryx.Flow
             var center = new Vector2(0.5f, 0.5f);
             var panel = UiKit.Place(UiKit.Node(backdrop, "Panel"), center, Vector2.zero, new Vector2(760f, 640f));
             UiKit.Fill(panel, UiKit.PanelColor);
-            UiKit.Label(panel, "Title", "Pausa", 80f, UiKit.Orange, center, new Vector2(0f, 225f), new Vector2(700f, 100f));
+            UiFonts.ApplyTitle(UiKit.Label(panel, "Title", "Pausa", 80f, UiKit.Orange, center, new Vector2(0f, 225f), new Vector2(700f, 100f)));
             var size = new Vector2(520f, 90f);
             ResumeButton = UiKit.Button(panel, "Resume", "Reanudar", center, new Vector2(0f, 85f), size);
             RetryButton = UiKit.Button(panel, "Retry", "Reintentar nivel", center, new Vector2(0f, -30f), size);

@@ -70,7 +70,7 @@ namespace Echoryx.Flow
         {
             var rect = Place(Node(parent, name), anchor, position, size);
             var label = rect.gameObject.AddComponent<TextMeshProUGUI>();
-            label.font = TMP_Settings.defaultFontAsset;
+            label.font = UiFonts.Body;
             label.text = text;
             label.fontSize = fontSize;
             label.color = color;
@@ -98,6 +98,10 @@ namespace Echoryx.Flow
             button.colors = colors;
             var label = Label(rect, "Text", text, fontSize, Ink, new Vector2(0.5f, 0.5f), Vector2.zero, size - new Vector2(24f, 12f));
             label.fontStyle = FontStyles.Bold;
+            UiFonts.ApplyBody(label);
+            rect.pivot = new Vector2(0.5f, 0.5f); // grow around the centre without moving
+            rect.anchoredPosition = position + Vector2.Scale(new Vector2(0.5f, 0.5f) - anchor, size);
+            rect.gameObject.AddComponent<ButtonHoverScale>();
             UiEvents.RaiseButtonCreated(button);
             return button;
         }
