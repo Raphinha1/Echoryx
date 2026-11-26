@@ -60,7 +60,7 @@ CC0 no exige atribución; se acredita igualmente por cortesía (música y efecto
 | [Orbitron](https://github.com/theleagueof/orbitron) | Matt McInerney. Copyright 2018 The Orbitron Project Authors, con Reserved Font Name «Orbitron» | [SIL Open Font License 1.1](https://openfontlicense.org) | Títulos del menú, la pausa y el fin de nivel |
 | [Exo 2](https://github.com/googlefonts/Exo-2.0) | Natanael Gama. Copyright 2013 The Exo 2 Project Authors | [SIL Open Font License 1.1](https://openfontlicense.org) | Resto del texto de esos menús |
 
-Datos tomados de los metadatos de los propios `.ttf`, que están en `Assets/_Echoryx/Fonts/`. Los TMP Font Assets de `Assets/_Echoryx/Resources/Fonts/` se generan a partir de ellos (`Echoryx/Fonts/Create TMP Fonts`).
+Los `.ttf` están en `Assets/_Echoryx/Fonts/`, junto a `Orbitron-OFL.txt` y `Exo2-OFL.txt` con el texto completo de cada licencia; la pantalla de créditos los muestra al final. Los TMP Font Assets de `Assets/_Echoryx/Resources/Fonts/` se generan a partir de ellos (`Echoryx/Fonts/Create TMP Fonts`).
 
 ## Código propio del pase de arte
 
