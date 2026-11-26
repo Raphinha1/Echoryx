@@ -3,6 +3,8 @@
   "rootNamespace": "Echoryx.Robot.PlayTests",
   "references": [
     "Echoryx.Player",
+    "Echoryx.Rewind",
+    "Echoryx.Rewind.Platforms",
     "Unity.InputSystem"
   ],
   "optionalUnityReferences": [
