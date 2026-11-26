@@ -33,7 +33,8 @@ namespace Echoryx.Audio
 
         private bool[] platePressed;
         private Vector3[] doorPosition;
-        private bool[] doorMoving;
+        private int[] doorDirection; // 1 opening, -1 closing, 0 still
+        private Vector3[] doorClosed;
         private EchoState echoState;
         private CheckpointTrigger checkpoint;
         private Vector3 playerPosition;
@@ -59,7 +60,10 @@ namespace Echoryx.Audio
             mechanisms = FindObjectsByType<RewindableMechanism>(FindObjectsSortMode.None);
             platePressed = new bool[plates.Length];
             doorPosition = new Vector3[doors.Length];
-            doorMoving = new bool[doors.Length];
+            doorDirection = new int[doors.Length];
+            doorClosed = new Vector3[doors.Length];
+            for (var i = 0; i < doors.Length; i++) // doors start closed
+                if (doors[i] != null && doors[i].Panel != null) doorClosed[i] = doors[i].Panel.localPosition;
             Snapshot();
             ready = true;
         }
@@ -147,9 +151,11 @@ namespace Echoryx.Audio
             {
                 if (doors[i] == null || doors[i].Panel == null) continue;
                 var position = doors[i].Panel.localPosition;
-                var moving = (position - doorPosition[i]).sqrMagnitude > 1e-6f;
-                if (moving && !doorMoving[i]) audio.Play(SoundId.Door);
-                doorMoving[i] = moving;
+                var travel = Vector3.Distance(position, doorClosed[i]) - Vector3.Distance(doorPosition[i], doorClosed[i]);
+                var direction = travel > 0.001f ? 1 : travel < -0.001f ? -1 : 0;
+                if (direction != 0 && direction != doorDirection[i])
+                    audio.Play(direction > 0 ? SoundId.DoorOpen : SoundId.DoorClose);
+                doorDirection[i] = direction;
                 doorPosition[i] = position;
             }
             var active = checkpoints != null ? checkpoints.ActiveCheckpoint : null;
@@ -178,7 +184,7 @@ namespace Echoryx.Audio
             for (var i = 0; i < doors.Length; i++)
             {
                 if (doors[i] != null && doors[i].Panel != null) doorPosition[i] = doors[i].Panel.localPosition;
-                doorMoving[i] = false;
+                doorDirection[i] = 0;
             }
             echoState = recorder != null ? recorder.State : EchoState.Available;
             checkpoint = checkpoints != null ? checkpoints.ActiveCheckpoint : null;

@@ -6,8 +6,8 @@ namespace Echoryx.Audio
 {
     public enum SoundId
     {
-        Footstep, Jump, Land, PressurePlate, Door, EchoRecord, EchoPlay, EchoEnd,
-        Rewind, Checkpoint, Goal, UiClick, UiHover, MenuMusic, LevelMusic
+        Footstep, Jump, Land, PressurePlate, DoorOpen, EchoRecord, EchoPlay, EchoEnd,
+        Rewind, Checkpoint, Goal, UiClick, UiHover, MenuMusic, LevelMusic, DoorClose
     }
 
     /// <summary>One clip, or several to pick from at random. May be left empty.</summary>
@@ -48,7 +48,8 @@ namespace Echoryx.Audio
 
         [Header("World")]
         public Sound pressurePlate = new Sound();
-        public Sound door = new Sound();
+        [UnityEngine.Serialization.FormerlySerializedAs("door")] public Sound doorOpen = new Sound();
+        public Sound doorClose = new Sound();
         public Sound checkpoint = new Sound();
         public Sound goal = new Sound();
 
@@ -78,7 +79,8 @@ namespace Echoryx.Audio
                 case SoundId.Jump: return jump;
                 case SoundId.Land: return land;
                 case SoundId.PressurePlate: return pressurePlate;
-                case SoundId.Door: return door;
+                case SoundId.DoorOpen: return doorOpen;
+                case SoundId.DoorClose: return doorClose;
                 case SoundId.EchoRecord: return echoRecord;
                 case SoundId.EchoPlay: return echoPlay;
                 case SoundId.EchoEnd: return echoEnd;

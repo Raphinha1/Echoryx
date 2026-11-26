@@ -9,7 +9,7 @@
 | Footsteps | Cada 1,7 m andando en el suelo |
 | Jump / Land | Despegue / aterrizaje tras un salto o caída |
 | Pressure Plate | La placa pasa a pulsada |
-| Door | La puerta empieza a moverse (abrir o cerrar) |
+| Door Open / Door Close | La puerta empieza a abrirse / a cerrarse |
 | Checkpoint / Goal | Checkpoint nuevo / nivel completado |
 | Echo Record («Echo grabando») | **En bucle** mientras se graba |
 | Echo Play («Echo reproduciendo») | **En bucle** mientras se reproduce |
@@ -17,6 +17,8 @@
 | Rewind | En bucle mientras se rebobina (usar un clip que haga loop) |
 | Ui Click / Ui Hover | Botones de menú: clic o Enter / puntero encima o navegación con teclado o mando |
 | Menu Music / Level Music | En bucle en `MainMenu` / en los niveles del catálogo, con crossfade de 1,2 s |
+
+`Echoryx/Audio/Assign Clips` asigna los clips de `Assets/_Echoryx/Audio/` y sus volúmenes. Sobrescribe esas entradas, no la música.
 
 ## Volúmenes
 
