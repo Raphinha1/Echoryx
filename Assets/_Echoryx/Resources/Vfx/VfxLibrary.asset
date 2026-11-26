@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb8872e2f5d2fb0e6af257319f5e8983, type: 3}
+  m_Name: VfxLibrary
+  m_EditorClassIdentifier: Echoryx.Vfx::Echoryx.Vfx.VfxLibrary
+  glow: {fileID: 2100000, guid: 52df2c1c648c0864ab3f2a74d0d12e59, type: 2}
+  dust: {fileID: 2100000, guid: dceacd23071992f4a86963a45d56d2ae, type: 2}
+  ring: {fileID: 2100000, guid: 37294b775a3aa3d24a21a646fbc0961b, type: 2}

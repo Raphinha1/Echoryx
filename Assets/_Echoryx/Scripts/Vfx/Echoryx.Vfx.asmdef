@@ -1,0 +1,6 @@
+{
+  "name": "Echoryx.Vfx",
+  "rootNamespace": "Echoryx.Vfx",
+  "references": ["Echoryx.Level", "Echoryx.Game", "Echoryx.Player", "Echoryx.Echo", "Echoryx.Rewind"],
+  "autoReferenced": true
+}
