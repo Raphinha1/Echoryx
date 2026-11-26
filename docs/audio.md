@@ -37,14 +37,6 @@ Fuera de `Scripts/Audio/` solo se añadieron `DoorController.Panel` (lectura) y 
 
 ## Sonido del Rewind
 
-`rewind-A.ogg`, `rewind-B.ogg` y `rewind-C.ogg` son **sonidos sintetizados por nosotros** para Echoryx con `Tools/audio/synth_rewind.py` (Python y NumPy, sin muestras ni material de terceros): **no dependen de ninguna licencia externa**. Duran 2 s, rondan −18 LUFS, no tienen energía apreciable bajo 300 Hz y son periódicos (el buffer es circular, así que no hay salto en la unión; cada ráfaga y tic lleva fundidos cortos).
+`rewind-C.ogg` es un **sonido sintetizado por nosotros** para Echoryx con `Tools/audio/synth_rewind.py` (Python y NumPy, sin muestras ni material de terceros): **no depende de ninguna licencia externa**. Es un whoosh: cuatro barridos ascendentes de ruido filtrado con eco corto, sin tono añadido. Dura 2 s, ronda −18 LUFS, no tiene energía apreciable bajo 300 Hz y es periódico (buffer circular, sin salto en la unión). `Assign Clips` lo asigna con volumen 0,8. Para regenerarlo: `python3 Tools/audio/synth_rewind.py` desde la raíz.
 
-| Menú `Echoryx/Audio/Rewind/…` | Archivo | Sonido |
-|---|---|---|
-| A - Cinta (**por defecto**) | `rewind-A.ogg` | Ráfagas rápidas de ruido de 1–6 kHz que se van abriendo hacia arriba |
-| B - Mecanismo | `rewind-B.ogg` | Tics secos, unos 16 por segundo en patrón tic-tac, con un brillo suave |
-| C - Whoosh | `rewind-C.ogg` | Cuatro barridos ascendentes de ruido con eco corto y un tono apenas perceptible |
-
-Los menús cambian solo la entrada **Rewind** del `AudioLibrary` (volumen 0,8). `Assign Clips` vuelve a A.
-
-Antecedentes: `rewind.ogg` (original de Kenney, sin modificar) casi no se oía en altavoces pequeños por tener la energía en los graves; la copia filtrada `rewind-audible.ogg` sonaba como una sirena. Ambos se conservan, pero ya no se usan.
+Los clips probados antes se retiraron; siguen en el historial de Git.
