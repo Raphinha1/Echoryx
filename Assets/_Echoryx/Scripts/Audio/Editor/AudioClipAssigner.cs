@@ -11,6 +11,29 @@ namespace Echoryx.Audio.Editor
     public static class AudioClipAssigner
     {
         private const string Folder = "Assets/_Echoryx/Audio/";
+        // Synthesized candidates (Tools/audio/synth_rewind.py). Assign Clips restores the default.
+        private const string DefaultRewind = "rewind-A";
+        private const float RewindVolume = 0.8f;
+
+        [MenuItem("Echoryx/Audio/Rewind/A - Cinta")]
+        public static void UseTapeRewind() => UseRewind("rewind-A");
+
+        [MenuItem("Echoryx/Audio/Rewind/B - Mecanismo")]
+        public static void UseClockworkRewind() => UseRewind("rewind-B");
+
+        [MenuItem("Echoryx/Audio/Rewind/C - Whoosh")]
+        public static void UseWhooshRewind() => UseRewind("rewind-C");
+
+        // Changes only the Rewind entry.
+        private static void UseRewind(string name)
+        {
+            var library = AssetDatabase.LoadAssetAtPath<AudioLibrary>(AudioAssetsBuilder.LibraryPath)
+                ?? throw new InvalidOperationException("Missing " + AudioAssetsBuilder.LibraryPath);
+            Set(library.rewind, name, RewindVolume);
+            EditorUtility.SetDirty(library);
+            AssetDatabase.SaveAssets();
+            Debug.Log("AUDIO Rewind: " + name);
+        }
 
         [MenuItem("Echoryx/Audio/Assign Clips")]
         public static void Assign()
@@ -26,8 +49,7 @@ namespace Echoryx.Audio.Editor
             Set(library.echoRecord, "echo-grabando", 0.45f);
             Set(library.echoPlay, "echo-reproduciendo", 0.45f);
             Set(library.echoEnd, "echo-terminar", 0.65f);
-            // rewind.ogg is almost all low end, inaudible on small speakers; this derived copy is high-passed at 500 Hz.
-            Set(library.rewind, "rewind-audible", 0.9f);
+            Set(library.rewind, DefaultRewind, RewindVolume);
             Set(library.checkpoint, "checkpoint", 0.75f);
             Set(library.goal, "meta", 0.85f);
             Set(library.uiClick, "Clic", 0.4f);

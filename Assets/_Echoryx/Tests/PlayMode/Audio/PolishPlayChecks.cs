@@ -117,14 +117,14 @@ namespace Echoryx.Audio.PlayTests
             var audio = AudioManager.Ensure();
             var player = Object.FindFirstObjectByType<CheckpointManager>().Player;
             var platform = Object.FindFirstObjectByType<RewindMovingPlatform>();
-            Assert.That(audio.Library.rewind.Pick().name, Is.EqualTo("rewind-audible"));
+            Assert.That(audio.Library.rewind.Pick().name, Is.EqualTo("rewind-A"));
             yield return new WaitForSeconds(3f); // the platform finishes its trip
             Assert.That(platform.BeginRewind(), Is.True);
             yield return new WaitForSecondsRealtime(0.4f);
             Assert.That(platform.Mode, Is.EqualTo(RewindMode.Rewinding));
             Assert.That(audio.IsLoopActive(SoundId.Rewind), Is.True);
             Assert.That(audio.LoopGain(SoundId.Rewind), Is.EqualTo(1f));
-            var source = audio.GetComponents<AudioSource>().Single(s => s.clip != null && s.clip.name == "rewind-audible");
+            var source = audio.GetComponents<AudioSource>().Single(s => s.clip != null && s.clip.name == "rewind-A");
             Assert.That(source.loop && source.volume > 0.5f, Is.True);
             Assert.That(source.outputAudioMixerGroup, Is.SameAs(audio.Library.sfxGroup));
             platform.EndRewind();

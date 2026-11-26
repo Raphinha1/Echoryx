@@ -35,11 +35,16 @@ Los bucles (Rewind y los dos del Echo; usar clips que repitan sin cortes) entran
 
 Fuera de `Scripts/Audio/` solo se añadieron `DoorController.Panel` (lectura) y `UiEvents.ButtonCreated`; no cambia la lógica de motor, Echo, Rewind ni checkpoints. Todo el audio es 2D.
 
-## Rewind inaudible (diagnóstico)
+## Sonido del Rewind
 
-El clip estaba asignado (volumen 0,55, grupo SFX) y, en una prueba rebobinando con el botón derecho, el bucle arrancaba y entregaba señal. La causa medida está en el archivo: casi toda la energía de `rewind.ogg` está por debajo de 150 Hz (media total −9,7 dB; −30,4 dB por encima de 300 Hz, unos 20 dB menos que los bucles del Echo), así que en altavoces pequeños casi no se oye. `Assign Clips` usa `rewind-audible.ogg` (volumen 0,9), derivado del original, que no se modifica: pasa-altos a 500 Hz con cuatro etapas (unos 48 dB/octava), ganancia y limitador. Queda en −16,1 LUFS; con el volumen aplicado, unos −17 LUFS, entre los dos bucles del Echo (−14 y −18,5). Se filtran tres copias seguidas y se recorta la central para que el filtro no rompa el bucle:
+`rewind-A.ogg`, `rewind-B.ogg` y `rewind-C.ogg` son **sonidos sintetizados por nosotros** para Echoryx con `Tools/audio/synth_rewind.py` (Python y NumPy, sin muestras ni material de terceros): **no dependen de ninguna licencia externa**. Duran 2 s, rondan −18 LUFS, no tienen energía apreciable bajo 300 Hz y son periódicos (el buffer es circular, así que no hay salto en la unión; cada ráfaga y tic lleva fundidos cortos).
 
-```
-HP="highpass=f=500:p=2,highpass=f=500:p=2,highpass=f=500:p=2,highpass=f=500:p=2"
-ffmpeg -stream_loop 2 -i rewind.ogg -af "aformat=sample_fmts=flt,$HP,volume=24dB,alimiter=limit=0.84:attack=3:release=50:level=false,atrim=start_sample=220500:end_sample=441000,asetpts=N/SR/TB" -c:a libvorbis -q:a 6 rewind-audible.ogg
-```
+| Menú `Echoryx/Audio/Rewind/…` | Archivo | Sonido |
+|---|---|---|
+| A - Cinta (**por defecto**) | `rewind-A.ogg` | Ráfagas rápidas de ruido de 1–6 kHz que se van abriendo hacia arriba |
+| B - Mecanismo | `rewind-B.ogg` | Tics secos, unos 16 por segundo en patrón tic-tac, con un brillo suave |
+| C - Whoosh | `rewind-C.ogg` | Cuatro barridos ascendentes de ruido con eco corto y un tono apenas perceptible |
+
+Los menús cambian solo la entrada **Rewind** del `AudioLibrary` (volumen 0,8). `Assign Clips` vuelve a A.
+
+Antecedentes: `rewind.ogg` (original de Kenney, sin modificar) casi no se oía en altavoces pequeños por tener la energía en los graves; la copia filtrada `rewind-audible.ogg` sonaba como una sirena. Ambos se conservan, pero ya no se usan.

@@ -47,11 +47,13 @@ Autor: **MintoDog**, en OpenGameArt.
 
 ### Efectos
 
-El resto de los `.ogg` de esa carpeta, de **Kenney Vleugels** ([Kenney.nl](https://kenney.nl)), packs **Digital Audio**, **Impact Sounds**, **Interface Sounds**, **Sci-Fi Sounds** y **UI Audio**. Licencia **CC0**, confirmada en el `License.txt` de cada pack.
+El resto de los `.ogg` de esa carpeta (salvo `rewind-A/B/C`, ver abajo), de **Kenney Vleugels** ([Kenney.nl](https://kenney.nl)), packs **Digital Audio**, **Impact Sounds**, **Interface Sounds**, **Sci-Fi Sounds** y **UI Audio**. Licencia **CC0**, confirmada en el `License.txt` de cada pack.
 
 CC0 no exige atribución; se acredita igualmente por cortesía (música y efectos).
 
 `rewind-audible.ogg` es una versión derivada de `rewind.ogg` (CC0): pasa-altos a 500 Hz, ganancia y limitador para que se oiga en altavoces pequeños.
+
+`rewind-A.ogg`, `rewind-B.ogg` y `rewind-C.ogg` son sonidos sintetizados por el proyecto Echoryx (`Tools/audio/synth_rewind.py`), sin material ni licencia externos.
 
 ## Fuentes
 
