@@ -1,0 +1,11 @@
+{
+  "name": "Echoryx.Flow.Editor",
+  "rootNamespace": "Echoryx.Flow.Editor",
+  "references": [
+    "Echoryx.Flow",
+    "Unity.InputSystem"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ]
+}

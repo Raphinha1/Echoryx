@@ -1,0 +1,22 @@
+{
+  "name": "Echoryx.Flow.PlayTests",
+  "rootNamespace": "Echoryx.Flow.PlayTests",
+  "references": [
+    "Echoryx.Flow",
+    "Echoryx.Level",
+    "Echoryx.Game",
+    "Echoryx.Player",
+    "Echoryx.Echo",
+    "Echoryx.Interactions",
+    "Echoryx.Rewind",
+    "Echoryx.Rewind.Platforms",
+    "Echoryx.Rewind.Input",
+    "Unity.InputSystem",
+    "Unity.TextMeshPro",
+    "UnityEngine.UI"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "autoReferenced": false
+}
