@@ -9,15 +9,17 @@
 
 ---
 
-## Capturas del Proyecto
+## Capturas del Desarrollo (archivo)
+
+Etapas anteriores del proyecto: la sala visual y el protagonista de estas imágenes ya fueron retirados (ver [créditos](docs/credits.md) y [archivo](docs/archivo/README.md)).
 
 | Sala de Referencia Sci-Fi (URP) | Locomoción del Protagonista |
 |:---:|:---:|
-| ![Sala de referencia visual sci-fi](docs/images/s05-a2-reference-room.png) | ![SuperSoldier corriendo](docs/images/s05-b42-run.png) |
+| ![Sala de referencia visual sci-fi](docs/archivo/images/s05-a2-reference-room.png) | ![SuperSoldier corriendo](docs/archivo/images/s05-b42-run.png) |
 
 | Vista en Tercera Persona | Plataforma Móvil con Físicas Desacopladas |
 |:---:|:---:|
-| ![Tercera persona](docs/images/s05-a2-third-person.png) | ![SuperSoldier sobre plataforma](docs/images/s05-b42-platform-idle.png) |
+| ![Tercera persona](docs/archivo/images/s05-a2-third-person.png) | ![SuperSoldier sobre plataforma](docs/archivo/images/s05-b42-platform-idle.png) |
 
 ---
 
@@ -107,10 +109,10 @@ Para más detalles, consulta la [documentación de pruebas](docs/testing.md).
 
 ## Documentación del Proyecto
 
-- 📄 [**Informe General de Avance (con capturas y análisis técnico)**](docs/informe-avance-proyecto.md)
+- 📄 [**Informe General de Avance (con capturas y análisis técnico)**](docs/archivo/informe-avance-proyecto.md)
 - 🎮 [Game Design Document (GDD)](docs/GDD.md)
 - 🏛️ [Arquitectura de Software y Ensamblados](docs/architecture.md)
 - 📅 [Plan de Desarrollo y Roadmap](docs/development-plan.md)
 - 🧪 [Guía de Pruebas y Validación](docs/testing.md)
 - 🎨 [Pipeline de Assets Visuales](docs/visual-assets.md)
-- 🚶 [Calibración de Locomoción del SuperSoldier](docs/supersoldier-locomotion.md)
+- 🚶 [Archivo: locomoción del SuperSoldier (retirado)](docs/archivo/supersoldier-locomotion.md)

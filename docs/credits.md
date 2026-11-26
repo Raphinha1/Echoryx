@@ -23,7 +23,7 @@ El paquete no incluye archivo de licencia ni de créditos; consulta la ficha del
 
 ### SCI-FI SuperSoldier (retirado)
 
-Se usó durante el desarrollo como protagonista de prueba y **fue retirado** del proyecto; el juego usa ahora el robot descrito en *Personaje*. Sus archivos **siguen en el historial de Git**, y las capturas y vídeos de la evidencia de desarrollo muestran el modelo, por lo que la atribución se mantiene.
+Se usó durante el desarrollo como protagonista de prueba y **fue retirado** del proyecto; el juego usa ahora el robot descrito en *Personaje*. Sus archivos **siguen en el historial de Git**, y las capturas y vídeos de la evidencia de desarrollo, [archivada](archivo/README.md), muestran el modelo, por lo que la atribución se mantiene.
 
 | Obra | Autor | Licencia |
 |---|---|---|

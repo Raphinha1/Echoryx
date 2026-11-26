@@ -55,4 +55,4 @@ Las decisiones y evidencia S05-A1 se conservan en [visual-assets](visual-assets.
 
 S05-A2 creó VisualReferenceRoom y cinco prefabs de estructura; la verificación automatizada y las capturas están documentadas en [sala de referencia](visual-reference-room.md). El usuario confirmó su cierre/validación al iniciar S05-B1. S05-B1 evaluó y retiró Cybernet Warrior; su registro y hashes se conservan. S05-B2/B3 aprobaron técnica y visualmente el SuperSoldier y su locomoción en laboratorios aislados. S05-B4 integrará el aspecto visual con PlayerMotor; todavía no comienza.
 
-Evidencia B3 y pasos para reproducir la validación manual: [laboratorio de locomoción](supersoldier-locomotion.md).
+Evidencia B3 y pasos para reproducir la validación manual: [laboratorio de locomoción](archivo/supersoldier-locomotion.md).

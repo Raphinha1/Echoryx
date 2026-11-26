@@ -81,9 +81,9 @@ La cápsula provisional de 2 m ocupa una parte grande de la pantalla a ese FOV; 
 - Capturas reales URP con OpenGL Core/Mesa Intel UHD Graphics: conjunto y cámara del juego en Play Mode; inspeccionadas sin materiales magenta. Los huecos entre FBX se resolvieron con encajes y respaldos; no se detectaron caras estructurales ausentes desde las vistas inspeccionadas.
 - Resultado de las suites y alcance manual se registra en [testing](testing.md#s05-a2-sala-de-referencia).
 
-![Sala — vista de conjunto](images/s05-a2-reference-room.png)
+![Sala — vista de conjunto](archivo/images/s05-a2-reference-room.png)
 
-![Sala — cámara del juego en Play Mode](images/s05-a2-third-person.png)
+![Sala — cámara del juego en Play Mode](archivo/images/s05-a2-third-person.png)
 
 ## Recorrido manual de referencia
 

@@ -81,13 +81,13 @@ Menús:
 
 1. `Echoryx/S05-A1/Prepare Visual Assets`: configura este subconjunto y materiales; crea la galería si no existe. No abre escenas de gameplay ni reemplaza una galería existente. Reejecutarlo vuelve a aplicar la configuración documentada a los nuevos assets/materiales de S05-A1.
 2. `Echoryx/S05-A1/Validate Visual Assets`: comprueba los diez modelos, slots remapeados a URP Lit, ausencia de componentes de gameplay y configuración de importación; actualiza el informe.
-3. `Echoryx/S05-A1/Render Visual Lab Preview`: abre solo VisualAssetLab y guarda una captura en `docs/images/s05-a1-visual-lab.png`. Requiere un dispositivo gráfico; no funciona con `-nographics`.
+3. `Echoryx/S05-A1/Render Visual Lab Preview`: abre solo VisualAssetLab y guarda una captura en `docs/archivo/images/s05-a1-visual-lab.png`. Requiere un dispositivo gráfico; no funciona con `-nographics`.
 
 `RebuildLab` es una entrada explícita de CLI que reconstruye **solo VisualAssetLab**; sobrescribe cambios manuales de presentación de esa galería y no es necesaria para usar los assets. No ejecutarla sobre una galería personalizada sin conservar esos cambios.
 
 El resultado observado y los pasos pendientes se registran en [testing](testing.md#s05-a1-importación-y-galería-visual). Esta escena no está en Build Settings y no incluye Player, Echo, Rewind, checkpoints ni navegación. Permite comprobar los recursos antes de integrarlos.
 
-![Galería de validación URP](images/s05-a1-visual-lab.png)
+![Galería de validación URP](archivo/images/s05-a1-visual-lab.png)
 
 ## Montaje posterior: S05-A2
 
@@ -102,4 +102,4 @@ El candidato Cybernet Warrior fue evaluado y retirado por falta de rig y su dens
 
 ## Personaje S05-B2
 
-SCI-FI SuperSoldier se conserva separado de la biblioteca Quaternius. Su FBX incluye rig/skinning y su Avatar Humanoid y locomoción están aprobados en laboratorio; procedencia, mapas, costes y captura: [informe S05-B2](supersoldier-validation.md).
+SCI-FI SuperSoldier se conserva separado de la biblioteca Quaternius. Su FBX incluye rig/skinning y su Avatar Humanoid y locomoción están aprobados en laboratorio; procedencia, mapas, costes y captura: [informe S05-B2](archivo/supersoldier-validation.md).
