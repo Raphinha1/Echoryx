@@ -10,7 +10,7 @@
 
 ## Estado
 
-- Base: Unity 6000.3.22f1, URP 17.3.0, Input System 1.20.1 y Cinemachine 3.1.7 declarados.
+- Base: Unity 6000.3.29f1 (iniciado en 6000.3.22f1), URP 17.3.0, Input System 1.20.1 y Cinemachine 3.1.7 declarados.
 - S00: cerrado en `aa2f2c5`; `Prototype` y `Laboratory` existen.
 - S01: cerrado según el estado informado por el usuario; controlador, cámara y circuito de `Prototype` presentes.
 - S02-A: captura con Q hasta cinco segundos a 20 Hz, validada manualmente por el usuario (hasta 101 muestras).
@@ -32,5 +32,6 @@
 - HUD y niveles definitivos siguen sin implementarse.
 - S05-B4: integración de animación visual con PlayerMotor mediante PlayerAnimationDriver y desacoplamiento de velocidad sobre plataformas con ResolvedPlanarMotion; laboratorio PlayerAnimationIntegrationLab completado; 91/91 EditMode y 25/25 PlayMode pasaron (116/116 total).
 - Documentación e informe general de avance con capturas técnicas preparado en docs/archivo/informe-avance-proyecto.md y README.md actualizado.
+- Limpieza: retirados el SuperSoldier, Quaternius, sus laboratorios, los instaladores S01–S04 y `Laboratory`; la evidencia antigua está en `docs/archivo/`. `Level_01_Tutorial` es la primera escena del build. Las líneas anteriores son historial.
 
 Consulta `docs/` para especificaciones completas, dependencias y criterios; evita duplicar aquí detalles técnicos.

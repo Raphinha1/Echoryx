@@ -1,6 +1,6 @@
 # Level_01_Tutorial
 
-Escena: `Assets/_Echoryx/Scenes/Level_01_Tutorial.unity` (con pase de arte, ver [Arte](#arte)) (añadida a Build Settings tras `Prototype`). Nivel de tres salas en línea (+Z) que enseña Echo y Rewind. Se regenera con `Echoryx > Level 01 > Build Tutorial` (requiere TMP Essentials, ver abajo).
+Escena: `Assets/_Echoryx/Scenes/Level_01_Tutorial.unity` (con pase de arte, ver [Arte](#arte)) (primera escena de Build Settings; `Prototype` va después). Nivel de tres salas en línea (+Z) que enseña Echo y Rewind. Se regenera con `Echoryx > Level 01 > Build Tutorial` (requiere TMP Essentials, ver abajo).
 
 ## Controles reales
 
@@ -41,7 +41,6 @@ Scripts nuevos en `Assets/_Echoryx/Scripts/Level/` (asmdef `Echoryx.Level`): `Le
 ## Qué falta / a revisar a mano
 
 - Revisar visualmente cámara Cinemachine (colisión con muros de 6 m de ancho), iluminación y legibilidad de los hints en el Editor.
-- Jugador con cápsula placeholder (el prefab `Player` no incluye todavía el personaje animado) y bloques con color plano; reemplazar arte después.
 - TMP Essential Resources se importó en `Assets/TextMesh Pro/` (necesario para los textos).
 - Sin audio, sin menú ni botón de reintento tras la meta, sin persistencia.
 - La plataforma parte al cargar la escena y queda aparcada lejos; tras un respawn en la sala 3 se restaura **aparcada** en el mismo estado (ver *Plataforma y respawn*), así que siempre hace falta Rewind.
@@ -61,7 +60,6 @@ Pase visual con los kits CC0 de Kenney (ver [credits](credits.md)); no toca lóg
 
 - Recorrer el nivel en Play y ajustar a gusto intensidad de Bloom, niebla (`Lighting > Environment`) y colores del skybox (`Materials/Art/ArtSky.mat`).
 - Las pantallas de pared y los bloques del fondo son decoración estática sin collider: moverlos/quitarlos no afecta al juego.
-- El jugador sigue siendo la cápsula placeholder.
 
 ### Correcciones visuales (post-revisión en el Editor)
 
@@ -76,10 +74,10 @@ Sustituye la cápsula del Player y el visual del Echo con el paquete *Animated L
 
 - **Paquete:** rig *Generic* (sin Humanoid), 10 clips sin root motion. Usados: `StaticIdle`, `Walk`, `Run`, `Jump_Start`, `Jump_Air`, `Jump_Landing`. No usados: `CombatIdle`, `BasicAttack`, `GetHit`, `Death`. Los materiales ya son URP Lit / ShaderGraph; las versiones con Metallic 1 se veían negras, por lo que hay copias mate en `Materials/Robot/`. La variante de color se elige con el desplazamiento del atlas (`RobotPlayerBase`/`RobotPlayerOrange`, fila 16: acentos naranja-marrón); el casco/torso negro es el diseño del robot.
 - **Controller** `Art/Animations/Robot/PlayerLocomotion.controller`: Blend Tree 1D por `Speed` (Idle 0, Walk ≈2 m/s, Run 6 m/s con `timeScale` calibrado ≈1,5 según la zancada del clip) y estados `Jump_Start → Jump_Air → Jump_Landing` por `Grounded`. Apply Root Motion desactivado. La calibración (zancada estimada del pie en el clip) es una aproximación: ajusta el *threshold*/`timeScale` si ves patinaje.
-- **`RobotAnimationDriver`** (puente de solo lectura, en el prefab `RobotVisual`): usa `PlayerMotor.PlanarSpeed`, que ya es el desplazamiento resuelto del `CharacterController` descontando el transporte de plataformas y el movimiento bloqueado por paredes (reutilizado en lugar de recalcularlo, y sin tocar el motor); suaviza con SmoothDamp (`speedDampTime`, `stopThreshold`, `groundedGrace` expuestos). El driver del SuperSoldier (`PlayerAnimationDriver`) sigue intacto.
+- **`RobotAnimationDriver`** (puente de solo lectura, en el prefab `RobotVisual`): usa `PlayerMotor.PlanarSpeed`, que ya es el desplazamiento resuelto del `CharacterController` descontando el transporte de plataformas y el movimiento bloqueado por paredes (reutilizado en lugar de recalcularlo, y sin tocar el motor); suaviza con SmoothDamp (`speedDampTime`, `stopThreshold`, `groundedGrace` expuestos). El antiguo driver del SuperSoldier (`PlayerAnimationDriver`) se retiró en la limpieza.
 - **Prefabs** (`Prefabs/Characters/`): `RobotVisual` (escala 1,1 ≈ 1,85 m, pies en el suelo, mira a +Z) y `RobotEchoVisual` (mismo modelo con `EchoHologram`, cian semitransparente, sin sombras). `Player.prefab` y `EchoActor.prefab` los instancian; la cápsula y el `Hologram Visual` antiguos quedan **desactivados** (no borrados) para no romper overrides en escenas.
 - **Echo:** se anima con su propio desplazamiento (sin saltos: siempre "en suelo").
-- **Validación previa:** `RobotIntegrationLab.unity` (Player sin modificar + robot en escena). Se probó caminar/correr/parar, salto, pared y plataforma antes de integrar. `PlayerAnimationIntegrationLab` (SuperSoldier) oculta el robot en su instancia de Player, y una aserción antigua ("el Player compartido no tiene Animator") se actualizó: ahora los únicos Animators del Player son los del robot.
+- **Validación previa:** `RobotIntegrationLab.unity` (Player sin modificar + robot en escena). Se probó caminar/correr/parar, salto, pared y plataforma antes de integrar.
 - **Reconstruir:** `Echoryx > Robot > 1 Build Controller, Prefabs and Lab` y `2 Integrate Into Player and Echo`.
 
 ### Revisar a mano
