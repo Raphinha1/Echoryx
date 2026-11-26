@@ -18,6 +18,9 @@ namespace Echoryx.Interactions
         private int resetFrame = -1;
         private bool resetPending;
 
+        /// <summary>The moving panel, read-only for presentation (e.g. door sounds).</summary>
+        public Transform Panel => doorPanel;
+
         public bool IsOpen => doorPanel != null
             && Vector3.Distance(doorPanel.localPosition, closedLocalPosition + openOffset) < 0.001f;
 

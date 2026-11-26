@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e741a52448343035d8e9c57af63702c2, type: 3}
+  m_Name: AudioLibrary
+  m_EditorClassIdentifier: Echoryx.Audio::Echoryx.Audio.AudioLibrary
+  musicGroup: {fileID: -8728706109564718258, guid: d41cd193ed1ef6f7bb4522faf21a8c83, type: 2}
+  sfxGroup: {fileID: 4491795211669915781, guid: d41cd193ed1ef6f7bb4522faf21a8c83, type: 2}
+  footsteps:
+    clips:
+    - {fileID: 8300000, guid: a78a5731df3042953a78ce432e1f0ee5, type: 3}
+    volume: 0.35
+  jump:
+    clips:
+    - {fileID: 8300000, guid: 3f935f53a2494dfffb8f6cf493a26b21, type: 3}
+    volume: 0.55
+  land:
+    clips:
+    - {fileID: 8300000, guid: e7f601042c66051cd9ab6488c8aec5b7, type: 3}
+    volume: 0.55
+  pressurePlate:
+    clips:
+    - {fileID: 8300000, guid: 14b50d07e7032409eabe40e613028e2b, type: 3}
+    volume: 0.7
+  doorOpen:
+    clips:
+    - {fileID: 8300000, guid: f47289072378b4cb9a93377696eb3c1c, type: 3}
+    volume: 0.7
+  doorClose:
+    clips:
+    - {fileID: 8300000, guid: 60114f8bca610daf9bdcbf740474f6bd, type: 3}
+    volume: 0.7
+  checkpoint:
+    clips:
+    - {fileID: 8300000, guid: a010b03c1ba0419bfae8b102b289fe18, type: 3}
+    volume: 0.75
+  goal:
+    clips:
+    - {fileID: 8300000, guid: 735b3564b5a6941009aa3f0fa464458c, type: 3}
+    volume: 0.85
+  echoRecord:
+    clips:
+    - {fileID: 8300000, guid: 2206b66a5401eedd290605eef3c57dfb, type: 3}
+    volume: 0.45
+  echoPlay:
+    clips:
+    - {fileID: 8300000, guid: 791504242ad018fe0b4b8b28cf63b878, type: 3}
+    volume: 0.45
+  echoEnd:
+    clips:
+    - {fileID: 8300000, guid: 3730707cc2aec0029a3c25769e520b9b, type: 3}
+    volume: 0.65
+  rewind:
+    clips:
+    - {fileID: 8300000, guid: c34b860e7287a299eb12fa9c886b9909, type: 3}
+    volume: 0.55
+  uiClick:
+    clips:
+    - {fileID: 8300000, guid: d4ad77a103a1f230c8689bff0977a620, type: 3}
+    volume: 0.4
+  uiHover:
+    clips:
+    - {fileID: 8300000, guid: d4ad77a103a1f230c8689bff0977a620, type: 3}
+    volume: 0.15
+  menuMusic:
+    clips:
+    - {fileID: 8300000, guid: cd9c38506e4f0002da7a095afaba443a, type: 3}
+    volume: 0.5
+  levelMusic:
+    clips:
+    - {fileID: 8300000, guid: d33b01e81131e35d98a054daa7a110e0, type: 3}
+    volume: 0.5

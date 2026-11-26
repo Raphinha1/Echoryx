@@ -1,0 +1,15 @@
+{
+  "name": "Echoryx.Audio",
+  "rootNamespace": "Echoryx.Audio",
+  "references": [
+    "Echoryx.Flow",
+    "Echoryx.Level",
+    "Echoryx.Game",
+    "Echoryx.Player",
+    "Echoryx.Echo",
+    "Echoryx.Interactions",
+    "Echoryx.Rewind",
+    "UnityEngine.UI"
+  ],
+  "autoReferenced": true
+}

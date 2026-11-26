@@ -115,6 +115,7 @@ Para más detalles, consulta la [documentación de pruebas](docs/testing.md).
 - 📄 [**Informe General de Avance (con capturas y análisis técnico)**](docs/archivo/informe-avance-proyecto.md)
 - 🎮 [Game Design Document (GDD)](docs/GDD.md)
 - 🧭 [Flujo del juego: menú, niveles, pausa y progreso](docs/game-flow.md)
+- 🔊 [Audio: mixer, librería de sonidos y dónde asignar clips](docs/audio.md)
 - 🏛️ [Arquitectura de Software y Ensamblados](docs/architecture.md)
 - 📅 [Plan de Desarrollo y Roadmap](docs/development-plan.md)
 - 🧪 [Guía de Pruebas y Validación](docs/testing.md)

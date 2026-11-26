@@ -1,0 +1,6 @@
+{
+  "name": "Echoryx.Audio.Editor",
+  "rootNamespace": "Echoryx.Audio.Editor",
+  "references": ["Echoryx.Audio"],
+  "includePlatforms": ["Editor"]
+}

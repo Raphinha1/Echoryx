@@ -34,6 +34,23 @@ Cambios hechos en Echoryx: ajustes de importación Humanoid en Unity, remapeo de
 
 Estuvo en `Assets/_Echoryx/Art/Characters/SihaGamesSuperSoldier/`; esa carpeta incluía `ATTRIBUTION.md` y `provenance.json` (enlaces y SHA-256 por archivo), recuperables desde el historial.
 
+## Audio
+
+### Música
+
+Autor: **MintoDog**, en OpenGameArt.
+
+| Archivo (`Assets/_Echoryx/Audio/`) | Uso | Fuente | Licencia |
+|---|---|---|---|
+| `sci-fi_puzzle_title_bpm120.ogg` | Menú | <https://opengameart.org/content/sci-fi-puzzle-title> | CC0 |
+| `sci-fi_puzzle_in-game_2_bpm95.ogg` | Niveles | <https://opengameart.org/node/180660> | CC0 |
+
+### Efectos
+
+El resto de los `.ogg` de esa carpeta, de **Kenney Vleugels** ([Kenney.nl](https://kenney.nl)), packs **Digital Audio**, **Impact Sounds**, **Interface Sounds**, **Sci-Fi Sounds** y **UI Audio**. Licencia **CC0**, confirmada en el `License.txt` de cada pack.
+
+CC0 no exige atribución; se acredita igualmente por cortesía (música y efectos).
+
 ## Código propio del pase de arte
 
 - `Assets/_Echoryx/Art/Shaders/EchoryxGradientSkybox.shader`: skybox con degradado y estrellas, escrito para este proyecto (sin texturas de terceros).
