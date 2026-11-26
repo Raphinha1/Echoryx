@@ -98,6 +98,7 @@ namespace Echoryx.Flow
             button.colors = colors;
             var label = Label(rect, "Text", text, fontSize, Ink, new Vector2(0.5f, 0.5f), Vector2.zero, size - new Vector2(24f, 12f));
             label.fontStyle = FontStyles.Bold;
+            UiEvents.RaiseButtonCreated(button);
             return button;
         }
 
