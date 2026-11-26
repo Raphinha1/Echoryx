@@ -342,3 +342,7 @@ echoryx_editor="/home/raphinha/Unity/Hub/Editor/6000.3.22f1/Editor/Unity"
 ```
 
 La suite completa sin gráficos preserva las capturas ajenas a B3. Las dirigidas con gráficos sí regeneran imágenes B3. El usuario confirmó la aceptación visual final de Idle/Walk/Run/Jump/Fall/Land, contacto y transiciones. El laboratorio no simula el salto físico ni prueba el desplazamiento de PlayerMotor o el clon simultáneo; corresponden a integración/validación posterior en S05-B4. S05-B4 queda pendiente, no iniciado.
+
+## Flujo del juego
+
+Unity 6000.3.29f1 en batchmode con `-nographics`: **EditMode 124/124** y **PlayMode 39/39** (línea base previa al flujo: 113 y 17). No se validó nada visual ni un build. Cobertura y pendientes en [game-flow](game-flow.md#pruebas).

@@ -1,6 +1,6 @@
 # Level_01_Tutorial
 
-Escena: `Assets/_Echoryx/Scenes/Level_01_Tutorial.unity` (con pase de arte, ver [Arte](#arte)) (primera escena de Build Settings; `Prototype` va después). Nivel de tres salas en línea (+Z) que enseña Echo y Rewind. Se regenera con `Echoryx > Level 01 > Build Tutorial` (requiere TMP Essentials, ver abajo).
+Escena: `Assets/_Echoryx/Scenes/Level_01_Tutorial.unity` (con pase de arte, ver [Arte](#arte)) (en Build Settings va después de `MainMenu`; es el primer nivel del [catálogo](game-flow.md)). Nivel de tres salas en línea (+Z) que enseña Echo y Rewind. Se regenera con `Echoryx > Level 01 > Build Tutorial` (requiere TMP Essentials, ver abajo).
 
 ## Controles reales
 
@@ -20,7 +20,7 @@ WASD mover · ratón mirar · Espacio saltar · **Q** grabar/parar Echo (máx. 5
 
 Scripts nuevos en `Assets/_Echoryx/Scripts/Level/` (asmdef `Echoryx.Level`): `LevelStats`, `LevelStatsTracker`, `LevelStatsAttemptCounter`, `LevelCompletePanel`, `GoalZone`, `TutorialHint`, `TutorialHintDisplay`, `PressurePlateEvents`. No se modificó `PlayerMotor`, Rewind, Echo ni checkpoints.
 
-## Estadísticas del panel final (sin persistencia)
+## Estadísticas del panel final (las mejores marcas se [guardan](game-flow.md#progreso))
 
 - **Intentos**: muertes y reinicios. Cada respawn resetea una vez la sala activa, así que un `LevelStatsAttemptCounter` dentro de cada `RoomResetScope` cuenta un intento.
 - **Usos de Rewind**: transiciones a `Rewinding` de la plataforma (una por cada vez que se mantiene el clic derecho con éxito).
@@ -42,7 +42,7 @@ Scripts nuevos en `Assets/_Echoryx/Scripts/Level/` (asmdef `Echoryx.Level`): `Le
 
 - Revisar visualmente cámara Cinemachine (colisión con muros de 6 m de ancho), iluminación y legibilidad de los hints en el Editor.
 - TMP Essential Resources se importó en `Assets/TextMesh Pro/` (necesario para los textos).
-- Sin audio, sin menú ni botón de reintento tras la meta, sin persistencia.
+- Sin audio. El menú, la pausa, los botones tras la meta y el progreso guardado son parte del [flujo del juego](game-flow.md), que los añade en tiempo de ejecución.
 - La plataforma parte al cargar la escena y queda aparcada lejos; tras un respawn en la sala 3 se restaura **aparcada** en el mismo estado (ver *Plataforma y respawn*), así que siempre hace falta Rewind.
 
 ## Arte

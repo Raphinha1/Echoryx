@@ -3,6 +3,9 @@
   "rootNamespace": "Echoryx.Level.PlayTests",
   "references": [
     "Echoryx.Level",
+    "Echoryx.Flow",
+    "UnityEngine.UI",
+    "Unity.TextMeshPro",
     "Echoryx.Game",
     "Echoryx.Player",
     "Echoryx.Echo",

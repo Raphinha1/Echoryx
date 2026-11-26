@@ -13,6 +13,8 @@ namespace Echoryx.Level
         [SerializeField] private TMP_Text timeLabel;
 
         public bool IsVisible => panel != null && panel.activeSelf;
+        /// <summary>The panel itself, so the game flow can add its navigation buttons to it.</summary>
+        public GameObject Root => panel;
 
         private void Awake()
         {

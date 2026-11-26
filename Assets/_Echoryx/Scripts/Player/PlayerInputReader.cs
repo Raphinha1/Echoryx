@@ -20,7 +20,10 @@ namespace Echoryx.Player
         public bool LookIsPointer => look?.activeControl?.device is Pointer;
         public bool ReleaseCursorPressed => Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
 
-        public bool CanReadAction(InputAction action) => releaseGate.CanRead(action, Time.frameCount);
+        /// <summary>While true (pause or level end) every gameplay action reads as released.</summary>
+        public bool Suspended { get; set; }
+
+        public bool CanReadAction(InputAction action) => !Suspended && releaseGate.CanRead(action, Time.frameCount);
 
         public void ResetInputState() => releaseGate.Reset(playerMap, Time.frameCount);
 

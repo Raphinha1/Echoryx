@@ -1,0 +1,14 @@
+{
+  "name": "Echoryx.Flow.Tests",
+  "rootNamespace": "Echoryx.Flow.Tests",
+  "references": [
+    "Echoryx.Flow",
+    "Unity.InputSystem"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ]
+}
