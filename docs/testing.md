@@ -345,4 +345,4 @@ La suite completa sin gráficos preserva las capturas ajenas a B3. Las dirigidas
 
 ## Flujo del juego
 
-Unity 6000.3.29f1 en batchmode con `-nographics`: **EditMode 122/122** y **PlayMode 34/34** (línea base previa: 113 y 17). No se validó nada visual ni un build. Cobertura y pendientes en [game-flow](game-flow.md#pruebas).
+Unity 6000.3.29f1 en batchmode con `-nographics`: **EditMode 124/124** y **PlayMode 39/39** (línea base previa al flujo: 113 y 17). No se validó nada visual ni un build. Cobertura y pendientes en [game-flow](game-flow.md#pruebas).

@@ -2,7 +2,7 @@
 
 [![Unity](https://img.shields.io/badge/Unity-6000.3.29f1-blue.svg)](https://unity.com/)
 [![Render Pipeline](https://img.shields.io/badge/Render%20Pipeline-URP%2017.3.0-orange.svg)](https://unity.com/srp/universal-render-pipeline)
-[![Tests](https://img.shields.io/badge/Tests-156%20Passed%20(100%25)-brightgreen.svg)](docs/testing.md)
+[![Tests](https://img.shields.io/badge/Tests-163%20Passed%20(100%25)-brightgreen.svg)](docs/testing.md)
 [![License](https://img.shields.io/badge/License-Academic%20Project-lightgrey.svg)]()
 
 **Echoryx** es un videojuego 3D de plataformas y resolución de rompecabezas temporales desarrollado en **Unity 6** con **Universal Render Pipeline (URP)**. El jugador controla a un robot y utiliza dos habilidades temporales complementarias —la grabación y reproducción de acciones pasadas (**Echo**) y la reversión cinemática de objetos interactivos (**Rewind**)— para navegar salas modulares y superar obstáculos sincronizados.
@@ -102,9 +102,9 @@ El proyecto se rige por Desarrollo Guiado por Pruebas (TDD) y cuenta con una bat
 /ruta/hacia/Unity -batchmode -quit -projectPath . -runTests -testPlatform playmode -testResults playmode-results.xml
 ```
 
-- **EditMode Tests:** 122 pasadas / 0 fallidas (100%)
-- **PlayMode Tests:** 34 pasadas / 0 fallidas (100%)
-- **Total:** **156 pruebas automatizadas aprobadas**
+- **EditMode Tests:** 124 pasadas / 0 fallidas (100%)
+- **PlayMode Tests:** 39 pasadas / 0 fallidas (100%)
+- **Total:** **163 pruebas automatizadas aprobadas**
 
 Para más detalles, consulta la [documentación de pruebas](docs/testing.md).
 

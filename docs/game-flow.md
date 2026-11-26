@@ -71,6 +71,39 @@ Una entrada significa «completado». Cada mejor marca se conserva por separado 
 
 Las pruebas sustituyen el almacenamiento con `GameProgress.Storage = new MemoryProgressStorage()`. **Cualquier prueba nueva que complete un nivel del catálogo debe hacer lo mismo** para no escribir en el progreso real.
 
+## Errores «count in old and new state must be the same»
+
+```
+Action count in old and new state must be the same
+Map count in old and new state must be the same
+Binding count in old and new state must be the same
+  … InputManager:OnNativeDeviceDiscovered
+```
+
+**Diagnóstico (Input System 1.20.1, Unity 6000.3.29f1): solo del Editor; lo dispara que cambie la forma de `InputSystem_Actions.inputactions`, no el código del juego.** Aparecieron al abrir el Editor después de pasar de `main` (mapas `Player`, `UI`) a la rama que añade el mapa `System`; en el `Editor.log` salen en modo edición, antes de la primera entrada en Play.
+
+1. Al cargar el dominio, `InputSystemEditorInitializer` llama a `InputSystem.EnableActions()` antes de registrar la protección «solo en Play» (`InitializeEditorHooks()`), así que las acciones del proyecto quedan con estado activo en modo edición.
+2. Si el archivo cambió desde la última importación, Unity lo reimporta sobre el mismo objeto; el estado anterior sobrevive con el número antiguo de mapas.
+3. Al descubrir el primer dispositivo, el paquete intenta una re-resolución parcial sobre ese estado y fallan las tres aserciones. En la misma operación el estado se reconstruye.
+
+Reproducido en una copia desechable del proyecto, abriendo el Editor en batchmode y añadiendo un mando:
+
+| Apertura | Forma del asset respecto a la anterior | Código del flujo | Errores |
+|---|---|---|---:|
+| `main` → rama | 2 → 3 mapas | sí (primera vez) | 3 |
+| rama otra vez | igual | sí | 0 |
+| volver a `main` | 3 → 2 mapas | no | 3 |
+| `main` + solo el `.inputactions` de la rama | 2 → 3 mapas | **no** | **3** |
+| añadir después todo el código de la rama | igual | sí | **0** |
+
+**Qué hacer:** nada. Salen una vez cuando cambia la forma del asset entre aperturas (al cambiar de rama, hacer `pull` o editar mapas); el estado queda reconstruido y una nueva apertura sale limpia. Es esperable que reaparezcan una vez al alternar entre `main` y esta rama mientras difieran. No se ha cambiado código del juego ni el paquete. Un build no reimporta assets, por lo que no se espera allí (no probado).
+
+**Regla que se mantiene:** todos los mapas, acciones y bindings se declaran en el `.inputactions`; el código solo habilita y deshabilita. `InputAssetStabilityTests` y `DeviceDiscoveryPlayChecks` comprueban que descubrir dispositivos en menú, nivel, pausa, fin y recargas no registra errores, no cambia la forma del asset y que hay un único `EventSystem` con un único `InputSystemUIInputModule`.
+
+### Aparte: un dispositivo nuevo suelta el Rewind mantenido
+
+Observado al escribir esas pruebas; **no** es la causa de los errores ni viene del flujo. Al conectarse cualquier dispositivo (también un teclado), el paquete re-resuelve los bindings y restaura la fase de la acción, pero no la bandera que devuelve `InputAction.IsPressed()`. `RewindInteractor` usa `IsPressed()`, así que suelta el Rewind aunque el botón siga pulsado; el estado queda correcto y basta soltar y volver a pulsar. No se corrigió porque implica cambiar la lógica de Rewind.
+
 ## Pruebas
 
 - EditMode: `LevelProgressTests` (orden, validación, desbloqueo, mejores marcas, JSON corrupto, ida y vuelta por `PlayerPrefs` con clave temporal) y `ShippedFlowAssetsTests`.
