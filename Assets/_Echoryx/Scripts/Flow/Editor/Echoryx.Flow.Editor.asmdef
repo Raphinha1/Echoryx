@@ -3,6 +3,7 @@
   "rootNamespace": "Echoryx.Flow.Editor",
   "references": [
     "Echoryx.Flow",
+    "Unity.TextMeshPro",
     "Unity.InputSystem"
   ],
   "includePlatforms": [
