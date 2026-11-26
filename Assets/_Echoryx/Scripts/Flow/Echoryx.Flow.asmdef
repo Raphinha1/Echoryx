@@ -1,0 +1,14 @@
+{
+  "name": "Echoryx.Flow",
+  "rootNamespace": "Echoryx.Flow",
+  "references": [
+    "Echoryx.Level",
+    "Echoryx.Player",
+    "Echoryx.Rewind",
+    "Echoryx.Rewind.Input",
+    "Unity.InputSystem",
+    "Unity.TextMeshPro",
+    "UnityEngine.UI"
+  ],
+  "autoReferenced": true
+}
