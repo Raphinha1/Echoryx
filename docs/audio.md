@@ -11,7 +11,9 @@
 | Pressure Plate | La placa pasa a pulsada |
 | Door | La puerta empieza a moverse (abrir o cerrar) |
 | Checkpoint / Goal | Checkpoint nuevo / nivel completado |
-| Echo Record / Echo Play / Echo End | Empieza a grabar / empieza a reproducir / termina la reproducción |
+| Echo Record («Echo grabando») | **En bucle** mientras se graba |
+| Echo Play («Echo reproduciendo») | **En bucle** mientras se reproduce |
+| Echo End («Echo terminar») | Una vez, al acabar la reproducción |
 | Rewind | En bucle mientras se rebobina (usar un clip que haga loop) |
 | Ui Click / Ui Hover | Botones de menú: clic o Enter / puntero encima o navegación con teclado o mando |
 | Menu Music / Level Music | En bucle en `MainMenu` / en los niveles del catálogo, con crossfade de 1,2 s |
@@ -19,6 +21,8 @@
 ## Volúmenes
 
 `Assets/_Echoryx/Audio/EchoryxMixer.mixer`: grupos `Master`, `Music` y `SFX`, con `MasterVolume`, `MusicVolume` y `SFXVolume` expuestos (dB), por ejemplo `mixer.SetFloat("MusicVolume", -10f)` desde `Start` o después. En pausa la música baja al 35 % en las fuentes de audio, sin tocar el mixer.
+
+Los bucles (Rewind y los dos del Echo; usar clips que repitan sin cortes) entran y salen con un fade de 0,1 s. Paran al terminar, cancelar o reaparecer. En pausa se detienen en su posición y continúan al reanudar; el de Rewind termina porque la pausa suelta el Rewind.
 
 ## Piezas (`Scripts/Audio/`)
 

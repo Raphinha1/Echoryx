@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Echoryx.Echo;
 using Echoryx.Flow;
+using Echoryx.Game;
 using Echoryx.Level;
 using NUnit.Framework;
 #if UNITY_EDITOR
@@ -45,8 +47,8 @@ namespace Echoryx.Audio.PlayTests
                     audio.Play(id);
                     audio.PlayMusic(id);
                 }
-                audio.SetRewindLoop(true);
-                audio.SetRewindLoop(false);
+                audio.SetLoop(SoundId.Rewind, true);
+                audio.SetLoop(SoundId.Rewind, false);
                 audio.Paused = true;
                 yield return null;
                 audio.Paused = false;
@@ -90,6 +92,110 @@ namespace Echoryx.Audio.PlayTests
             Assert.Ignore("Loads authored scenes in the Editor.");
             yield break;
 #endif
+        }
+
+        [UnityTest]
+        public IEnumerator EchoLoopsStartAndStopWithTheEcho()
+        {
+#if UNITY_EDITOR
+            GameProgress.Storage = new MemoryProgressStorage();
+            var audio = AudioManager.Ensure();
+            shipped = audio.Library;
+            empty = ScriptableObject.CreateInstance<AudioLibrary>();
+            var clip = AudioClip.Create("tone", 44100, 1, 44100, false);
+            empty.echoRecord.clips = new[] { clip };
+            empty.echoPlay.clips = new[] { clip };
+            var requested = new List<SoundId>();
+            Action<SoundId> record = requested.Add;
+            try
+            {
+                yield return Load("Assets/_Echoryx/Scenes/Level_01_Tutorial.unity");
+                audio.Library = empty;
+                audio.Requested += record;
+                var manager = UnityEngine.Object.FindFirstObjectByType<CheckpointManager>();
+                var recorder = manager.Player.GetComponent<EchoRecorder>();
+                var playback = manager.Player.GetComponent<EchoPlayback>();
+                var flow = UnityEngine.Object.FindFirstObjectByType<LevelFlow>();
+
+                // Recording: starts, holds through a pause, resumes, stops when the recording ends.
+                recorder.Toggle();
+                yield return Settle();
+                AssertLoops(audio, true, false);
+                Assert.That(audio.LoopGain(SoundId.EchoRecord), Is.EqualTo(1f));
+                flow.Pause();
+                yield return Settle();
+                Assert.That(audio.IsLoopActive(SoundId.EchoRecord) && audio.IsLoopHeld(SoundId.EchoRecord), Is.True);
+                Assert.That(audio.LoopGain(SoundId.EchoRecord), Is.EqualTo(0f));
+                flow.Resume();
+                yield return Settle();
+                Assert.That(audio.IsLoopHeld(SoundId.EchoRecord), Is.False);
+                Assert.That(audio.LoopGain(SoundId.EchoRecord), Is.EqualTo(1f));
+                recorder.Toggle();
+                yield return Settle();
+                AssertLoops(audio, false, false);
+                Assert.That(audio.LoopGain(SoundId.EchoRecord), Is.EqualTo(0f));
+                Assert.That(requested, Has.No.Member(SoundId.EchoEnd));
+
+                // Playback until it finishes by itself: the end sound plays once.
+                Assert.That(playback.TryStart(), Is.True);
+                yield return null;
+                AssertLoops(audio, false, true);
+                var deadline = Time.time + 8f; // longer than the five-second Echo limit
+                while (recorder.State == EchoState.Playing && Time.time < deadline) yield return null;
+                yield return Settle();
+                AssertLoops(audio, false, false);
+                Assert.That(requested.FindAll(id => id == SoundId.EchoEnd).Count, Is.EqualTo(1));
+
+                // Cancel while recording.
+                recorder.Toggle();
+                yield return Settle();
+                AssertLoops(audio, true, false);
+                recorder.Cancel();
+                yield return Settle();
+                AssertLoops(audio, false, false);
+
+                // Respawn while recording and while playing: both stop, without an end sound.
+                recorder.Toggle();
+                yield return Settle();
+                manager.RespawnNow();
+                yield return Settle();
+                AssertLoops(audio, false, false);
+                recorder.Toggle();
+                yield return Settle();
+                recorder.Toggle();
+                yield return null;
+                Assert.That(playback.TryStart(), Is.True);
+                yield return null;
+                AssertLoops(audio, false, true);
+                requested.Clear();
+                manager.RespawnNow();
+                yield return Settle();
+                AssertLoops(audio, false, false);
+                Assert.That(requested, Has.No.Member(SoundId.EchoEnd));
+            }
+            finally
+            {
+                audio.Requested -= record;
+                UnityEngine.Object.Destroy(clip);
+            }
+#else
+            Assert.Ignore("Loads authored scenes in the Editor.");
+            yield break;
+#endif
+        }
+
+        // Longer than the loop fade, in the unscaled time the fade uses.
+        private static IEnumerator Settle()
+        {
+            yield return null;
+            yield return new WaitForSecondsRealtime(AudioManager.LoopFadeSeconds * 3f);
+            yield return null;
+        }
+
+        private static void AssertLoops(AudioManager audio, bool recording, bool playing)
+        {
+            Assert.That(audio.IsLoopActive(SoundId.EchoRecord), Is.EqualTo(recording), "recording loop");
+            Assert.That(audio.IsLoopActive(SoundId.EchoPlay), Is.EqualTo(playing), "playback loop");
         }
 
 #if UNITY_EDITOR

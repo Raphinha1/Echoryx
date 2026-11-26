@@ -21,7 +21,7 @@ namespace Echoryx.Audio
         {
             var audio = AudioManager.Ensure();
             audio.Paused = false;
-            audio.SetRewindLoop(false);
+            audio.StopLoops();
             var catalog = LevelCatalog.Current;
             if (catalog != null && scene.path == catalog.MainMenuScenePath) audio.PlayMusic(SoundId.MenuMusic);
             else if (catalog != null && catalog.IndexOfScene(scene.path) >= 0) audio.PlayMusic(SoundId.LevelMusic);

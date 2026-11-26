@@ -68,7 +68,7 @@ namespace Echoryx.Audio
         {
             if (stats != null) stats.Completed -= OnCompleted;
             if (AudioManager.Instance == null) return;
-            AudioManager.Instance.SetRewindLoop(false);
+            AudioManager.Instance.StopLoops();
             AudioManager.Instance.Paused = false;
         }
 
@@ -81,16 +81,16 @@ namespace Echoryx.Audio
             if (flow == null) flow = FindFirstObjectByType<LevelFlow>();
             var paused = flow != null && flow.State == LevelFlowState.Paused;
             audio.Paused = paused;
-            if (paused || Time.deltaTime <= 0f)
-            {
-                audio.SetRewindLoop(false);
-                return;
-            }
-
+            // Loops follow state every frame, so a cancel or a respawn stops them too. While paused the
+            // manager holds them; the game itself lets go of Rewind, so that loop ends.
             var rewinding = false;
             foreach (var mechanism in mechanisms)
                 if (mechanism != null && mechanism.Mode == RewindMode.Rewinding) rewinding = true;
-            audio.SetRewindLoop(rewinding);
+            audio.SetLoop(SoundId.Rewind, rewinding);
+            var echo = recorder != null ? recorder.State : EchoState.Available;
+            audio.SetLoop(SoundId.EchoRecord, echo == EchoState.Recording);
+            audio.SetLoop(SoundId.EchoPlay, echo == EchoState.Playing);
+            if (paused || Time.deltaTime <= 0f) return;
 
             // A respawn teleports and resets things: take the new state without announcing it.
             var respawned = (stats != null && stats.Attempts != attempts)
@@ -162,9 +162,8 @@ namespace Echoryx.Audio
             if (recorder == null) return;
             var state = recorder.State;
             if (state == echoState) return;
-            if (state == EchoState.Recording) audio.Play(SoundId.EchoRecord);
-            else if (state == EchoState.Playing) audio.Play(SoundId.EchoPlay);
-            else if (echoState == EchoState.Playing) audio.Play(SoundId.EchoEnd);
+            // Recording and playing are loops (above); only the end of a playback is a one-shot.
+            if (echoState == EchoState.Playing) audio.Play(SoundId.EchoEnd);
             echoState = state;
         }
 

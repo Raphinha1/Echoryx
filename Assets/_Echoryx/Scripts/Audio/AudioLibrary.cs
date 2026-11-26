@@ -53,8 +53,11 @@ namespace Echoryx.Audio
         public Sound goal = new Sound();
 
         [Header("Echo and Rewind")]
+        [Tooltip("Echo grabando: loops while recording.")]
         public Sound echoRecord = new Sound();
+        [Tooltip("Echo reproduciendo: loops while the Echo plays back.")]
         public Sound echoPlay = new Sound();
+        [Tooltip("One-shot when a playback finishes.")]
         public Sound echoEnd = new Sound();
         [Tooltip("Loops while a mechanism is being rewound.")]
         public Sound rewind = new Sound();
