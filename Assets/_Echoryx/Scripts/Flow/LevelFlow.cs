@@ -1,3 +1,4 @@
+using Echoryx.Echo;
 using Echoryx.Level;
 using Echoryx.Player;
 using Echoryx.Rewind;
@@ -28,6 +29,7 @@ namespace Echoryx.Flow
     {
         private const string PauseActionName = "System/Pause";
         private const string RestartActionName = "System/RestartLevel";
+        private const string HelpActionName = "System/ToggleHelp";
         public const string AllLevelsCompletedText = "Has completado todos los niveles";
 
         private LevelCatalog catalog;
@@ -39,7 +41,9 @@ namespace Echoryx.Flow
         private LevelStats stats;
         private InputAction pauseAction;
         private InputAction restartAction;
+        private InputAction helpAction;
         private GameObject pauseMenu;
+        private GameObject pausePanel;
         private bool motorWasEnabled;
         private bool orbitWasEnabled;
         private bool rewindWasEnabled;
@@ -55,6 +59,10 @@ namespace Echoryx.Flow
         public Button CompleteRetryButton { get; private set; }
         public Button CompleteMenuButton { get; private set; }
         public TMP_Text AllCompletedLabel { get; private set; }
+        public Button OptionsButton { get; private set; }
+        public OptionsPanel Options { get; private set; }
+        /// <summary>Null when the scene has no Echo recorder.</summary>
+        public EchoHud Hud { get; private set; }
 
         public static LevelFlow Install(Scene scene, LevelCatalog catalog, int levelIndex)
         {
@@ -71,6 +79,8 @@ namespace Echoryx.Flow
             flow.stats = Find<LevelStats>(scene);
             UiKit.EnsureEventSystem(scene);
             flow.BuildPauseMenu();
+            var recorder = Find<EchoRecorder>(scene);
+            if (recorder != null) flow.Hud = EchoHud.Create(go.transform, recorder);
             flow.BuildCompletionButtons(Find<LevelCompletePanel>(scene));
             go.SetActive(true);
             return flow;
@@ -93,8 +103,10 @@ namespace Echoryx.Flow
             restartAction = actions != null ? actions.FindAction(RestartActionName) : null;
             if (pauseAction == null || restartAction == null)
                 Debug.LogError("The level catalog needs input actions with " + PauseActionName + " and " + RestartActionName + ".", this);
+            helpAction = actions != null ? actions.FindAction(HelpActionName) : null;
             pauseAction?.Enable();
             restartAction?.Enable();
+            helpAction?.Enable();
             if (stats != null) stats.Completed += OnLevelCompleted;
         }
 
@@ -103,6 +115,7 @@ namespace Echoryx.Flow
             if (stats != null) stats.Completed -= OnLevelCompleted;
             pauseAction?.Disable();
             restartAction?.Disable();
+            helpAction?.Disable();
             // Never leave the game frozen if this object goes away while paused.
             if (State == LevelFlowState.Paused) Time.timeScale = 1f;
         }
@@ -120,9 +133,13 @@ namespace Echoryx.Flow
                 return;
             }
 
+            if (State == LevelFlowState.Playing && Hud != null && helpAction != null && helpAction.WasPressedThisFrame())
+                Hud.ToggleControls();
+
             if (pauseAction == null || !pauseAction.WasPressedThisFrame()) return;
-            if (State == LevelFlowState.Paused) Resume();
-            else Pause();
+            if (State != LevelFlowState.Paused) Pause();
+            else if (Options.IsOpen) Options.Cancel(); // Esc backs out of the options first
+            else Resume();
         }
 
         private void LateUpdate()
@@ -151,6 +168,8 @@ namespace Echoryx.Flow
             Time.timeScale = 0f;
             SuspendInteraction();
             pauseMenu.SetActive(true);
+            pausePanel.SetActive(true);
+            Hud?.SetVisible(false);
             UiKit.Select(ResumeButton);
             return true;
         }
@@ -158,7 +177,9 @@ namespace Echoryx.Flow
         public bool Resume()
         {
             if (leaving || State != LevelFlowState.Paused) return false;
+            Options.Hide();
             pauseMenu.SetActive(false);
+            Hud?.SetVisible(true);
             UiKit.Select(null);
             Time.timeScale = 1f;
             State = LevelFlowState.Resuming;
@@ -199,6 +220,7 @@ namespace Echoryx.Flow
             if (State == LevelFlowState.Resuming) FinishResume();
             State = LevelFlowState.Completed;
             SuspendInteraction();
+            Hud?.SetVisible(false);
             // The completion panel subscribed first, so it is already visible and its buttons can take focus.
             UiKit.Select(NextLevelButton != null && NextLevelButton.gameObject.activeSelf ? NextLevelButton : CompleteRetryButton);
         }
@@ -260,6 +282,12 @@ namespace Echoryx.Flow
             CompleteMenuButton.onClick.AddListener(GoToMenu);
         }
 
+        private void OpenOptions()
+        {
+            pausePanel.SetActive(false);
+            Options.Open();
+        }
+
         private void BuildPauseMenu()
         {
             var canvas = UiKit.CreateCanvas(transform, "Pause Canvas", 100);
@@ -267,18 +295,26 @@ namespace Echoryx.Flow
             UiKit.Fill(backdrop, UiKit.Backdrop);
             pauseMenu = backdrop.gameObject;
             var center = new Vector2(0.5f, 0.5f);
-            var panel = UiKit.Place(UiKit.Node(backdrop, "Panel"), center, Vector2.zero, new Vector2(760f, 640f));
+            var panel = UiKit.Place(UiKit.Node(backdrop, "Panel"), center, Vector2.zero, new Vector2(760f, 760f));
+            pausePanel = panel.gameObject;
             UiKit.Fill(panel, UiKit.PanelColor);
-            UiFonts.ApplyTitle(UiKit.Label(panel, "Title", "Pausa", 80f, UiKit.Orange, center, new Vector2(0f, 225f), new Vector2(700f, 100f)));
+            UiFonts.ApplyTitle(UiKit.Label(panel, "Title", "Pausa", 80f, UiKit.Orange, center, new Vector2(0f, 290f), new Vector2(700f, 100f)));
             var size = new Vector2(520f, 90f);
-            ResumeButton = UiKit.Button(panel, "Resume", "Reanudar", center, new Vector2(0f, 85f), size);
-            RetryButton = UiKit.Button(panel, "Retry", "Reintentar nivel", center, new Vector2(0f, -30f), size);
-            MenuButton = UiKit.Button(panel, "Main Menu", "Menú principal", center, new Vector2(0f, -145f), size);
+            ResumeButton = UiKit.Button(panel, "Resume", "Reanudar", center, new Vector2(0f, 160f), size);
+            RetryButton = UiKit.Button(panel, "Retry", "Reintentar nivel", center, new Vector2(0f, 50f), size);
+            OptionsButton = UiKit.Button(panel, "Options Button", "Opciones", center, new Vector2(0f, -60f), size);
+            MenuButton = UiKit.Button(panel, "Main Menu", "Menú principal", center, new Vector2(0f, -170f), size);
             UiKit.Label(panel, "Controls", "Esc: reanudar\nR: volver al checkpoint · Retroceso: reiniciar nivel", 28f,
-                UiKit.Lilac, center, new Vector2(0f, -255f), new Vector2(720f, 90f));
+                UiKit.Lilac, center, new Vector2(0f, -300f), new Vector2(720f, 90f));
             ResumeButton.onClick.AddListener(() => Resume());
             RetryButton.onClick.AddListener(Retry);
             MenuButton.onClick.AddListener(GoToMenu);
+            Options = OptionsPanel.Create(backdrop, () =>
+            {
+                pausePanel.SetActive(true);
+                UiKit.Select(OptionsButton);
+            });
+            OptionsButton.onClick.AddListener(OpenOptions);
             pauseMenu.SetActive(false);
         }
     }

@@ -1118,6 +1118,16 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "ToggleHelp",
+                    "type": "Button",
+                    "id": "4bdafc3a-33c5-475a-91c2-6f0ddb343c68",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -1153,6 +1163,18 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "RestartLevel",
+                    "isComposite": false,
+                    "isPartOfComposite": false,
+                    "priority": 0
+                },
+                {
+                    "name": "",
+                    "id": "4d080208-578f-4662-b914-211ac6533b27",
+                    "path": "<Keyboard>/h",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "ToggleHelp",
                     "isComposite": false,
                     "isPartOfComposite": false,
                     "priority": 0

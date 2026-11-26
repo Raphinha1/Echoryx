@@ -49,6 +49,7 @@ Etapas anteriores del proyecto: la sala visual y el protagonista de estas imáge
 | **Reiniciar Sala** | `R` | Devuelve al jugador al checkpoint activo y reinicia los mecanismos de la sala |
 | **Pausa** | `Esc` (mando: Start) | Menú con Reanudar, Reintentar nivel y Menú principal |
 | **Reiniciar Nivel** | `Retroceso` | Reinicia el nivel desde cero |
+| **Ayuda en pantalla** | `H` | Muestra u oculta el recordatorio de controles |
 
 ---
 

@@ -84,6 +84,32 @@ namespace Echoryx.Audio.PlayTests
         }
 
         [UnityTest]
+        public IEnumerator SavedVolumesReachTheMixer()
+        {
+            GameSettings.Storage = new MemorySettingsStorage();
+            var audio = AudioManager.Ensure();
+            yield return null;
+            var mixer = audio.Library.musicGroup.audioMixer;
+            try
+            {
+                GameSettings.MusicVolume = 0.5f;
+                GameSettings.SfxVolume = 0f;
+                yield return null;
+                Assert.That(mixer.GetFloat("MusicVolume", out var music), Is.True);
+                Assert.That(mixer.GetFloat("SFXVolume", out var sfx), Is.True);
+                Assert.That(music, Is.EqualTo(-6.02f).Within(0.05f));
+                Assert.That(sfx, Is.EqualTo(-80f).Within(0.05f));
+            }
+            finally
+            {
+                GameSettings.MusicVolume = 1f;
+                GameSettings.SfxVolume = 1f;
+                GameSettings.Storage = null;
+                audio.ApplyVolumes();
+            }
+        }
+
+        [UnityTest]
         public IEnumerator RewindingPlaysTheAudibleLoop()
         {
 #if UNITY_EDITOR

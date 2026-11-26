@@ -16,6 +16,8 @@ namespace Echoryx.Flow.Tests
             Assert.That(InputSystem.actions, Is.SameAs(actions), "One input asset for gameplay, flow and project settings.");
             Assert.That(actions.actionMaps.Select(m => m.name), Is.EqualTo(new[] { "Player", "UI", "System" }),
                 "Everything the game needs is declared in the asset, not added from code.");
+            Assert.That(actions.FindAction("System/ToggleHelp").bindings.Select(b => b.path), Is.EqualTo(new[] { "<Keyboard>/h" }));
+            Assert.That(actions.FindActionMap("Player").bindings.Select(b => b.path), Has.No.Member("<Keyboard>/h"), "H is free.");
         }
 
         [Test]

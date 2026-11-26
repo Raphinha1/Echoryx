@@ -3,6 +3,7 @@
   "rootNamespace": "Echoryx.Flow",
   "references": [
     "Echoryx.Level",
+    "Echoryx.Echo",
     "Echoryx.Player",
     "Echoryx.Rewind",
     "Echoryx.Rewind.Input",

@@ -121,6 +121,14 @@ namespace Echoryx.Flow.Tests
             }
         }
 
+        [Test]
+        public void VolumeSlidersMapToMixerDecibels()
+        {
+            Assert.That(GameSettings.ToDecibels(1f), Is.EqualTo(0f).Within(1e-4f));
+            Assert.That(GameSettings.ToDecibels(0.5f), Is.EqualTo(-6.02f).Within(0.01f));
+            Assert.That(GameSettings.ToDecibels(0f), Is.EqualTo(-80f));
+        }
+
         private bool[] Unlocked(GameProgress progress) =>
             new[] { progress.IsUnlocked(catalog, 0), progress.IsUnlocked(catalog, 1), progress.IsUnlocked(catalog, 2) };
     }
