@@ -71,8 +71,10 @@ MonoBehaviour:
     - {fileID: 8300000, guid: d4ad77a103a1f230c8689bff0977a620, type: 3}
     volume: 0.15
   menuMusic:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: cd9c38506e4f0002da7a095afaba443a, type: 3}
+    volume: 0.5
   levelMusic:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: d33b01e81131e35d98a054daa7a110e0, type: 3}
+    volume: 0.5

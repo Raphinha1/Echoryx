@@ -18,7 +18,7 @@
 | Ui Click / Ui Hover | Botones de menú: clic o Enter / puntero encima o navegación con teclado o mando |
 | Menu Music / Level Music | En bucle en `MainMenu` / en los niveles del catálogo, con crossfade de 1,2 s |
 
-`Echoryx/Audio/Assign Clips` asigna los clips de `Assets/_Echoryx/Audio/` y sus volúmenes. Sobrescribe esas entradas, no la música.
+`Echoryx/Audio/Assign Clips` asigna los clips de `Assets/_Echoryx/Audio/` y sus volúmenes. Sobrescribe esas entradas, incluida la música (Streaming, volumen 0,5, en bucle).
 
 ## Volúmenes
 

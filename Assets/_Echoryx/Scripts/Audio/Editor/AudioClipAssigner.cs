@@ -6,7 +6,7 @@ namespace Echoryx.Audio.Editor
 {
     /// <summary>
     /// Assigns the clips in Assets/_Echoryx/Audio to the AudioLibrary with their volumes. Overwrites those
-    /// entries; music entries are left as they are.
+    /// entries. Music is imported as streaming; it loops because the AudioManager music sources loop.
     /// </summary>
     public static class AudioClipAssigner
     {
@@ -31,12 +31,28 @@ namespace Echoryx.Audio.Editor
             Set(library.goal, "meta", 0.85f);
             Set(library.uiClick, "Clic", 0.4f);
             Set(library.uiHover, "Clic", 0.15f);
+            SetMusic(library.menuMusic, "sci-fi_puzzle_title_bpm120", 0.5f);
+            SetMusic(library.levelMusic, "sci-fi_puzzle_in-game_2_bpm95", 0.5f);
             EditorUtility.SetDirty(library);
             AssetDatabase.SaveAssets();
 
             foreach (SoundId id in Enum.GetValues(typeof(SoundId)))
                 if (library.Get(id).Pick() == null) Debug.Log("AUDIO sin clip: " + id);
             Debug.Log("AUDIO clips asignados.");
+        }
+
+        private static void SetMusic(Sound sound, string name, float volume)
+        {
+            var importer = AssetImporter.GetAtPath(Folder + name + ".ogg") as AudioImporter
+                ?? throw new InvalidOperationException("Missing clip: " + Folder + name + ".ogg");
+            var settings = importer.defaultSampleSettings;
+            if (settings.loadType != AudioClipLoadType.Streaming)
+            {
+                settings.loadType = AudioClipLoadType.Streaming;
+                importer.defaultSampleSettings = settings;
+                importer.SaveAndReimport();
+            }
+            Set(sound, name, volume);
         }
 
         // Missing files stop the run before anything is saved.
