@@ -1,0 +1,7 @@
+{
+  "name": "Echoryx.Vfx.PlayTests",
+  "rootNamespace": "Echoryx.Vfx.PlayTests",
+  "references": ["Echoryx.Vfx", "Echoryx.Flow", "Echoryx.Level", "Echoryx.Game", "Echoryx.Player", "Echoryx.Echo", "Echoryx.Rewind", "Echoryx.Rewind.Platforms"],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "autoReferenced": false
+}
