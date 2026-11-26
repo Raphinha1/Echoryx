@@ -28,6 +28,7 @@ namespace Echoryx.Flow.PlayTests
         {
             storage = new MemoryProgressStorage();
             GameProgress.Storage = storage; // never the real PlayerPrefs
+            GameSettings.Storage = new MemorySettingsStorage();
             Time.timeScale = 1f;
             Time.captureDeltaTime = 1f / 60f;
             originalSettings = InputSystem.settings;
@@ -57,6 +58,8 @@ namespace Echoryx.Flow.PlayTests
             LevelCatalog.Override = null;
             MainMenuController.QuitHandler = null;
             GameProgress.Storage = null;
+            GameSettings.Storage = null;
+            GameSettings.Display = null;
             Time.timeScale = 1f;
             Time.captureDeltaTime = 0f;
             yield return null;

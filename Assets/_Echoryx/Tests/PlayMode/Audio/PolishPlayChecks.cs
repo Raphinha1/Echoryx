@@ -84,6 +84,32 @@ namespace Echoryx.Audio.PlayTests
         }
 
         [UnityTest]
+        public IEnumerator SavedVolumesReachTheMixer()
+        {
+            GameSettings.Storage = new MemorySettingsStorage();
+            var audio = AudioManager.Ensure();
+            yield return null;
+            var mixer = audio.Library.musicGroup.audioMixer;
+            try
+            {
+                GameSettings.MusicVolume = 0.5f;
+                GameSettings.SfxVolume = 0f;
+                yield return null;
+                Assert.That(mixer.GetFloat("MusicVolume", out var music), Is.True);
+                Assert.That(mixer.GetFloat("SFXVolume", out var sfx), Is.True);
+                Assert.That(music, Is.EqualTo(-6.02f).Within(0.05f));
+                Assert.That(sfx, Is.EqualTo(-80f).Within(0.05f));
+            }
+            finally
+            {
+                GameSettings.MusicVolume = 1f;
+                GameSettings.SfxVolume = 1f;
+                GameSettings.Storage = null;
+                audio.ApplyVolumes();
+            }
+        }
+
+        [UnityTest]
         public IEnumerator RewindingPlaysTheAudibleLoop()
         {
 #if UNITY_EDITOR
@@ -91,14 +117,14 @@ namespace Echoryx.Audio.PlayTests
             var audio = AudioManager.Ensure();
             var player = Object.FindFirstObjectByType<CheckpointManager>().Player;
             var platform = Object.FindFirstObjectByType<RewindMovingPlatform>();
-            Assert.That(audio.Library.rewind.Pick().name, Is.EqualTo("rewind-audible"));
+            Assert.That(audio.Library.rewind.Pick().name, Is.EqualTo("rewind-C"));
             yield return new WaitForSeconds(3f); // the platform finishes its trip
             Assert.That(platform.BeginRewind(), Is.True);
             yield return new WaitForSecondsRealtime(0.4f);
             Assert.That(platform.Mode, Is.EqualTo(RewindMode.Rewinding));
             Assert.That(audio.IsLoopActive(SoundId.Rewind), Is.True);
             Assert.That(audio.LoopGain(SoundId.Rewind), Is.EqualTo(1f));
-            var source = audio.GetComponents<AudioSource>().Single(s => s.clip != null && s.clip.name == "rewind-audible");
+            var source = audio.GetComponents<AudioSource>().Single(s => s.clip != null && s.clip.name == "rewind-C");
             Assert.That(source.loop && source.volume > 0.5f, Is.True);
             Assert.That(source.outputAudioMixerGroup, Is.SameAs(audio.Library.sfxGroup));
             platform.EndRewind();

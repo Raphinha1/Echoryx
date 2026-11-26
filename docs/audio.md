@@ -35,10 +35,8 @@ Los bucles (Rewind y los dos del Echo; usar clips que repitan sin cortes) entran
 
 Fuera de `Scripts/Audio/` solo se añadieron `DoorController.Panel` (lectura) y `UiEvents.ButtonCreated`; no cambia la lógica de motor, Echo, Rewind ni checkpoints. Todo el audio es 2D.
 
-## Rewind inaudible (diagnóstico)
+## Sonido del Rewind
 
-El clip estaba asignado (volumen 0,55, grupo SFX) y, en una prueba rebobinando con el botón derecho, el bucle arrancaba y entregaba señal. La causa medida está en el archivo: casi toda la energía de `rewind.ogg` está por debajo de 150 Hz (media total −9,7 dB; −30,4 dB por encima de 300 Hz, unos 20 dB menos que los bucles del Echo), así que en altavoces pequeños casi no se oye. `Assign Clips` usa `rewind-audible.ogg`, derivado con:
+`rewind-C.ogg` es un **sonido sintetizado por nosotros** para Echoryx con `Tools/audio/synth_rewind.py` (Python y NumPy, sin muestras ni material de terceros): **no depende de ninguna licencia externa**. Es un whoosh: cuatro barridos ascendentes de ruido filtrado con eco corto, sin tono añadido. Dura 2 s, ronda −18 LUFS, no tiene energía apreciable bajo 300 Hz y es periódico (buffer circular, sin salto en la unión). `Assign Clips` lo asigna con volumen 0,8. Para regenerarlo: `python3 Tools/audio/synth_rewind.py` desde la raíz.
 
-```
-ffmpeg -i rewind.ogg -af "highpass=f=180:p=2,highpass=f=180:p=2,volume=18dB,alimiter=limit=0.84:attack=2:release=40:level=false" -c:a libvorbis -q:a 6 rewind-audible.ogg
-```
+Los clips probados antes se retiraron; siguen en el historial de Git.

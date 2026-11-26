@@ -106,6 +106,40 @@ namespace Echoryx.Flow
             return button;
         }
 
+        public static Slider Slider(Transform parent, string name, Vector2 anchor, Vector2 position, Vector2 size, float value)
+        {
+            var rect = Place(Node(parent, name), anchor, position, size);
+            var background = Stretched(rect, "Background");
+            background.anchorMin = new Vector2(0f, 0.35f);
+            background.anchorMax = new Vector2(1f, 0.65f);
+            Fill(background, Locked);
+            var fillArea = Stretched(rect, "Fill Area");
+            fillArea.anchorMin = new Vector2(0f, 0.35f);
+            fillArea.anchorMax = new Vector2(1f, 0.65f);
+            var fill = Stretched(fillArea, "Fill");
+            Fill(fill, Lilac);
+            var handleArea = Stretched(rect, "Handle Area");
+            handleArea.offsetMin = new Vector2(14f, 0f);
+            handleArea.offsetMax = new Vector2(-14f, 0f);
+            var handle = Node(handleArea, "Handle");
+            handle.sizeDelta = new Vector2(28f, 0f);
+            var knob = Fill(handle, Color.white);
+            var slider = rect.gameObject.AddComponent<Slider>();
+            slider.fillRect = fill;
+            slider.handleRect = handle;
+            slider.targetGraphic = knob;
+            var colors = slider.colors;
+            colors.normalColor = Lilac;
+            colors.highlightedColor = Orange;
+            colors.selectedColor = Orange;
+            colors.pressedColor = Orange;
+            slider.colors = colors;
+            slider.minValue = 0f;
+            slider.maxValue = 1f;
+            slider.SetValueWithoutNotify(value);
+            return slider;
+        }
+
         /// <summary>Gives the scene an EventSystem driven by the Input System, if it has none.</summary>
         public static void EnsureEventSystem(Scene scene)
         {

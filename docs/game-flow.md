@@ -118,3 +118,10 @@ Observado al escribir esas pruebas; **no** es la causa de los errores ni viene d
 - Bloqueo del cursor en la vista Game y en un build (en el Editor, `Esc` además libera el cursor por sí mismo).
 - Mando físico (Start y navegación).
 - Build real: arranque en el menú, botón Salir y persistencia entre ejecuciones.
+
+## Opciones, créditos y HUD del Echo
+
+- **Opciones** (menú principal y pausa): volumen de Música y SFX (parámetros `MusicVolume` y `SFXVolume` del mixer), pantalla completa y resolución. Se guardan en `PlayerPrefs` (`GameSettings`); la pantalla guardada se vuelve a aplicar al arrancar un build. En la pausa, `Esc` sale primero de la confirmación y de las opciones.
+- **Reiniciar progreso:** pide confirmación y borra la clave del JSON de progreso. No toca las opciones. No hay deshacer.
+- **Créditos:** muestra la copia de `docs/credits.md` y las dos licencias OFL desde `Resources/Credits/`. Tras editar `docs/credits.md`, ejecuta `Echoryx/Credits/Sync To Resources` (también se ejecuta antes de cada build); `CreditsResourcesTests` falla si las copias difieren.
+- **HUD del Echo:** estado (Listo para grabar, Grabando, Listo para reproducir, Echo activo), barra de 5 s y recordatorio de controles que se oculta con `H` (`System/ToggleHelp`; la elección se recuerda). Se oculta en pausa y al completar el nivel.

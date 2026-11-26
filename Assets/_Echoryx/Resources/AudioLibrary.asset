@@ -60,8 +60,8 @@ MonoBehaviour:
     volume: 0.65
   rewind:
     clips:
-    - {fileID: 8300000, guid: ea9d5f1382799f772849204907fc9c54, type: 3}
-    volume: 0.7
+    - {fileID: 8300000, guid: 40c7c8ad48abf202096ebcf8fd283d62, type: 3}
+    volume: 0.8
   uiClick:
     clips:
     - {fileID: 8300000, guid: d4ad77a103a1f230c8689bff0977a620, type: 3}

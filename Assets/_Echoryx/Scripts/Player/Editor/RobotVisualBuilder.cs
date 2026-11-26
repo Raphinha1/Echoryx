@@ -24,11 +24,21 @@ namespace Echoryx.Player.Editor
         private const string PlayerPath = "Assets/_Echoryx/Prefabs/Player.prefab";
         private const string EchoPath = "Assets/_Echoryx/Prefabs/EchoActor.prefab";
         private const string HologramPath = "Assets/_Echoryx/Materials/EchoHologram.mat";
-        private const string OffsetMaterialPath = "Assets/FreeLowPolyRobot/Materials/M_AtlasOffset.mat";
         private const string BasePath = "Assets/FreeLowPolyRobot/Materials/M_AtlasBase.mat";
-        /// <summary>Atlas row (0.03125 per row) that tints the robot accents orange-brown, close to the level accents.
-        /// The black metal shell is part of the package's design and stays.</summary>
-        private const int PlayerColorRow = 16;
+        /// <summary>
+        /// The Player robot's colour: golden amber, to stand out against the lilac/orange level (cyan and blue are
+        /// reserved for the Echo). This is the only value to change; then run Echoryx/Robot/Apply Accent Color.
+        /// It tints the atlas' light-to-dark ramp, so light parts show the colour and dark parts stay dark.
+        /// </summary>
+        public static readonly Color AccentColor = new Color(1f, 0.79f, 0.20f);
+        /// <summary>The Player robot's eyes: warm white (cyan stays exclusive to the Echo). Same menu applies it.</summary>
+        public static readonly Color EyeColor = new Color(1f, 0.95f, 0.85f);
+        /// <summary>HDR strength of the eyes: enough to glow without burning out.</summary>
+        private const float EyeGlow = 1.15f;
+        private const string PackageEyes = "M_AtlasEmissive";
+        private const string EyesName = "RobotPlayerEyes";
+        /// <summary>Soft self-light so the colour still reads as gold on faces in shadow.</summary>
+        private const float AccentGlow = 0.45f;
 
         /// <summary>Authored visual scale: ~1.85 m tall, matching the 2 m capsule collider.</summary>
         public const float ModelScale = 1.1f;
@@ -206,15 +216,11 @@ namespace Echoryx.Player.Editor
             animator.updateMode = AnimatorUpdateMode.Normal;
             if (!echo)
             {
-                // Color variant: the package selects colors by atlas UV offset (_UV_Offset) on M_AtlasOffset.
-                // The package materials are Metallic 1 (render black without reflection probes), so both
-                // slots get matte copies; the emissive eyes (M_AtlasEmissive) are kept as authored.
-                var accent = new Vector2(0f, PlayerColorRow * 0.03125f);
-                var baseMatte = Matte("RobotPlayerBase", BasePath, 0.15f, accent);
-                var variant = Matte("RobotPlayerOrange", OffsetMaterialPath, 0.25f, accent);
+                var (baseMatte, variant) = AccentMaterials();
+                var eyes = EyeMaterial();
                 foreach (var renderer in model.GetComponentsInChildren<Renderer>())
                     renderer.sharedMaterials = renderer.sharedMaterials.Select(m =>
-                        m == null ? m : m.name == "M_AtlasOffset" ? variant : m.name == "M_AtlasBase" ? baseMatte : m).ToArray();
+                        m == null ? m : m.name == "M_AtlasOffset" ? variant : m.name == "M_AtlasBase" ? baseMatte : m.name == PackageEyes ? eyes : m).ToArray();
             }
             if (echo)
             {
@@ -237,27 +243,88 @@ namespace Echoryx.Player.Editor
             UnityEngine.Object.DestroyImmediate(root);
         }
 
-        private static Material Matte(string name, string sourcePath, float smoothness, Vector2? uvOffset)
+        /// <summary>Re-tints the Player body and eyes without rebuilding controller or lab. The Echo uses its own material.</summary>
+        [MenuItem("Echoryx/Robot/Apply Accent Color")]
+        public static void ApplyAccentColor()
+        {
+            AccentMaterials();
+            AssignEyes(EyeMaterial());
+            AssetDatabase.SaveAssets();
+            Debug.Log("Robot accent applied.");
+        }
+
+        // The package's eye material takes its cyan from the atlas, so ours has no texture: only the colour.
+        private static Material EyeMaterial()
         {
             EnsureFolder("Assets/_Echoryx/Materials", "Robot");
+            var path = "Assets/_Echoryx/Materials/Robot/" + EyesName + ".mat";
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material == null)
+            {
+                var source = AssetDatabase.LoadAssetAtPath<Material>(BasePath) ?? throw new InvalidOperationException(BasePath + " missing.");
+                material = new Material(source.shader) { name = EyesName };
+                AssetDatabase.CreateAsset(material, path);
+            }
+            material.SetColor("_BaseColor", EyeColor);
+            material.SetColor("_Color", EyeColor);
+            material.SetColor("_EmissionColor", EyeColor * EyeGlow);
+            material.EnableKeyword("_EMISSION");
+            material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+            material.SetFloat("_Metallic", 0f);
+            material.SetFloat("_Smoothness", 0.2f);
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
+        // Swaps the eye slots of RobotVisual only; saved just when something changes.
+        private static void AssignEyes(Material eyes)
+        {
+            var root = PrefabUtility.LoadPrefabContents(VisualPath);
+            try
+            {
+                var changed = false;
+                foreach (var renderer in root.GetComponentsInChildren<Renderer>(true))
+                {
+                    var materials = renderer.sharedMaterials;
+                    for (var i = 0; i < materials.Length; i++)
+                        if (materials[i] != null && materials[i].name == PackageEyes) { materials[i] = eyes; changed = true; }
+                    renderer.sharedMaterials = materials;
+                }
+                if (changed) PrefabUtility.SaveAsPrefabAsset(root, VisualPath);
+            }
+            finally { PrefabUtility.UnloadPrefabContents(root); }
+        }
+
+        // The package materials are Metallic 1 (render black without reflection probes), so both slots get matte
+        // URP Lit copies; the package's offset shader has no tint, so it is not used.
+        private static (Material baseSlot, Material offsetSlot) AccentMaterials() =>
+            (Matte("RobotPlayerBase", 0.15f), Matte("RobotPlayerOrange", 0.25f));
+
+        private static Material Matte(string name, float smoothness)
+        {
+            EnsureFolder("Assets/_Echoryx/Materials", "Robot");
+            var source = AssetDatabase.LoadAssetAtPath<Material>(BasePath) ?? throw new InvalidOperationException(BasePath + " missing.");
             var path = "Assets/_Echoryx/Materials/Robot/" + name + ".mat";
             var material = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (material == null)
             {
-                var source = AssetDatabase.LoadAssetAtPath<Material>(sourcePath) ?? throw new InvalidOperationException(sourcePath + " missing.");
                 material = new Material(source) { name = name };
                 AssetDatabase.CreateAsset(material, path);
             }
+            material.shader = source.shader;
+            material.SetTexture("_BaseMap", source.GetTexture("_BaseMap"));
+            material.SetTextureOffset("_BaseMap", Vector2.zero); // the atlas' neutral (grey) ramp
+            material.SetColor("_BaseColor", AccentColor);
+            material.SetColor("_Color", AccentColor);
+            // The atlas masks the self-light, so its dark areas stay dark.
+            material.SetTexture("_EmissionMap", source.GetTexture("_BaseMap"));
+            material.SetColor("_EmissionColor", AccentColor * AccentGlow);
+            material.EnableKeyword("_EMISSION");
+            // URP drops _EMISSION when saving a material that is not flagged as emissive.
+            material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
             material.SetFloat("_Metallic", 0f);
             material.SetFloat("_Smoothness", smoothness);
             material.SetFloat("_Glossiness", smoothness);
-            if (uvOffset.HasValue)
-            {
-                // Lit atlas material: tiling/offset picks the color; the ShaderGraph one exposes _UV_Offset instead.
-                if (material.shader.name.Contains("Lit")) material.SetTextureOffset("_BaseMap", uvOffset.Value);
-                else if (material.HasProperty("_UV_Offset")) material.SetVector("_UV_Offset", new Vector4(uvOffset.Value.x, uvOffset.Value.y, 0f, 0f));
-                else throw new InvalidOperationException("Robot offset shader lost its _UV_Offset property.");
-            }
             EditorUtility.SetDirty(material);
             return material;
         }

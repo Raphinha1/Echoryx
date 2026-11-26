@@ -8,6 +8,7 @@ namespace Echoryx.Flow
     {
         string Read();
         void Write(string json);
+        void Delete();
     }
 
     public sealed class PlayerPrefsProgressStorage : IProgressStorage
@@ -24,6 +25,12 @@ namespace Echoryx.Flow
             PlayerPrefs.SetString(key, json);
             PlayerPrefs.Save();
         }
+
+        public void Delete()
+        {
+            PlayerPrefs.DeleteKey(key);
+            PlayerPrefs.Save();
+        }
     }
 
     /// <summary>Volatile storage, so tests never touch the player's saved progress.</summary>
@@ -32,6 +39,7 @@ namespace Echoryx.Flow
         public string Json = string.Empty;
         public string Read() => Json;
         public void Write(string json) => Json = json;
+        public void Delete() => Json = string.Empty;
     }
 
     /// <summary>A completed level. Each best value is kept independently across runs.</summary>
@@ -73,6 +81,9 @@ namespace Echoryx.Flow
         }
 
         public static GameProgress Load() => new GameProgress(Storage);
+
+        /// <summary>Erases every saved completion and statistic.</summary>
+        public static void Reset() => Storage.Delete();
 
         public bool IsCompleted(string levelId) => Find(levelId) != null;
 

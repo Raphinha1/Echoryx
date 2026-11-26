@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Echoryx.Flow;
 using UnityEngine;
 
 namespace Echoryx.Audio
@@ -43,6 +44,22 @@ namespace Echoryx.Audio
         public AudioSource ActiveMusicSource => music[current];
         /// <summary>Raised for every requested effect, even when no clip is assigned.</summary>
         public event Action<SoundId> Requested;
+
+        // The mixer ignores SetFloat during Awake, so the saved volumes are applied from Start.
+        private void Start()
+        {
+            GameSettings.VolumesChanged += ApplyVolumes;
+            ApplyVolumes();
+        }
+
+        /// <summary>Writes the saved Music and SFX volumes to the mixer's exposed parameters.</summary>
+        public void ApplyVolumes()
+        {
+            var group = Library != null ? Library.musicGroup : null;
+            if (group == null) return;
+            group.audioMixer.SetFloat("MusicVolume", GameSettings.ToDecibels(GameSettings.MusicVolume));
+            group.audioMixer.SetFloat("SFXVolume", GameSettings.ToDecibels(GameSettings.SfxVolume));
+        }
 
         public static AudioManager Ensure()
         {
@@ -199,6 +216,7 @@ namespace Echoryx.Audio
 
         private void OnDestroy()
         {
+            GameSettings.VolumesChanged -= ApplyVolumes;
             if (Instance == this) Instance = null;
         }
     }

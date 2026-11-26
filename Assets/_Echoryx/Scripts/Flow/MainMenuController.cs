@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Echoryx.Flow
 {
-    /// <summary>Main menu: Play, level selection (locked levels disabled) and Quit.</summary>
+    /// <summary>Main menu: Play, level selection (locked levels disabled), options, credits and Quit.</summary>
     public sealed class MainMenuController : MonoBehaviour
     {
         /// <summary>Grid of the level selector: 3 columns x 4 rows fit on screen.</summary>
@@ -27,6 +27,10 @@ namespace Echoryx.Flow
         public Button SelectButton { get; private set; }
         public Button QuitButton { get; private set; }
         public Button BackButton { get; private set; }
+        public Button OptionsButton { get; private set; }
+        public Button CreditsButton { get; private set; }
+        public OptionsPanel Options { get; private set; }
+        public CreditsPanel Credits { get; private set; }
         public IReadOnlyList<Button> LevelButtons => levelButtons;
         public bool IsSelectingLevel => selectPanel != null && selectPanel.activeSelf;
 
@@ -109,10 +113,12 @@ namespace Echoryx.Flow
             mainPanel = UiKit.Stretched(canvas.transform, "Main Panel").gameObject;
             UiKit.Label(mainPanel.transform, "Subtitle", "Usa el pasado para abrirte camino", 38f, UiKit.Orange, center,
                 new Vector2(0f, 275f), new Vector2(1200f, 60f));
-            var size = new Vector2(520f, 96f);
-            PlayButton = UiKit.Button(mainPanel.transform, "Play", "Jugar", center, new Vector2(0f, 90f), size);
-            SelectButton = UiKit.Button(mainPanel.transform, "Select Level", "Seleccionar nivel", center, new Vector2(0f, -35f), size);
-            QuitButton = UiKit.Button(mainPanel.transform, "Quit", "Salir", center, new Vector2(0f, -160f), size);
+            var size = new Vector2(520f, 90f);
+            PlayButton = UiKit.Button(mainPanel.transform, "Play", "Jugar", center, new Vector2(0f, 150f), size);
+            SelectButton = UiKit.Button(mainPanel.transform, "Select Level", "Seleccionar nivel", center, new Vector2(0f, 40f), size);
+            OptionsButton = UiKit.Button(mainPanel.transform, "Options Button", "Opciones", center, new Vector2(0f, -70f), size);
+            CreditsButton = UiKit.Button(mainPanel.transform, "Credits Button", "Créditos", center, new Vector2(0f, -180f), size);
+            QuitButton = UiKit.Button(mainPanel.transform, "Quit", "Salir", center, new Vector2(0f, -290f), size);
             PlayButton.onClick.AddListener(Play);
             SelectButton.onClick.AddListener(OpenLevelSelect);
             QuitButton.onClick.AddListener(Quit);
@@ -138,6 +144,33 @@ namespace Echoryx.Flow
             }
             BackButton = UiKit.Button(selectPanel.transform, "Back", "Volver", center, new Vector2(0f, -475f), new Vector2(360f, 76f), 34f);
             BackButton.onClick.AddListener(CloseLevelSelect);
+
+            var heading = title.gameObject;
+            Options = OptionsPanel.Create(canvas.transform, () => ReturnFromScreen(heading, OptionsButton), RefreshAfterReset);
+            Credits = CreditsPanel.Create(canvas.transform, () => ReturnFromScreen(heading, CreditsButton));
+            OptionsButton.onClick.AddListener(() => { mainPanel.SetActive(false); Options.Open(); });
+            CreditsButton.onClick.AddListener(() => { mainPanel.SetActive(false); heading.SetActive(false); Credits.Open(); });
+        }
+
+        private void ReturnFromScreen(GameObject heading, Button focus)
+        {
+            heading.SetActive(true);
+            mainPanel.SetActive(true);
+            UiKit.Select(focus);
+        }
+
+        // The level buttons show saved progress, so they are relabelled in place (the options stay open).
+        private void RefreshAfterReset()
+        {
+            progress = GameProgress.Load();
+            for (var i = 0; i < levelButtons.Count; i++)
+            {
+                var unlocked = progress.IsUnlocked(catalog, i);
+                levelButtons[i].interactable = unlocked;
+                var label = levelButtons[i].GetComponentInChildren<TMPro.TMP_Text>();
+                label.text = Describe(i);
+                label.color = unlocked ? UiKit.Ink : UiKit.LockedText;
+            }
         }
 
         private string Describe(int index)

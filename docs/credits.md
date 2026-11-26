@@ -47,11 +47,11 @@ Autor: **MintoDog**, en OpenGameArt.
 
 ### Efectos
 
-El resto de los `.ogg` de esa carpeta, de **Kenney Vleugels** ([Kenney.nl](https://kenney.nl)), packs **Digital Audio**, **Impact Sounds**, **Interface Sounds**, **Sci-Fi Sounds** y **UI Audio**. Licencia **CC0**, confirmada en el `License.txt` de cada pack.
+El resto de los `.ogg` de esa carpeta (salvo `rewind-C`, ver abajo), de **Kenney Vleugels** ([Kenney.nl](https://kenney.nl)), packs **Digital Audio**, **Impact Sounds**, **Interface Sounds**, **Sci-Fi Sounds** y **UI Audio**. Licencia **CC0**, confirmada en el `License.txt` de cada pack.
 
 CC0 no exige atribución; se acredita igualmente por cortesía (música y efectos).
 
-`rewind-audible.ogg` es una versión derivada de `rewind.ogg` (CC0): recorte de graves, ganancia y limitador para que se oiga en altavoces pequeños.
+`rewind-C.ogg` es un sonido sintetizado por el proyecto Echoryx (`Tools/audio/synth_rewind.py`), sin material ni licencia externos.
 
 ## Fuentes
 
@@ -60,7 +60,7 @@ CC0 no exige atribución; se acredita igualmente por cortesía (música y efecto
 | [Orbitron](https://github.com/theleagueof/orbitron) | Matt McInerney. Copyright 2018 The Orbitron Project Authors, con Reserved Font Name «Orbitron» | [SIL Open Font License 1.1](https://openfontlicense.org) | Títulos del menú, la pausa y el fin de nivel |
 | [Exo 2](https://github.com/googlefonts/Exo-2.0) | Natanael Gama. Copyright 2013 The Exo 2 Project Authors | [SIL Open Font License 1.1](https://openfontlicense.org) | Resto del texto de esos menús |
 
-Datos tomados de los metadatos de los propios `.ttf`, que están en `Assets/_Echoryx/Fonts/`. Los TMP Font Assets de `Assets/_Echoryx/Resources/Fonts/` se generan a partir de ellos (`Echoryx/Fonts/Create TMP Fonts`).
+Los `.ttf` están en `Assets/_Echoryx/Fonts/`, junto a `Orbitron-OFL.txt` y `Exo2-OFL.txt` con el texto completo de cada licencia; la pantalla de créditos los muestra al final. Los TMP Font Assets de `Assets/_Echoryx/Resources/Fonts/` se generan a partir de ellos (`Echoryx/Fonts/Create TMP Fonts`).
 
 ## Código propio del pase de arte
 
