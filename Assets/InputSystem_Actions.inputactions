@@ -1094,6 +1094,70 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "System",
+            "id": "bda0eb4e-e77a-40ae-a8bb-a4d8db2e2e11",
+            "actions": [
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "d3632957-c7a0-44c3-af18-a61068976b19",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "RestartLevel",
+                    "type": "Button",
+                    "id": "d1dd2595-6742-4cfc-897b-0f9388f49c75",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "6f974350-983f-43c8-a684-805b9cb71af0",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false,
+                    "priority": 0
+                },
+                {
+                    "name": "",
+                    "id": "3ec38fc6-d60e-4cb9-9079-55bedc3e33b9",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false,
+                    "priority": 0
+                },
+                {
+                    "name": "",
+                    "id": "3428e828-9ebb-4576-b8fc-58a8ac6b6bc5",
+                    "path": "<Keyboard>/backspace",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "RestartLevel",
+                    "isComposite": false,
+                    "isPartOfComposite": false,
+                    "priority": 0
+                }
+            ]
         }
     ],
     "controlSchemes": [
