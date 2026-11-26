@@ -1,7 +1,0 @@
-{
-  "name": "Echoryx.Echo.Editor",
-  "rootNamespace": "Echoryx.Echo.Editor",
-  "references": ["Echoryx.Echo", "Unity.InputSystem", "Unity.RenderPipelines.Universal.Editor"],
-  "includePlatforms": ["Editor"],
-  "autoReferenced": true
-}

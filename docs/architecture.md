@@ -1,5 +1,7 @@
 # Arquitectura
 
+> **Nota (limpieza del proyecto):** las secciones históricas de este documento citan laboratorios, instaladores `S01`–`S04`, herramientas `S05*`, comandos `-executeMethod` y pruebas que ya se retiraron (SuperSoldier, Quaternius y montajes de una sola vez). Se conservan como registro; el código sigue disponible en el historial de Git. Ver [archivo](archivo/README.md).
+
 ## Plataforma y estado base
 
 - Unity 6 **6000.3.22f1**; renderizado URP **17.3.0**.

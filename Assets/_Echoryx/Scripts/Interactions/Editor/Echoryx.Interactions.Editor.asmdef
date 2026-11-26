@@ -1,7 +1,0 @@
-{
-  "name": "Echoryx.Interactions.Editor",
-  "rootNamespace": "Echoryx.Interactions.Editor",
-  "references": ["Echoryx.Interactions", "Echoryx.Echo", "Echoryx.Player"],
-  "includePlatforms": ["Editor"],
-  "autoReferenced": true
-}
