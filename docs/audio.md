@@ -37,8 +37,9 @@ Fuera de `Scripts/Audio/` solo se añadieron `DoorController.Panel` (lectura) y 
 
 ## Rewind inaudible (diagnóstico)
 
-El clip estaba asignado (volumen 0,55, grupo SFX) y, en una prueba rebobinando con el botón derecho, el bucle arrancaba y entregaba señal. La causa medida está en el archivo: casi toda la energía de `rewind.ogg` está por debajo de 150 Hz (media total −9,7 dB; −30,4 dB por encima de 300 Hz, unos 20 dB menos que los bucles del Echo), así que en altavoces pequeños casi no se oye. `Assign Clips` usa `rewind-audible.ogg`, derivado con:
+El clip estaba asignado (volumen 0,55, grupo SFX) y, en una prueba rebobinando con el botón derecho, el bucle arrancaba y entregaba señal. La causa medida está en el archivo: casi toda la energía de `rewind.ogg` está por debajo de 150 Hz (media total −9,7 dB; −30,4 dB por encima de 300 Hz, unos 20 dB menos que los bucles del Echo), así que en altavoces pequeños casi no se oye. `Assign Clips` usa `rewind-audible.ogg` (volumen 0,9), derivado del original, que no se modifica: pasa-altos a 500 Hz con cuatro etapas (unos 48 dB/octava), ganancia y limitador. Queda en −16,1 LUFS; con el volumen aplicado, unos −17 LUFS, entre los dos bucles del Echo (−14 y −18,5). Se filtran tres copias seguidas y se recorta la central para que el filtro no rompa el bucle:
 
 ```
-ffmpeg -i rewind.ogg -af "highpass=f=180:p=2,highpass=f=180:p=2,volume=18dB,alimiter=limit=0.84:attack=2:release=40:level=false" -c:a libvorbis -q:a 6 rewind-audible.ogg
+HP="highpass=f=500:p=2,highpass=f=500:p=2,highpass=f=500:p=2,highpass=f=500:p=2"
+ffmpeg -stream_loop 2 -i rewind.ogg -af "aformat=sample_fmts=flt,$HP,volume=24dB,alimiter=limit=0.84:attack=3:release=50:level=false,atrim=start_sample=220500:end_sample=441000,asetpts=N/SR/TB" -c:a libvorbis -q:a 6 rewind-audible.ogg
 ```

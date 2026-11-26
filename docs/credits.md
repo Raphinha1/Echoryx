@@ -51,7 +51,7 @@ El resto de los `.ogg` de esa carpeta, de **Kenney Vleugels** ([Kenney.nl](https
 
 CC0 no exige atribución; se acredita igualmente por cortesía (música y efectos).
 
-`rewind-audible.ogg` es una versión derivada de `rewind.ogg` (CC0): recorte de graves, ganancia y limitador para que se oiga en altavoces pequeños.
+`rewind-audible.ogg` es una versión derivada de `rewind.ogg` (CC0): pasa-altos a 500 Hz, ganancia y limitador para que se oiga en altavoces pequeños.
 
 ## Fuentes
 

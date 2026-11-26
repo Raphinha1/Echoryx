@@ -26,8 +26,8 @@ namespace Echoryx.Audio.Editor
             Set(library.echoRecord, "echo-grabando", 0.45f);
             Set(library.echoPlay, "echo-reproduciendo", 0.45f);
             Set(library.echoEnd, "echo-terminar", 0.65f);
-            // rewind.ogg is almost all below 150 Hz and inaudible on small speakers; this derived copy boosts it.
-            Set(library.rewind, "rewind-audible", 0.7f);
+            // rewind.ogg is almost all low end, inaudible on small speakers; this derived copy is high-passed at 500 Hz.
+            Set(library.rewind, "rewind-audible", 0.9f);
             Set(library.checkpoint, "checkpoint", 0.75f);
             Set(library.goal, "meta", 0.85f);
             Set(library.uiClick, "Clic", 0.4f);
