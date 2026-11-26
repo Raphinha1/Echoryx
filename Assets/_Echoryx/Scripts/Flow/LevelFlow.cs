@@ -9,10 +9,11 @@ using UnityEngine.UI;
 
 namespace Echoryx.Flow
 {
-    public enum LevelFlowState { Playing, Paused, Resuming }
+    public enum LevelFlowState { Playing, Paused, Resuming, Completed }
 
     /// <summary>
-    /// Pause menu and full level restart. Added at run time to every scene listed in the LevelCatalog.
+    /// Pause menu, full level restart and the end-of-level step (save progress; Next / Retry / Menu buttons
+    /// on the existing completion panel). Added at run time to every scene listed in the LevelCatalog.
     ///
     /// Pausing freezes the game with timeScale 0 and also stops what timeScale does not: gameplay input is
     /// suspended, the camera orbit is disabled and a held Rewind is released exactly as if the button had
@@ -27,6 +28,7 @@ namespace Echoryx.Flow
     {
         private const string PauseActionName = "System/Pause";
         private const string RestartActionName = "System/RestartLevel";
+        public const string AllLevelsCompletedText = "Has completado todos los niveles";
 
         private LevelCatalog catalog;
         private int levelIndex;
@@ -47,6 +49,11 @@ namespace Echoryx.Flow
         public Button ResumeButton { get; private set; }
         public Button RetryButton { get; private set; }
         public Button MenuButton { get; private set; }
+        // Buttons added to the completion panel (null when the level has no such panel).
+        public Button NextLevelButton { get; private set; }
+        public Button CompleteRetryButton { get; private set; }
+        public Button CompleteMenuButton { get; private set; }
+        public TMP_Text AllCompletedLabel { get; private set; }
 
         public static LevelFlow Install(Scene scene, LevelCatalog catalog, int levelIndex)
         {
@@ -63,6 +70,7 @@ namespace Echoryx.Flow
             flow.stats = Find<LevelStats>(scene);
             UiKit.EnsureEventSystem(scene);
             flow.BuildPauseMenu();
+            flow.BuildCompletionButtons(Find<LevelCompletePanel>(scene));
             go.SetActive(true);
             return flow;
         }
@@ -86,10 +94,12 @@ namespace Echoryx.Flow
                 Debug.LogError("The level catalog needs input actions with " + PauseActionName + " and " + RestartActionName + ".", this);
             pauseAction?.Enable();
             restartAction?.Enable();
+            if (stats != null) stats.Completed += OnLevelCompleted;
         }
 
         private void OnDisable()
         {
+            if (stats != null) stats.Completed -= OnLevelCompleted;
             pauseAction?.Disable();
             restartAction?.Disable();
             // Never leave the game frozen if this object goes away while paused.
@@ -175,6 +185,23 @@ namespace Echoryx.Flow
             Cursor.visible = true;
         }
 
+        private void OnLevelCompleted()
+        {
+            var level = catalog.Levels[levelIndex];
+            GameProgress.Load().RecordCompletion(level.Id, stats.Attempts, stats.RewindUses, stats.ElapsedSeconds);
+            if (State == LevelFlowState.Resuming) FinishResume();
+            State = LevelFlowState.Completed;
+            SuspendInteraction();
+            // The completion panel subscribed first, so it is already visible and its buttons can take focus.
+            UiKit.Select(NextLevelButton != null && NextLevelButton.gameObject.activeSelf ? NextLevelButton : CompleteRetryButton);
+        }
+
+        public void GoToNextLevel()
+        {
+            var next = catalog.NextAfter(levelIndex);
+            if (State == LevelFlowState.Completed && next != null) Leave(next.ScenePath);
+        }
+
         /// <summary>Restarts the whole level from scratch (R only returns to the last checkpoint).</summary>
         public void Retry() => Leave(gameObject.scene.path);
 
@@ -183,6 +210,37 @@ namespace Echoryx.Flow
         private void Leave(string scenePath)
         {
             if (!leaving) leaving = SceneNavigator.Load(scenePath);
+        }
+
+        /// <summary>Extends the level's existing completion panel; they appear and hide together with it.</summary>
+        private void BuildCompletionButtons(LevelCompletePanel complete)
+        {
+            if (complete == null || complete.Root == null) return;
+            var panel = (RectTransform)complete.Root.transform;
+            var canvas = complete.GetComponentInParent<Canvas>();
+            if (canvas != null && canvas.GetComponent<GraphicRaycaster>() == null) canvas.gameObject.AddComponent<GraphicRaycaster>();
+
+            // Taller to fit the buttons, nudged up so it stays clear of the hint strip.
+            panel.sizeDelta = new Vector2(panel.sizeDelta.x, 700f);
+            panel.anchoredPosition = new Vector2(0f, 25f);
+            var background = panel.GetComponent<Image>();
+            if (background != null) background.color = UiKit.PanelColor;
+            var title = panel.Find("Title");
+            if (title != null && title.TryGetComponent<TMP_Text>(out var heading)) heading.color = UiKit.Orange;
+
+            var hasNext = catalog.NextAfter(levelIndex) != null;
+            var bottom = new Vector2(0.5f, 0f);
+            var size = new Vector2(300f, 80f);
+            NextLevelButton = UiKit.Button(panel, "Next Level", "Siguiente nivel", bottom, new Vector2(-320f, 36f), size, 34f);
+            CompleteRetryButton = UiKit.Button(panel, "Retry", "Reintentar", bottom, new Vector2(hasNext ? 0f : -170f, 36f), size, 34f);
+            CompleteMenuButton = UiKit.Button(panel, "Menu", "Menú", bottom, new Vector2(hasNext ? 320f : 170f, 36f), size, 34f);
+            AllCompletedLabel = UiKit.Label(panel, "All Completed", AllLevelsCompletedText, 36f, UiKit.Orange,
+                bottom, new Vector2(0f, 128f), new Vector2(900f, 44f));
+            NextLevelButton.gameObject.SetActive(hasNext);
+            AllCompletedLabel.gameObject.SetActive(!hasNext);
+            NextLevelButton.onClick.AddListener(GoToNextLevel);
+            CompleteRetryButton.onClick.AddListener(Retry);
+            CompleteMenuButton.onClick.AddListener(GoToMenu);
         }
 
         private void BuildPauseMenu()

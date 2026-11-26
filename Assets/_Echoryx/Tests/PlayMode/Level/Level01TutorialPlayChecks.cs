@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Linq;
 using Echoryx.Echo;
+using Echoryx.Flow;
 using Echoryx.Game;
 using Echoryx.Interactions;
 using Echoryx.Player;
@@ -34,10 +35,13 @@ namespace Echoryx.Level.PlayTests
         private InputSettings originalSettings;
         private InputSettings testSettings;
         private HideFlags originalFlags;
+        private MemoryProgressStorage progressStorage;
 
         [UnitySetUp]
         public IEnumerator SetUp()
         {
+            progressStorage = new MemoryProgressStorage();
+            GameProgress.Storage = progressStorage; // completing the level must not touch real PlayerPrefs
 #if UNITY_EDITOR
             EditorSceneManager.LoadSceneInPlayMode("Assets/_Echoryx/Scenes/Level_01_Tutorial.unity",
                 new LoadSceneParameters(LoadSceneMode.Single));
@@ -78,6 +82,7 @@ namespace Echoryx.Level.PlayTests
                 originalSettings.hideFlags = originalFlags;
             }
             if (testSettings != null) Object.Destroy(testSettings);
+            GameProgress.Storage = null;
             Time.captureDeltaTime = 0f;
             yield return null;
         }
@@ -201,6 +206,19 @@ namespace Echoryx.Level.PlayTests
             Assert.That(stats.Attempts, Is.EqualTo(3));
             Assert.That(stats.RewindUses, Is.EqualTo(1));
             Assert.That(stats.ElapsedSeconds, Is.GreaterThan(10d));
+
+            // Reaching the real goal saves progress and offers the way on.
+            var record = new GameProgress(progressStorage).Find("level-01-tutorial");
+            Assert.That(record, Is.Not.Null);
+            Assert.That(record.bestAttempts, Is.EqualTo(3));
+            Assert.That(record.bestRewinds, Is.EqualTo(1));
+            Assert.That(record.bestSeconds, Is.EqualTo(stats.ElapsedSeconds).Within(1e-6d));
+            var flow = Object.FindFirstObjectByType<LevelFlow>();
+            Assert.That(flow.State, Is.EqualTo(LevelFlowState.Completed));
+            Assert.That(flow.CompleteRetryButton.gameObject.activeInHierarchy, Is.True);
+            Assert.That(flow.CompleteMenuButton.gameObject.activeInHierarchy, Is.True);
+            Assert.That(flow.AllCompletedLabel.gameObject.activeInHierarchy, Is.True, "Only one level ships today.");
+            Assert.That(flow.NextLevelButton.gameObject.activeSelf, Is.False);
         }
 
         [UnityTest]
