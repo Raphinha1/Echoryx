@@ -56,6 +56,13 @@ Pase visual con los kits CC0 de Kenney (ver [credits](credits.md)); no toca lóg
 - **Atmósfera:** skybox con degradado y estrellas (`EchoryxGradientSkybox`), luz direccional cálida con sombras suaves, niebla exponencial suave, `Global Volume` (`Settings/Level01VolumeProfile.asset`) con Bloom suave, Color Adjustments (saturación +14) y Vignette ligero. Un solo Volume y una luz con sombras: pensado para rendimiento.
 - **Hints de la sala 3** reescritos como preguntas guiadas: Rewind retrocede el movimiento de un mecanismo, no al jugador.
 
+- **Cerramiento:** usa la misma solución que Level_02 (`LevelEnclosure`):
+  - Paneles opacos sin collider detrás de las paredes perimetrales, que sobresalen 30 cm por cada extremo.
+  - Pilares en las esquinas.
+  - Revestimientos solapados en los dos fosos.
+
+  Forma parte de `Apply Art Pass`; `Echoryx > Level 01 > Apply Wall Backing` lo rehace solo a él, sin tocar el resto de la escena. Se verificó con la cámara real girando 360° en cada sala y con el exterior en magenta: solo se ve por encima de las paredes.
+
 ### Revisar a mano en el Editor
 
 - Recorrer el nivel en Play y ajustar a gusto intensidad de Bloom, niebla (`Lighting > Environment`) y colores del skybox (`Materials/Art/ArtSky.mat`).

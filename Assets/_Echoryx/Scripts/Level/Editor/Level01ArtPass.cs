@@ -458,11 +458,34 @@ namespace Echoryx.Level.Editor
 
             PatchHint("Hint Rewind Platform", Level01TutorialBuilder.RewindPlatformHint);
             PatchHint("Hint Rewind Retry", Level01TutorialBuilder.RewindRetryHint);
+            Enclose(art);
             MarkScenery(art);
             ConfigureCamera();
             Atmosphere(scene, m);
             EditorSceneManager.MarkSceneDirty(scene);
             if (!EditorSceneManager.SaveScene(scene)) throw new InvalidOperationException("Could not save scene.");
+        }
+
+        /// <summary>
+        /// Closes the slits between wall pieces (same solution as Level_02). Also runs on its own from
+        /// Echoryx/Level 01/Apply Wall Backing, which only touches this part of the scene.
+        /// </summary>
+        private static void Enclose(Transform art) => LevelEnclosure.Apply(art,
+            ("Pit 1", Level01TutorialBuilder.PitOneStart, Level01TutorialBuilder.PitOneEnd),
+            ("Pit 2", Level01TutorialBuilder.PitTwoStart, Level01TutorialBuilder.PitTwoEnd));
+
+        [MenuItem("Echoryx/Level 01/Apply Wall Backing")]
+        public static void ApplyWallBacking()
+        {
+            if (!Application.isBatchMode && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            var scene = EditorSceneManager.OpenScene(Level01TutorialBuilder.ScenePath, OpenSceneMode.Single);
+            var art = GameObject.Find(ArtRoot)?.transform ?? throw new InvalidOperationException("Run Apply Art Pass first.");
+            MarkScenery(LevelEnclosure.Apply(art,
+                ("Pit 1", Level01TutorialBuilder.PitOneStart, Level01TutorialBuilder.PitOneEnd),
+                ("Pit 2", Level01TutorialBuilder.PitTwoStart, Level01TutorialBuilder.PitTwoEnd)));
+            EditorSceneManager.MarkSceneDirty(scene);
+            if (!EditorSceneManager.SaveScene(scene)) throw new InvalidOperationException("Could not save scene.");
+            Debug.Log("Level 01 wall backing applied.");
         }
 
         internal static void MarkScenery(Transform art)
