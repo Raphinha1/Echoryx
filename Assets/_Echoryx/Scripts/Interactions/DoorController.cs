@@ -7,6 +7,8 @@ namespace Echoryx.Interactions
     public sealed class DoorController : MonoBehaviour
     {
         [SerializeField] private PressurePlate plate;
+        [Tooltip("Optional: these plates must be pressed too, at the same time as the main one.")]
+        [SerializeField] private PressurePlate[] extraPlates = System.Array.Empty<PressurePlate>();
         [SerializeField] private Transform doorPanel;
         [SerializeField] private Transform threshold;
         [SerializeField] private Vector3 thresholdSize = new Vector3(3.5f, 3f, 2f);
@@ -33,10 +35,18 @@ namespace Echoryx.Interactions
         {
             if (resetPending || resetFrame == Time.frameCount || plate == null || doorPanel == null || threshold == null) return;
             var fullyClosed = Vector3.Distance(doorPanel.localPosition, closedLocalPosition) < 0.001f;
-            var open = gate.ShouldOpen(plate.IsPressed, PlayerInThreshold(), fullyClosed);
+            var open = gate.ShouldOpen(PlatesPressed(), PlayerInThreshold(), fullyClosed);
             var target = closedLocalPosition + (open ? openOffset : Vector3.zero);
             doorPanel.localPosition = Vector3.MoveTowards(
                 doorPanel.localPosition, target, moveSpeed * Time.deltaTime);
+        }
+
+        private bool PlatesPressed()
+        {
+            if (!plate.IsPressed) return false;
+            foreach (var extra in extraPlates)
+                if (extra != null && !extra.IsPressed) return false;
+            return true;
         }
 
         private bool PlayerInThreshold()
