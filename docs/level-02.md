@@ -9,7 +9,7 @@ Escena `Assets/_Echoryx/Scenes/Level_02_Sincronia.unity`, segundo nivel del cat�
 - Jugador: 6 m/s, salto de 1,65 m de altura, alcance horizontal de unos 4,4 m.
 - Echo: graba como máximo 5 s y se reproduce desde la pose en la que empezó la grabación, esté donde esté el jugador al pulsar E.
 - Rewind: apunta con el centro de la cámara hasta 12 m y, una vez sujeto, no necesita seguir apuntando.
-- Plataforma de la sala 2: 5,4 m a 1,5 m/s (3,6 s), rebobinado ×1,2 (3,0 s).
+- Plataforma de la sala 2: 5,4 m a 2,4 m/s (2,25 s), rebobinado ×1,2 (1,9 s). Es 1,6 veces más rápida que en la primera versión.
 - Plataforma de la sala 3: 6,5 m a 3,2 m/s, rebobinado ×0,7. El viaje rebobinado va a 2,24 m/s, 1,6 veces más rápido que en la primera versión.
 
 Los tiempos de cada paso se midieron en `Level02SincroniaPlayChecks`, que juega cada sala con input real a 60 fps. El tiempo cero es la pulsación de E.
@@ -36,10 +36,10 @@ Una reja en el borde del foso (z = 30,15) solo se abre mientras alguien pisa su 
   1. En la placa de la reja, pulsa **Q** ya encima y deja que se agoten los 5 s.
   2. Ve hasta el borde, delante de la reja.
   3. Pulsa **E**. El Echo pisa la placa y la reja sube.
-  4. Mantén **clic derecho** sobre la plataforma desde 0,32 s. Vuelve al borde a los 3,30 s.
-  5. Sin soltar, súbete. Cruzas la reja a los 3,58 s. Suelta y viaja.
+  4. Mantén **clic derecho** sobre la plataforma desde 0,32 s. Vuelve al borde a los 2,17 s.
+  5. Sin soltar, súbete. Cruzas la reja a los 2,45 s. Suelta y viaja.
   6. El Echo deja la placa a los 5,02 s.
-- **Margen:** 1,43 s. Si la grabación empieza unos 1,5 s antes de llegar a la placa, o pulsas E en la placa y caminas después hasta la reja, el margen desaparece.
+- **Margen:** 2,57 s; antes de acelerar la plataforma era 1,43 s. Sigue siendo necesario que el Echo sujete la placa: si la pisas tú, la reja se cierra al irte (comprobado). Una grabación que empieza a unos 2,5 s de la placa, o pulsar E en la placa y caminar después los 9 m hasta la reja, ya no deja tiempo.
 
 La zona anti-aplastamiento de la reja está sobre el foso, no delante. Si estuviera delante, quedarse bajo la reja abierta la mantendría abierta para siempre.
 
@@ -58,7 +58,7 @@ La plataforma de esta sala viaja del lado lejano al cercano y queda aparcada jun
 
 ## Cerramiento
 
-El nivel es una sección de estación cerrada: no se coloca el decorado flotante del nivel 1. Cada foso es una caja cerrada, con paneles laterales, de extremo y fondo bajo el campo de peligro. El pozo tiene sus cuatro paredes revestidas. El casco bajo la sala 1 queda por debajo del fondo del pozo. Todo lo genera el builder, así que se conserva al reconstruir la escena. Se revisó con capturas desde la cámara real de cada sala, incluido el pozo.
+El nivel es una sección de estación cerrada: no se coloca el decorado flotante del nivel 1. Detrás de las cuatro paredes perimetrales hay paneles opacos que van del fondo de los fosos a lo alto de los muros y sobresalen 30 cm por cada extremo. Las cuatro esquinas tienen pilares que solapan ambos paneles. Como sus medidas salen de las piezas de pared generadas, ninguna rendija entre piezas deja ver el exterior. No tienen collider, así que no afectan al jugador ni a la cámara. Los revestimientos del pozo y de los fosos se solapan 6 cm en cada esquina. Cada foso es una caja cerrada, con paneles laterales, de extremo y fondo bajo el campo de peligro. El pozo tiene sus cuatro paredes revestidas. El casco bajo la sala 1 queda por debajo del fondo del pozo. Todo lo genera el builder, así que se conserva al reconstruir la escena. Se revisó con capturas desde la cámara real de cada sala, incluido el pozo, girando 360° a tres inclinaciones. Para que cualquier hueco saltara a la vista, se pintó de magenta el fondo exterior: solo aparece por encima de las paredes, porque el nivel no tiene techo, igual que el nivel 1.
 
 ## Pistas
 
