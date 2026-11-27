@@ -10,13 +10,13 @@ Escena `Assets/_Echoryx/Scenes/Level_02_Sincronia.unity`, segundo nivel del cat�
 - Echo: graba como máximo 5 s y se reproduce desde la pose en la que empezó la grabación, esté donde esté el jugador al pulsar E.
 - Rewind: apunta con el centro de la cámara hasta 12 m y, una vez sujeto, no necesita seguir apuntando.
 - Plataforma de la sala 2: 5,4 m a 1,5 m/s (3,6 s), rebobinado ×1,2 (3,0 s).
-- Plataforma de la sala 3: 6,5 m a 2 m/s, rebobinado ×0,7 (1,4 m/s).
+- Plataforma de la sala 3: 6,5 m a 3,2 m/s, rebobinado ×0,7. El viaje rebobinado va a 2,24 m/s, 1,6 veces más rápido que en la primera versión.
 
 Los tiempos de cada paso se midieron en `Level02SincroniaPlayChecks`, que juega cada sala con input real a 60 fps. El tiempo cero es la pulsación de E.
 
 ## Sala 1 — Dos placas (z −2…14)
 
-Una puerta a z = 14 exige dos placas a la vez: una justo delante (z = 12,6) y otra en el fondo de un pozo de 2,6 m del que no se sale saltando.
+Una puerta a z = 14 exige dos placas a la vez: una justo delante (z = 12,6) y otra al fondo de un pozo de 2,6 m del que no se sale saltando. El pozo mide 2,7 × 7 m, con la placa en el extremo lejano para que la cámara tenga sitio detrás del jugador.
 
 - **Tentador y erróneo:** grabar al Echo en la placa de la puerta y bajar tú al pozo. La puerta se abre, pero tú estás atrapado abajo.
 - **Solución:**
@@ -24,6 +24,7 @@ Una puerta a z = 14 exige dos placas a la vez: una justo delante (z = 12,6) y ot
   2. Pulsa **R**. Vuelves al inicio y la grabación terminada se conserva. Si la grabación seguía en curso al pulsar R, se pierde.
   3. Ponte en la placa de la puerta y pulsa **E**. El Echo aparece en el pozo y la puerta se abre en 0,55 s.
   4. Cruza el umbral a los 1,05 s y continúa hasta el checkpoint de z = 17.
+- **Lectura de la placa:** usa el mismo indicador que en el nivel 1 (naranja libre, verde contigo, cian con el Echo), pero en esta placa es más intenso, emite más partículas y reacciona desde 10 m. Además, una luz cálida ilumina el fondo del pozo.
 - **Margen:** 3,95 s. Es una sala de introducción: la dificultad es entender que R conserva la grabación, no el reloj.
 
 ## Sala 2 — La reja (z 14…39)
@@ -35,10 +36,10 @@ Una reja en el borde del foso (z = 30,15) solo se abre mientras alguien pisa su 
   1. En la placa de la reja, pulsa **Q** ya encima y deja que se agoten los 5 s.
   2. Ve hasta el borde, delante de la reja.
   3. Pulsa **E**. El Echo pisa la placa y la reja sube.
-  4. Mantén **clic derecho** sobre la plataforma desde 0,32 s. Vuelve al borde a los 3,28 s.
-  5. Sin soltar, súbete. Cruzas la reja a los 3,57 s. Suelta y viaja.
+  4. Mantén **clic derecho** sobre la plataforma desde 0,32 s. Vuelve al borde a los 3,30 s.
+  5. Sin soltar, súbete. Cruzas la reja a los 3,58 s. Suelta y viaja.
   6. El Echo deja la placa a los 5,02 s.
-- **Margen:** 1,45 s. Si la grabación empieza unos 1,5 s antes de llegar a la placa, o pulsas E en la placa y caminas después hasta la reja, el margen desaparece.
+- **Margen:** 1,43 s. Si la grabación empieza unos 1,5 s antes de llegar a la placa, o pulsas E en la placa y caminas después hasta la reja, el margen desaparece.
 
 La zona anti-aplastamiento de la reja está sobre el foso, no delante. Si estuviera delante, quedarse bajo la reja abierta la mantendría abierta para siempre.
 
@@ -51,15 +52,19 @@ La plataforma de esta sala viaja del lado lejano al cercano y queda aparcada jun
   1. En la placa de la compuerta, pulsa **Q** ya encima y deja que se agoten los 5 s.
   2. Súbete a la plataforma aparcada.
   3. Pulsa **E** y mantén **clic derecho** apuntando a la plataforma.
-  4. Pasas bajo la compuerta abierta a los 3,78 s, de pie en el centro de la plataforma, y llegas al otro lado a los 4,70 s.
+  4. Pasas bajo la compuerta abierta a los 2,43 s, de pie en el centro de la plataforma, y llegas al otro lado a los 3,00 s.
   5. Bájate sin soltar, suelta y ve a la meta (z = 60,5).
-- **Margen:** 1,22 s hasta dejar atrás la compuerta. La compuerta tampoco baja sobre alguien que ya está debajo, así que el límite real es entrar bajo ella, aproximadamente 0,9 s antes.
+- **Margen:** 2,57 s hasta dejar atrás la compuerta. Con la plataforma más rápida, el margen pasó de 1,22 a 2,57 s; sigue por encima de 1 s, así que no se ajustó nada más. La compuerta tampoco baja sobre alguien que ya está debajo, lo que da algo más de margen real. La sala sigue exigiendo el Echo: sin él, la compuerta te empuja al foso (comprobado).
+
+## Cerramiento
+
+El nivel es una sección de estación cerrada: no se coloca el decorado flotante del nivel 1. Cada foso es una caja cerrada, con paneles laterales, de extremo y fondo bajo el campo de peligro. El pozo tiene sus cuatro paredes revestidas. El casco bajo la sala 1 queda por debajo del fondo del pozo. Todo lo genera el builder, así que se conserva al reconstruir la escena. Se revisó con capturas desde la cámara real de cada sala, incluido el pozo.
 
 ## Pistas
 
 Solo explican reglas:
 
-- La puerta necesita sus dos placas a la vez.
+- La puerta necesita sus dos placas a la vez, y una placa cuenta mientras algo la pisa.
 - Del pozo no se sale saltando, y R conserva la última grabación terminada.
 - La reja solo se abre mientras alguien pisa su placa y, cerrada, no deja pasar ni apuntar.
 - El Echo repite lo grabado desde donde empezaste a grabar, durante 5 s como máximo.
