@@ -52,7 +52,7 @@ namespace Echoryx.Level.Editor
         public const float GrateZ = 30.15f, PitTwoStart = 30f, PitTwoEnd = 38.9f;
         public static readonly Vector3 PlatformTwoStart = new Vector3(0f, 0.05f, 31.9f);
         public static readonly Vector3 PlatformTwoEnd = new Vector3(0f, 0.05f, 37.3f);
-        public const float PlatformTwoSpeed = 1.5f, PlatformTwoRewind = 1.2f;
+        public const float PlatformTwoSpeed = 2.4f, PlatformTwoRewind = 1.2f; // 1.6x the first version
         public const float CheckpointThreeZ = 40.2f;
 
         // Room 3: the platform's one-way trip runs from the far side to the near side and parks next to the
@@ -258,12 +258,75 @@ namespace Echoryx.Level.Editor
                 Art.Spawn(Art.Modular, "template-wall", art, "Wall Start " + i, new Vector3(x, 0f, StartZ - 1f), new Vector3(0f, 180f, 0f), new Vector3(0.825f, 1.4f, 1f), a.Wall);
                 Art.Spawn(Art.Modular, "template-wall", art, "Wall End " + i, new Vector3(x, 0f, EndZ + 1f), Vector3.zero, new Vector3(0.825f, 1.4f, 1f), a.Wall);
             }
+            Backing(art, dark);
             Art.Display(art, "Display 1", new Vector3(-2.92f, 3.7f, 8f), 90f, a);
             Art.Display(art, "Display 2", new Vector3(2.92f, 3.7f, 24f), -90f, a);
             Art.Display(art, "Display 3", new Vector3(-2.92f, 3.7f, 43f), 90f, a);
             Art.Display(art, "Display 4", new Vector3(2.92f, 3.7f, 60f), -90f, a);
             // Level 02 is a closed station section: no floating scenery outside the walls.
             Enclose(art, dark);
+        }
+
+        /// <summary>
+        /// Opaque backing behind every perimeter wall (measured from the spawned wall art, floor of the pits to the
+        /// top of the walls, a little longer at each end) plus corner pillars that overlap both panels. Whatever
+        /// slit the modular wall pieces leave, only these dark panels show through. No colliders: neither the
+        /// player nor the camera deoccluder can touch them.
+        /// </summary>
+        private static void Backing(Transform art, Material dark)
+        {
+            Bounds Of(string prefix)
+            {
+                var bounds = new Bounds();
+                var first = true;
+                foreach (var renderer in art.GetComponentsInChildren<Renderer>())
+                {
+                    if (!renderer.name.StartsWith(prefix) && !renderer.transform.parent.name.StartsWith(prefix)
+                        && !HasAncestor(renderer.transform, prefix)) continue;
+                    if (first) { bounds = renderer.bounds; first = false; }
+                    else bounds.Encapsulate(renderer.bounds);
+                }
+                if (first) throw new InvalidOperationException("No wall art named " + prefix);
+                return bounds;
+            }
+            var left = Of("Wall L ");
+            var right = Of("Wall R ");
+            var start = Of("Wall Start ");
+            var end = Of("Wall End ");
+            const float bottom = -7.6f, thickness = 0.1f, over = 0.3f;
+            var top = Mathf.Max(Mathf.Max(left.max.y, right.max.y), Mathf.Max(start.max.y, end.max.y));
+            var height = top - bottom;
+            var middleY = (top + bottom) * 0.5f;
+            var outerLeft = left.min.x - thickness;
+            var outerRight = right.max.x + thickness;
+            var outerStart = Mathf.Min(start.min.z, left.min.z, right.min.z) - thickness;
+            var outerEnd = Mathf.Max(end.max.z, left.max.z, right.max.z) + thickness;
+            Panel(art, "Backing Left", new Vector3(outerLeft + thickness * 0.5f, middleY, (outerStart + outerEnd) * 0.5f),
+                new Vector3(thickness, height, outerEnd - outerStart + 2f * over), dark);
+            Panel(art, "Backing Right", new Vector3(outerRight - thickness * 0.5f, middleY, (outerStart + outerEnd) * 0.5f),
+                new Vector3(thickness, height, outerEnd - outerStart + 2f * over), dark);
+            Panel(art, "Backing Start", new Vector3((outerLeft + outerRight) * 0.5f, middleY, outerStart + thickness * 0.5f),
+                new Vector3(outerRight - outerLeft + 2f * over, height, thickness), dark);
+            Panel(art, "Backing End", new Vector3((outerLeft + outerRight) * 0.5f, middleY, outerEnd - thickness * 0.5f),
+                new Vector3(outerRight - outerLeft + 2f * over, height, thickness), dark);
+            // Corner pillars: from inside the end wall's run to the outer backing, overlapping both.
+            foreach (var (x0, x1) in new[] { (outerLeft, Mathf.Min(start.min.x, end.min.x) + 0.1f), (Mathf.Max(start.max.x, end.max.x) - 0.1f, outerRight) })
+                foreach (var (z0, z1) in new[] { (outerStart, Mathf.Max(left.min.z, right.min.z) + 0.3f), (Mathf.Min(left.max.z, right.max.z) - 0.3f, outerEnd) })
+                    Panel(art, "Corner Pillar", new Vector3((x0 + x1) * 0.5f, middleY, (z0 + z1) * 0.5f), new Vector3(x1 - x0, height, z1 - z0), dark);
+        }
+
+        private static bool HasAncestor(Transform child, string prefix)
+        {
+            for (var t = child; t != null; t = t.parent)
+                if (t.name.StartsWith(prefix)) return true;
+            return false;
+        }
+
+        private static void Panel(Transform art, string name, Vector3 position, Vector3 size, Material material)
+        {
+            var cube = B.Cube(art, name, position, size, material);
+            UnityEngine.Object.DestroyImmediate(cube.GetComponent<Collider>());
+            cube.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.Off;
         }
 
         /// <summary>Each pit is a closed box (side, end and bottom panels), so no gap shows the void below.</summary>
@@ -323,8 +386,12 @@ namespace Echoryx.Level.Editor
                     Vector3.zero, new Vector3((x1 - x0) / 4.2f, 1f, tile / 4.2f), a.Floor);
         }
 
+        // Linings overlap their neighbours by 6 cm at each end (the thin axis is kept), so corners have no slit.
         private static void Lining(Transform art, string name, Vector3 position, Vector3 size, Material material)
         {
+            const float overlap = 0.12f;
+            size = new Vector3(size.x > 0.2f ? size.x + overlap : size.x, size.y > 0.2f ? size.y + overlap : size.y,
+                size.z > 0.2f ? size.z + overlap : size.z);
             var cube = B.Cube(art, name, position, size, material);
             UnityEngine.Object.DestroyImmediate(cube.GetComponent<Collider>());
         }
