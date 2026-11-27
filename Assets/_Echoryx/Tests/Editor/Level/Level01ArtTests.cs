@@ -53,8 +53,13 @@ namespace Echoryx.Level.Tests
                 var art = GameObject.Find("Level Art");
                 Assert.That(art, Is.Not.Null);
                 Assert.That(art.GetComponentsInChildren<Collider>(true), Is.Empty);
-                var meshes = art.GetComponentsInChildren<MeshFilter>(true).Select(f => AssetDatabase.GetAssetPath(f.sharedMesh));
+                // The enclosure is hidden filler behind the walls (LevelEnclosure): plain cubes, checked below.
+                var enclosure = art.transform.Find("Enclosure");
+                Assert.That(enclosure, Is.Not.Null, "Wall backing, corner pillars and pit linings.");
+                var meshes = art.GetComponentsInChildren<MeshFilter>(true).Where(f => !f.transform.IsChildOf(enclosure))
+                    .Select(f => AssetDatabase.GetAssetPath(f.sharedMesh));
                 Assert.That(meshes, Is.All.Contains("kenney_"));
+                Assert.That(enclosure.GetComponentsInChildren<Renderer>(true).Select(r => r.sharedMaterial.name), Is.All.EqualTo("ArtWellWall"));
                 Assert.That(meshes.Any(p => p.Contains("Quaternius")), Is.False);
             });
         }

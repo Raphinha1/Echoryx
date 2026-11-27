@@ -37,9 +37,9 @@ namespace Echoryx.Level.Editor
         public const string RewindRetryHint = "Si la plataforma se te escapa o caes, ¿puedes hacer que empiece su recorrido de nuevo y probar otra estrategia?";
 
         private const float WallX = 3.15f;
-        private const float PitOneStart = 8f, PitOneEnd = 10.5f;
+        internal const float PitOneStart = 8f, PitOneEnd = 10.5f;
         private const float DoorZ = 30f, PlateZ = 21f;
-        private const float PitTwoStart = 36f, PitTwoEnd = 45f;
+        internal const float PitTwoStart = 36f, PitTwoEnd = 45f;
         private const float LevelStartZ = -2f, LevelEndZ = 56f;
 
         internal sealed class Materials
