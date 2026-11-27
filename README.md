@@ -2,10 +2,42 @@
 
 [![Unity](https://img.shields.io/badge/Unity-6000.3.29f1-blue.svg)](https://unity.com/)
 [![Render Pipeline](https://img.shields.io/badge/Render%20Pipeline-URP%2017.3.0-orange.svg)](https://unity.com/srp/universal-render-pipeline)
-[![Tests](https://img.shields.io/badge/Tests-163%20Passed%20(100%25)-brightgreen.svg)](docs/testing.md)
+[![Tests](https://img.shields.io/badge/Tests-131%20EditMode%20%7C%2064%20PlayMode-blue.svg)](docs/testing.md)
 [![License](https://img.shields.io/badge/License-Academic%20Project-lightgrey.svg)]()
 
 **Echoryx** es un videojuego 3D de plataformas y resolución de rompecabezas temporales desarrollado en **Unity 6** con **Universal Render Pipeline (URP)**. El jugador controla a un robot y utiliza dos habilidades temporales complementarias —la grabación y reproducción de acciones pasadas (**Echo**) y la reversión cinemática de objetos interactivos (**Rewind**)— para navegar salas modulares y superar obstáculos sincronizados.
+
+---
+
+## Documentación
+
+- [Diseño: GDD v1.0](docs/GDD.md)
+- [Technical Design Document (TDD)](docs/technical-design-document.md)
+- [Historial de desarrollo](docs/historial-desarrollo.md)
+- [Créditos y licencias](docs/credits.md)
+- Niveles: [1, Tutorial](docs/level-01-tutorial.md) · [2, Sincronía](docs/level-02.md) · [3, Paradojas](docs/level-03.md)
+
+### Cómo ejecutar
+
+1. Abre el proyecto con Unity `6000.3.29f1`.
+2. Importa *Animated Low Poly Robot Free* en `Assets/FreeLowPolyRobot/` (no está en Git).
+3. Abre `Assets/_Echoryx/Scenes/MainMenu.unity` y pulsa Play. El repositorio no incluye un build.
+
+**GPU híbrida en Linux:** hay que lanzarlo con estas variables, tanto para un build como para el Editor (sustituye la ruta del ejecutable):
+
+```bash
+__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia <ruta-al-ejecutable>
+```
+
+### Controles
+
+| Acción | Control |
+|---|---|
+| Moverse / cámara / saltar | WASD / ratón / Espacio |
+| Echo: grabar o detener / reproducir | Q / E |
+| Rewind | Mantener clic derecho apuntando al mecanismo |
+| Volver al checkpoint / reiniciar nivel | R / Retroceso |
+| Pausa / mostrar u ocultar ayuda | Esc (Start en mando) / H |
 
 ---
 
@@ -87,6 +119,7 @@ Las escenas principales se encuentran en `Assets/_Echoryx/Scenes/`:
 - **`MainMenu.unity`:** Primera escena del build: Jugar, Seleccionar nivel y Salir ([flujo del juego](docs/game-flow.md)).
 - **`Level_01_Tutorial.unity`:** Nivel tutorial de tres salas que enseña Echo y Rewind ([detalle](docs/level-01-tutorial.md)).
 - **`Level_02_Sincronia.unity`:** Segundo nivel: tres salas que combinan Echo y Rewind ([solución](docs/level-02.md)).
+- **`Level_03_Paradojas.unity`:** Tercer nivel, «Laboratorio de Paradojas»: cinco tramos que combinan Echo y Rewind, con un acertijo final en dos etapas ([solución](docs/level-03.md)).
 - **`Prototype.unity`:** Circuito de pruebas de movimiento, puzzle de Echo, cruce con Rewind y sala combinada S04-C.
 - **`RobotIntegrationLab.unity`:** Laboratorio del robot; lo usan las pruebas PlayMode de locomoción.
 
@@ -104,9 +137,9 @@ El proyecto se rige por Desarrollo Guiado por Pruebas (TDD) y cuenta con una bat
 /ruta/hacia/Unity -batchmode -quit -projectPath . -runTests -testPlatform playmode -testResults playmode-results.xml
 ```
 
-- **EditMode Tests:** 124 pasadas / 0 fallidas (100%)
-- **PlayMode Tests:** 39 pasadas / 0 fallidas (100%)
-- **Total:** **163 pruebas automatizadas aprobadas**
+- **EditMode:** 131 pruebas
+- **PlayMode:** 64 pruebas
+- **Total:** **195 pruebas automatizadas** (conteo del código; ver el [TDD, sección 5](docs/technical-design-document.md#5-estrategia-de-pruebas-y-tdd))
 
 Para más detalles, consulta la [documentación de pruebas](docs/testing.md).
 
@@ -116,7 +149,9 @@ Para más detalles, consulta la [documentación de pruebas](docs/testing.md).
 
 - 📄 [**Informe General de Avance (con capturas y análisis técnico)**](docs/archivo/informe-avance-proyecto.md)
 - 🎮 [Game Design Document (GDD)](docs/GDD.md)
+- 🧩 [Nivel 1: Tutorial](docs/level-01-tutorial.md)
 - 🧩 [Nivel 2: Sincronía](docs/level-02.md)
+- 🧩 [Nivel 3: Paradojas](docs/level-03.md)
 - 🧭 [Flujo del juego: menú, niveles, pausa y progreso](docs/game-flow.md)
 - ✨ [Efectos visuales](docs/vfx.md)
 - 🔊 [Audio: mixer, librería de sonidos y dónde asignar clips](docs/audio.md)

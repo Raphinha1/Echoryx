@@ -86,7 +86,7 @@ flowchart LR
 - Configuración de ensamblados Assembly Definition (`.asmdef`) para aislar dominio, infraestructura y tests.
 
 ### S01 — Controlador del Jugador en Tercera Persona
-- Implementación de [`PlayerMotor`](file:///home/raphinha/Proyectos/Universidad/ISC%207/Desarrollo%20de%20entretenimiento/Echoryx/Assets/_Echoryx/Scripts/Player/PlayerMotor.cs) basado en `CharacterController`.
+- Implementación de [`PlayerMotor`](../../Assets/_Echoryx/Scripts/Player/PlayerMotor.cs) basado en `CharacterController`.
 - Física terrestre y aérea: aceleración suave, deceleración responsiva, gravedad configurable.
 - Tolerancias de plataformeo clásicas: **Coyote Time** (salto unos fotogramas tras dejar un borde) y **Jump Buffering** (registro anticipado del salto antes de tocar tierra).
 - Cámara en tercera persona con `CinemachineBrain` y seguimiento orbital amortiguado que impide clipping con geometrías.
@@ -135,9 +135,9 @@ flowchart LR
 El proyecto fue construido bajo estrictos principios de arquitectura limpia y desarrollo guiado por pruebas:
 
 1. **Desacoplamiento Física vs. Presentación:**
-   [`PlayerMotor`](file:///home/raphinha/Proyectos/Universidad/ISC%207/Desarrollo%20de%20entretenimiento/Echoryx/Assets/_Echoryx/Scripts/Player/PlayerMotor.cs) es la única autoridad de desplazamiento mediante `CharacterController`. La presentación visual ([`PlayerAnimationDriver`](file:///home/raphinha/Proyectos/Universidad/ISC%207/Desarrollo%20de%20entretenimiento/Echoryx/Assets/_Echoryx/Scripts/Player/PlayerAnimationDriver.cs)) se ejecuta en `DefaultExecutionOrder(20)`, leyendo la velocidad resuelta en el fotograma actual sin aplicar jamás Root Motion físico.
+   [`PlayerMotor`](../../Assets/_Echoryx/Scripts/Player/PlayerMotor.cs) es la única autoridad de desplazamiento mediante `CharacterController`. La presentación visual (`PlayerAnimationDriver` (retirado; en el historial de Git)) se ejecuta en `DefaultExecutionOrder(20)`, leyendo la velocidad resuelta en el fotograma actual sin aplicar jamás Root Motion físico.
 2. **Medición Aislada de Movimiento Planar:**
-   La clase estática [`ResolvedPlanarMotion`](file:///home/raphinha/Proyectos/Universidad/ISC%207/Desarrollo%20de%20entretenimiento/Echoryx/Assets/_Echoryx/Scripts/Player/ResolvedPlanarMotion.cs) filtra el desplazamiento aportado por plataformas móviles o colisiones oblicuas contra muros, garantizando que el `Animator` solo responda al movimiento voluntario del jugador.
+   La clase estática [`ResolvedPlanarMotion`](../../Assets/_Echoryx/Scripts/Player/ResolvedPlanarMotion.cs) filtra el desplazamiento aportado por plataformas móviles o colisiones oblicuas contra muros, garantizando que el `Animator` solo responda al movimiento voluntario del jugador.
 3. **Aislamiento por Salas (*Room Scoping*):**
    Los puzzles están aislados en componentes de sala. Los checkpoints pertenecen a una sala específica; al disparar un reinicio, únicamente los suscriptores de esa sala son reseteados a su pose y estado inicial.
 4. **Almacenamiento Circular de Historial:**
