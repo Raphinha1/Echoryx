@@ -101,7 +101,7 @@ namespace Echoryx.Level.PlayTests
             Assert.That(plateDoor.IsPressed && !door.IsOpen, Is.True, "The door needs both plates.");
 
             // Into the well: no way out by jumping (tempting wrong answer: hold the well plate yourself).
-            yield return WalkTo(new Vector3(1.9f, 0f, 5.75f));
+            yield return WalkTo(new Vector3(1.95f, 0f, 7.6f));
             Assert.That(player.transform.position.y, Is.LessThan(-2f));
             Assert.That(plateWell.IsPressed, Is.True);
             basis.rotation = Quaternion.LookRotation(Vector3.left);

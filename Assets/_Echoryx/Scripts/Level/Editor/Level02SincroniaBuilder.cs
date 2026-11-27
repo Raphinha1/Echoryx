@@ -41,8 +41,8 @@ namespace Echoryx.Level.Editor
         public const float StartZ = -2f, EndZ = 64f;
 
         // Room 1: a well the player cannot climb out of (2.6 m deep, jump reaches 1.65 m).
-        public const float WellX0 = 0.6f, WellX1 = 3.3f, WellZ0 = 4f, WellZ1 = 7.5f, WellDepth = 2.6f;
-        public static readonly Vector3 PlateWell = new Vector3(1.9f, -WellDepth, 5.75f);
+        public const float WellX0 = 0.6f, WellX1 = 3.3f, WellZ0 = 2.5f, WellZ1 = 9.5f, WellDepth = 2.6f;
+        public static readonly Vector3 PlateWell = new Vector3(1.95f, -WellDepth, 7.6f); // far end: room for the camera behind
         public const float DoorOneZ = 14f;
         public static readonly Vector3 PlateDoor = new Vector3(0f, 0f, 12.6f); // just before the door's threshold
         public const float CheckpointTwoZ = 17f;
@@ -61,11 +61,11 @@ namespace Echoryx.Level.Editor
         public const float PitThreeStart = 46f, PitThreeEnd = 55.7f, GateZ = 52.4f;
         public static readonly Vector3 PlatformThreeStart = new Vector3(0f, 0.05f, 54.1f); // far
         public static readonly Vector3 PlatformThreeEnd = new Vector3(0f, 0.05f, 47.6f);   // near
-        public const float PlatformThreeSpeed = 2f, PlatformThreeRewind = 0.7f;
+        public const float PlatformThreeSpeed = 3.2f, PlatformThreeRewind = 0.7f; // ride (rewind) at 2.24 m/s
         public const float GoalZ = 60.5f;
 
         // Hints explain rules only, never the solution.
-        public const string HintDoor = "Esta puerta solo se abre si sus dos placas están pulsadas a la vez.";
+        public const string HintDoor = "Esta puerta solo se abre si sus dos placas están pulsadas a la vez. Una placa cuenta mientras algo la pisa.";
         public const string HintWell = "Del pozo no se sale saltando. R te devuelve al último checkpoint y conserva tu última grabación terminada.";
         public const string HintGrate = "La reja solo se abre mientras alguien pisa su placa. Cerrada, no deja pasar ni apuntar a través de ella.";
         public const string HintEcho = "Tu Echo repite lo grabado desde el punto donde empezaste a grabar, durante 5 segundos como máximo.";
@@ -130,6 +130,7 @@ namespace Echoryx.Level.Editor
             // Room 1: one plate at the bottom of the well, one in front of the door; the door needs both.
             var plateWell = B.Instantiate(plate, room1.transform, "Plate Well", PlateWell);
             var plateDoor = B.Instantiate(plate, room1.transform, "Plate Door", PlateDoor);
+            EmphasizeBeacon(plateWell);
             var doorOne = B.Instantiate(door, room1.transform, "Door Two Plates", new Vector3(0f, 0f, DoorOneZ));
             var doorController = doorOne.GetComponent<DoorController>();
             B.Set(doorController, "plate", plateDoor.GetComponent<PressurePlate>());
@@ -187,7 +188,7 @@ namespace Echoryx.Level.Editor
 
             var hints = B.NewChild(null, "Tutorial Hints").transform;
             B.NewHint(hint, hints, hintDisplay, "Hint Door", new Vector3(-1.5f, 2f, 1f), new Vector3(3.6f, 4f, 4f), HintDoor);
-            B.NewHint(hint, hints, hintDisplay, "Hint Well", new Vector3(1.9f, 0f, 5.75f), new Vector3(2.8f, 6f, 3.5f), HintWell);
+            B.NewHint(hint, hints, hintDisplay, "Hint Well", new Vector3(1.95f, 0f, (WellZ0 + WellZ1) * 0.5f), new Vector3(2.8f, 6f, WellZ1 - WellZ0), HintWell);
             B.NewHint(hint, hints, hintDisplay, "Hint Grate", new Vector3(0f, 2f, 18.6f), new Vector3(6f, 4f, 2.8f), HintGrate);
             B.NewHint(hint, hints, hintDisplay, "Hint Echo", new Vector3(0f, 2f, 27.5f), new Vector3(6f, 4f, 4.6f), HintEcho);
             B.NewHint(hint, hints, hintDisplay, "Hint Rewind Ride", new Vector3(0f, 2f, 39.7f), new Vector3(6f, 4f, 1.6f), HintRewindRide);
@@ -234,7 +235,10 @@ namespace Echoryx.Level.Editor
             Lining(art, "Well Side", new Vector3(WellX0 + 0.02f, -WellDepth * 0.5f, (WellZ0 + WellZ1) * 0.5f), new Vector3(0.04f, WellDepth, WellZ1 - WellZ0), dark);
             Lining(art, "Well Front", new Vector3((WellX0 + 3.3f) * 0.5f, -WellDepth * 0.5f, WellZ0 + 0.02f), new Vector3(3.3f - WellX0, WellDepth, 0.04f), dark);
             Lining(art, "Well Back", new Vector3((WellX0 + 3.3f) * 0.5f, -WellDepth * 0.5f, WellZ1 - 0.02f), new Vector3(3.3f - WellX0, WellDepth, 0.04f), dark);
-            Art.Spawn(Art.Station, "floor", art, "Floor 1 Hull", new Vector3(0f, -WellDepth - 1.4f, (StartZ + DoorOneZ) * 0.5f), Vector3.zero,
+            Lining(art, "Well Outer", new Vector3(2.98f, -WellDepth * 0.5f, (WellZ0 + WellZ1) * 0.5f), new Vector3(0.04f, WellDepth, WellZ1 - WellZ0), dark);
+            WellLight(art);
+            // Hull pivot is at its bottom; keep its top under the well floor.
+            Art.Spawn(Art.Station, "floor", art, "Floor 1 Hull", new Vector3(0f, -WellDepth - 0.45f - 2.8f, (StartZ + DoorOneZ) * 0.5f), Vector3.zero,
                 new Vector3(5.6f, 2.8f / 0.3f, DoorOneZ - StartZ), a.Hull);
             Art.Floor(art, "Floor 2", DoorOneZ + 0.3f, PitTwoStart, a);
             Art.Floor(art, "Floor 3", PitTwoEnd, PitThreeStart, a);
@@ -258,7 +262,53 @@ namespace Echoryx.Level.Editor
             Art.Display(art, "Display 2", new Vector3(2.92f, 3.7f, 24f), -90f, a);
             Art.Display(art, "Display 3", new Vector3(-2.92f, 3.7f, 43f), 90f, a);
             Art.Display(art, "Display 4", new Vector3(2.92f, 3.7f, 60f), -90f, a);
-            Art.Background(art, a);
+            // Level 02 is a closed station section: no floating scenery outside the walls.
+            Enclose(art, dark);
+        }
+
+        /// <summary>Each pit is a closed box (side, end and bottom panels), so no gap shows the void below.</summary>
+        private static void Enclose(Transform art, Material dark)
+        {
+            foreach (var (name, from, to) in new[] { ("Pit 2", PitTwoStart, PitTwoEnd), ("Pit 3", PitThreeStart, PitThreeEnd) })
+            {
+                var middle = (from + to) * 0.5f;
+                var length = to - from;
+                Lining(art, name + " Side L", new Vector3(-2.98f, -3.6f, middle), new Vector3(0.04f, 7.2f, length), dark);
+                Lining(art, name + " Side R", new Vector3(2.98f, -3.6f, middle), new Vector3(0.04f, 7.2f, length), dark);
+                Lining(art, name + " End Near", new Vector3(0f, -3.8f, from + 0.02f), new Vector3(6f, 6.8f, 0.04f), dark);
+                Lining(art, name + " End Far", new Vector3(0f, -3.8f, to - 0.02f), new Vector3(6f, 6.8f, 0.04f), dark);
+                Lining(art, name + " Bottom", new Vector3(0f, -7.2f, middle), new Vector3(6f, 0.04f, length), dark);
+            }
+        }
+
+        /// <summary>
+        /// The well plate sits 2.6 m down in shadow: its beacon (same colours as every plate) is brighter, reacts
+        /// from farther away and emits more particles, so it reads as interactive from the lane and the well camera.
+        /// </summary>
+        private static void EmphasizeBeacon(GameObject plateObject)
+        {
+            var driver = new SerializedObject(plateObject.GetComponent<PlateBeaconDriver>());
+            driver.FindProperty("nearRange").floatValue = 10f;
+            driver.ApplyModifiedPropertiesWithoutUndo();
+            var beacon = new SerializedObject(plateObject.GetComponentInChildren<InteractionBeacon>(true));
+            beacon.FindProperty("idleHaloAlpha").floatValue = 0.3f;
+            beacon.FindProperty("activeHaloAlpha").floatValue = 0.85f;
+            beacon.FindProperty("idleRate").floatValue = 6f;
+            beacon.FindProperty("activeRate").floatValue = 22f;
+            beacon.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        // A warm fill light at the bottom of the well, so its plate and beacon read from the well camera.
+        private static void WellLight(Transform art)
+        {
+            var light = new GameObject("Well Light").AddComponent<Light>();
+            light.transform.SetParent(art, false);
+            light.transform.position = PlateWell + new Vector3(0f, 1.8f, -0.6f);
+            light.type = LightType.Point;
+            light.color = new Color(1f, 0.7f, 0.42f);
+            light.intensity = 4f;
+            light.range = 7f;
+            light.shadows = LightShadows.None;
         }
 
         private static void Block(Transform parent, string name, float x0, float x1, float y0, float y1, float z0, float z1) =>

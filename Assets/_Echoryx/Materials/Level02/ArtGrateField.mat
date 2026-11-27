@@ -29,7 +29,7 @@ Material:
   m_InvalidKeywords: []
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
+  m_DoubleSidedGI: 1
   m_CustomRenderQueue: 3000
   stringTagMap:
     RenderType: Transparent
@@ -69,6 +69,6 @@ Material:
     - _ZWrite: 0
     m_Colors:
     - _BaseColor: {r: 0.72, g: 0.55, b: 1, a: 0.22}
-    - _Color: {r: 0.29999998, g: 1, b: 0.5, a: 0.3}
+    - _Color: {r: 0.72, g: 0.54999995, b: 1, a: 0.22}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
