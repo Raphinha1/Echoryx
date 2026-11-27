@@ -324,7 +324,7 @@ namespace Echoryx.Level.PlayTests
             Assert.That(EchoSeconds - crossed, Is.GreaterThan(RequiredMargin));
         }
 
-        // ------------------------------------------------------------ 5b. finale, stage 2: Rewind first, then E, then release
+        // ------------------------------------------------------------ 5b. finale, stage 2: E to aim, Rewind and hold, E again, release
 
         [UnityTest]
         public IEnumerator Section5bPinThePlatformCallTheEchoAndRideUnderTheGate()
@@ -334,7 +334,7 @@ namespace Echoryx.Level.PlayTests
             var start = Point(platform, "Platform Start");
             var end = Point(platform, "Platform End");
             var plate = Find<PressurePlate>("Plate Gate");
-            Assert.That(Find<DoorController>("Hanging Gate"), Is.Not.Null);
+            var gate = Find<DoorController>("Hanging Gate");
             const float gateZ = 112.8f;
             var aim = new Vector3(0.35f, 2.6f, 104.2f);
             yield return WaitUntil(() => Near(platform, end), 600);
@@ -342,9 +342,18 @@ namespace Echoryx.Level.PlayTests
             yield return WalkTo(plate.transform.position);
             yield return Record();
 
-            // Tempting answer: call the Echo first, then go and fetch the platform. The Echo runs out first.
+            // The platform is parked beyond the closed gate: the gate blocks aiming at it.
             yield return WalkTo(new Vector3(0f, 0f, 106.4f));
+            AimFrom(platform.transform.position, aim);
+            HoldRewind(true);
+            yield return Frames(10);
+            Assert.That(platform.Mode, Is.EqualTo(RewindMode.Normal), "Rewind cannot aim through the closed gate.");
+            HoldRewind(false);
+            yield return Frames(3);
+
+            // Tempting answer: the Echo opens the gate, fetch the platform with Rewind and ride. The Echo runs out first.
             yield return Pulse(Key.E);
+            yield return WaitUntil(() => gate.IsOpen, 60);
             yield return PullUp(platform, start, aim);
             yield return WalkTo(start);
             var attempts = stats.Attempts;
@@ -354,11 +363,17 @@ namespace Echoryx.Level.PlayTests
             yield return Frames(20);
             Assert.That(recorder.State, Is.EqualTo(EchoState.Ready), "The recording survives the respawn.");
 
-            // Solution: Rewind the platform to the dock and keep it there, call the Echo, release.
+            // Solution: the Echo opens the gate to aim, Rewind brings the platform back and keeps it at the dock,
+            // the Echo is called again once it has finished, then release.
             yield return WaitUntil(() => Near(platform, end), 600);
             yield return WalkTo(new Vector3(0f, 0f, 106.4f));
+            yield return Pulse(Key.E);
+            yield return WaitUntil(() => gate.IsOpen, 60);
             yield return PullUp(platform, start, aim);
             yield return WalkTo(start);
+            yield return WaitUntil(() => recorder.State == EchoState.Ready, 400);
+            yield return WaitUntil(() => !gate.IsOpen, 60);
+            Assert.That(Near(platform, start), Is.True, "Still held at the dock.");
             var t0 = Time.time;
             yield return Pulse(Key.E);
             HoldRewind(false);
