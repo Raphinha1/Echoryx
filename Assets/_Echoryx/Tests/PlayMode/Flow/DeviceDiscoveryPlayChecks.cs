@@ -177,7 +177,7 @@ namespace Echoryx.Flow.PlayTests
                 yield return WaitForScene(MenuScene);
                 yield return DiscoverAndRemove();
                 AssertHealthy();
-                Object.FindFirstObjectByType<MainMenuController>().Play();
+                Object.FindFirstObjectByType<MainMenuController>().LoadLevel(0); // Play would continue to Level 02
                 yield return WaitForScene(LevelScene);
                 AssertHealthy();
             }

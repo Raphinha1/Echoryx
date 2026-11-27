@@ -42,7 +42,7 @@ namespace Echoryx.Level.Editor
         private const float PitTwoStart = 36f, PitTwoEnd = 45f;
         private const float LevelStartZ = -2f, LevelEndZ = 56f;
 
-        private sealed class Materials
+        internal sealed class Materials
         {
             public Material Floor, Wall, Plate, Door, Hazard, Goal, Platform, Checkpoint, Step;
         }
@@ -117,35 +117,7 @@ namespace Echoryx.Level.Editor
             ConfigureLighting();
 
             // Player + camera rig (same wiring as the S01 prototype).
-            var player = (GameObject)PrefabUtility.InstantiatePrefab(playerPrefab, scene);
-            player.name = "Player";
-            player.transform.position = new Vector3(0f, 0.05f, 0f);
-            var anchor = player.transform.Find("CameraAnchor");
-            var input = player.GetComponent<PlayerInputReader>();
-            var rig = new GameObject("Camera Orbit Target");
-            var orbit = rig.AddComponent<PlayerCameraOrbit>();
-            orbit.SetTargets(anchor, input);
-            rig.transform.SetPositionAndRotation(anchor.position, Quaternion.Euler(12f, 0f, 0f));
-            player.GetComponent<PlayerMotor>().SetCameraReference(rig.transform);
-            var mainCamera = Camera.main ?? throw new InvalidOperationException("Default scene lacks a Main Camera.");
-            if (mainCamera.GetComponent<CinemachineBrain>() == null) mainCamera.gameObject.AddComponent<CinemachineBrain>();
-            var virtualCamera = new GameObject("Player Cinemachine Camera");
-            var cm = virtualCamera.AddComponent<CinemachineCamera>();
-            cm.Follow = rig.transform;
-            var follow = virtualCamera.AddComponent<CinemachineThirdPersonFollow>();
-            follow.Damping = new Vector3(0.1f, 0.15f, 0.1f);
-            follow.ShoulderOffset = new Vector3(0.35f, -0.25f, 0f);
-            follow.VerticalArmLength = 0.25f;
-            follow.CameraSide = 0.5f;
-            follow.CameraDistance = 4f;
-            var obstacles = follow.AvoidObstacles;
-            obstacles.Enabled = true;
-            obstacles.CollisionFilter = LayerMask.GetMask("Default");
-            obstacles.IgnoreTag = "Player";
-            obstacles.CameraRadius = 0.2f;
-            obstacles.DampingIntoCollision = 0f;
-            obstacles.DampingFromCollision = 0.25f;
-            follow.AvoidObstacles = obstacles;
+            var cm = CreatePlayerRig(scene, playerPrefab, new Vector3(0f, 0.05f, 0f), out var player, out var input, out var orbit);
 
             // Static geometry.
             var geometry = NewChild(null, "Level Geometry");
@@ -235,9 +207,45 @@ namespace Echoryx.Level.Editor
             Debug.Log("Level_01_Tutorial built and added to Build Settings.");
         }
 
+        /// <summary>Player prefab instance plus orbit rig and Cinemachine camera (shared by every level builder).</summary>
+        internal static CinemachineCamera CreatePlayerRig(Scene scene, GameObject playerPrefab, Vector3 position,
+            out GameObject player, out PlayerInputReader input, out PlayerCameraOrbit orbit)
+        {
+            player = (GameObject)PrefabUtility.InstantiatePrefab(playerPrefab, scene);
+            player.name = "Player";
+            player.transform.position = position;
+            var anchor = player.transform.Find("CameraAnchor");
+            input = player.GetComponent<PlayerInputReader>();
+            var rig = new GameObject("Camera Orbit Target");
+            orbit = rig.AddComponent<PlayerCameraOrbit>();
+            orbit.SetTargets(anchor, input);
+            rig.transform.SetPositionAndRotation(anchor.position, Quaternion.Euler(12f, 0f, 0f));
+            player.GetComponent<PlayerMotor>().SetCameraReference(rig.transform);
+            var mainCamera = Camera.main ?? throw new InvalidOperationException("Default scene lacks a Main Camera.");
+            if (mainCamera.GetComponent<CinemachineBrain>() == null) mainCamera.gameObject.AddComponent<CinemachineBrain>();
+            var virtualCamera = new GameObject("Player Cinemachine Camera");
+            var cm = virtualCamera.AddComponent<CinemachineCamera>();
+            cm.Follow = rig.transform;
+            var follow = virtualCamera.AddComponent<CinemachineThirdPersonFollow>();
+            follow.Damping = new Vector3(0.1f, 0.15f, 0.1f);
+            follow.ShoulderOffset = new Vector3(0.35f, -0.25f, 0f);
+            follow.VerticalArmLength = 0.25f;
+            follow.CameraSide = 0.5f;
+            follow.CameraDistance = 4f;
+            var obstacles = follow.AvoidObstacles;
+            obstacles.Enabled = true;
+            obstacles.CollisionFilter = LayerMask.GetMask("Default");
+            obstacles.IgnoreTag = "Player";
+            obstacles.CameraRadius = 0.2f;
+            obstacles.DampingIntoCollision = 0f;
+            obstacles.DampingFromCollision = 0.25f;
+            follow.AvoidObstacles = obstacles;
+            return cm;
+        }
+
         // ---------------------------------------------------------------- materials
 
-        private static Materials BuildMaterials() => new Materials
+        internal static Materials BuildMaterials() => new Materials
         {
             Floor = Lit("LevelFloor", new Color(0.55f, 0.58f, 0.62f)),
             Wall = Lit("LevelWall", new Color(0.30f, 0.34f, 0.42f)),
@@ -346,7 +354,7 @@ namespace Echoryx.Level.Editor
 
         // ---------------------------------------------------------------- scene content
 
-        private static void ConfigureLighting()
+        internal static void ConfigureLighting()
         {
             var light = UnityEngine.Object.FindFirstObjectByType<Light>();
             if (light != null)
@@ -402,7 +410,7 @@ namespace Echoryx.Level.Editor
             return root;
         }
 
-        private static RoomResetScope NewRoom(Transform parent, string name, LevelStats stats)
+        internal static RoomResetScope NewRoom(Transform parent, string name, LevelStats stats)
         {
             var room = NewChild(parent, name);
             var scope = room.AddComponent<RoomResetScope>();
@@ -413,7 +421,7 @@ namespace Echoryx.Level.Editor
             return scope;
         }
 
-        private static void NewCheckpoint(Transform parent, string name, Vector3 position,
+        internal static void NewCheckpoint(Transform parent, string name, Vector3 position,
             CheckpointManager manager, RoomResetScope room, Materials m)
         {
             var checkpoint = NewChild(parent, name);
@@ -434,7 +442,7 @@ namespace Echoryx.Level.Editor
             trigger.SetActive(false);
         }
 
-        private static void NewHazard(GameObject prefab, Transform parent, string name,
+        internal static void NewHazard(GameObject prefab, Transform parent, string name,
             CheckpointManager manager, Vector3 position, Vector3 scale)
         {
             var instance = Instantiate(prefab, parent, name, position);
@@ -442,7 +450,7 @@ namespace Echoryx.Level.Editor
             Set(instance.GetComponent<RespawnZone>(), "manager", manager);
         }
 
-        private static void NewHint(GameObject prefab, Transform parent, TutorialHintDisplay display,
+        internal static void NewHint(GameObject prefab, Transform parent, TutorialHintDisplay display,
             string name, Vector3 center, Vector3 size, string message)
         {
             var instance = Instantiate(prefab, parent, name, center);
@@ -455,7 +463,7 @@ namespace Echoryx.Level.Editor
 
         // ---------------------------------------------------------------- HUD
 
-        private static GameObject BuildHud(out TutorialHintDisplay hintDisplay, out GameObject completePanelObject)
+        internal static GameObject BuildHud(out TutorialHintDisplay hintDisplay, out GameObject completePanelObject)
         {
             var canvasObject = new GameObject("HUD Canvas", typeof(RectTransform));
             var canvas = canvasObject.AddComponent<Canvas>();
@@ -546,7 +554,7 @@ namespace Echoryx.Level.Editor
             block.isStatic = true;
         }
 
-        private static GameObject Cube(Transform parent, string name, Vector3 localPosition, Vector3 scale, Material material)
+        internal static GameObject Cube(Transform parent, string name, Vector3 localPosition, Vector3 scale, Material material)
         {
             var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             cube.name = name;
@@ -557,14 +565,14 @@ namespace Echoryx.Level.Editor
             return cube;
         }
 
-        private static GameObject NewChild(Transform parent, string name)
+        internal static GameObject NewChild(Transform parent, string name)
         {
             var go = new GameObject(name);
             if (parent != null) go.transform.SetParent(parent, false);
             return go;
         }
 
-        private static GameObject Instantiate(GameObject prefab, Transform parent, string name, Vector3 position)
+        internal static GameObject Instantiate(GameObject prefab, Transform parent, string name, Vector3 position)
         {
             var instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent.gameObject.scene);
             instance.name = name;
@@ -573,7 +581,7 @@ namespace Echoryx.Level.Editor
             return instance;
         }
 
-        private static void Set(UnityEngine.Object target, string field, UnityEngine.Object value)
+        internal static void Set(UnityEngine.Object target, string field, UnityEngine.Object value)
         {
             var data = new SerializedObject(target);
             var property = data.FindProperty(field) ?? throw new InvalidOperationException("Missing field " + field + " on " + target.GetType().Name);
@@ -581,7 +589,7 @@ namespace Echoryx.Level.Editor
             data.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static void Set(UnityEngine.Object target, string field, string value)
+        internal static void Set(UnityEngine.Object target, string field, string value)
         {
             var data = new SerializedObject(target);
             var property = data.FindProperty(field) ?? throw new InvalidOperationException("Missing field " + field + " on " + target.GetType().Name);
@@ -589,7 +597,7 @@ namespace Echoryx.Level.Editor
             data.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static void Append(RoomResetScope room, MonoBehaviour participant)
+        internal static void Append(RoomResetScope room, MonoBehaviour participant)
         {
             var data = new SerializedObject(room);
             var list = data.FindProperty("participants");

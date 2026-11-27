@@ -86,6 +86,7 @@ Las escenas principales se encuentran en `Assets/_Echoryx/Scenes/`:
 
 - **`MainMenu.unity`:** Primera escena del build: Jugar, Seleccionar nivel y Salir ([flujo del juego](docs/game-flow.md)).
 - **`Level_01_Tutorial.unity`:** Nivel tutorial de tres salas que enseña Echo y Rewind ([detalle](docs/level-01-tutorial.md)).
+- **`Level_02_Sincronia.unity`:** Segundo nivel: tres salas que combinan Echo y Rewind ([solución](docs/level-02.md)).
 - **`Prototype.unity`:** Circuito de pruebas de movimiento, puzzle de Echo, cruce con Rewind y sala combinada S04-C.
 - **`RobotIntegrationLab.unity`:** Laboratorio del robot; lo usan las pruebas PlayMode de locomoción.
 
@@ -115,6 +116,7 @@ Para más detalles, consulta la [documentación de pruebas](docs/testing.md).
 
 - 📄 [**Informe General de Avance (con capturas y análisis técnico)**](docs/archivo/informe-avance-proyecto.md)
 - 🎮 [Game Design Document (GDD)](docs/GDD.md)
+- 🧩 [Nivel 2: Sincronía](docs/level-02.md)
 - 🧭 [Flujo del juego: menú, niveles, pausa y progreso](docs/game-flow.md)
 - ✨ [Efectos visuales](docs/vfx.md)
 - 🔊 [Audio: mixer, librería de sonidos y dónde asignar clips](docs/audio.md)

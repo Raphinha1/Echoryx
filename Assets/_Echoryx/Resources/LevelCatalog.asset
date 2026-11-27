@@ -18,3 +18,6 @@ MonoBehaviour:
   - id: level-01-tutorial
     displayName: Tutorial
     scenePath: Assets/_Echoryx/Scenes/Level_01_Tutorial.unity
+  - id: level-02-sincronia
+    displayName: "Sincron\xEDa"
+    scenePath: Assets/_Echoryx/Scenes/Level_02_Sincronia.unity

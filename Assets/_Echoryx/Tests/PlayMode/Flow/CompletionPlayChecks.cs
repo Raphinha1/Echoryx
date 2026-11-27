@@ -20,7 +20,7 @@ namespace Echoryx.Flow.PlayTests
     /// </summary>
     public sealed class CompletionPlayChecks : FlowPlayTest
     {
-        private const string SecondScene = "Assets/_Echoryx/Scenes/Prototype.unity";
+        private const string SecondScene = "Assets/_Echoryx/Scenes/Level_02_Sincronia.unity";
         private LevelCatalog fake;
 
         [UnityTearDown]
@@ -33,6 +33,7 @@ namespace Echoryx.Flow.PlayTests
         [UnityTest]
         public IEnumerator LastLevelSavesProgressAndSaysAllLevelsAreCompleted()
         {
+            UseOnlyTheTutorial(); // the tutorial as the last level of its catalog
             yield return Load(LevelScene);
             var flow = Object.FindFirstObjectByType<LevelFlow>();
             var stats = Object.FindFirstObjectByType<LevelStats>();
@@ -84,7 +85,7 @@ namespace Echoryx.Flow.PlayTests
             yield return Pulse(Key.Enter);
             yield return WaitForScene(SecondScene);
             Assert.That(Time.timeScale, Is.EqualTo(1f));
-            // The second catalog entry also receives the flow, without any scene wiring (Prototype has no goal).
+            // The second catalog entry also receives the flow, without any scene wiring.
             var second = Object.FindFirstObjectByType<LevelFlow>();
             Assert.That(second, Is.Not.Null);
             yield return Pulse(Key.Escape);
@@ -132,6 +133,13 @@ namespace Echoryx.Flow.PlayTests
             Assert.That(stats == null, Is.True);
             Assert.That(Object.FindFirstObjectByType<LevelStats>().IsCompleted, Is.False);
             Assert.That(SceneManager.GetActiveScene().path, Is.EqualTo(LevelScene));
+        }
+
+        private void UseOnlyTheTutorial()
+        {
+            fake = ScriptableObject.CreateInstance<LevelCatalog>();
+            fake.Configure(MenuScene, LevelCatalog.Current.InputActions, new LevelEntry("level-01-tutorial", "Uno", LevelScene));
+            LevelCatalog.Override = fake;
         }
 
         private void UseTwoLevels()

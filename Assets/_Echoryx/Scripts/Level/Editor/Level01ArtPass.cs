@@ -15,15 +15,15 @@ namespace Echoryx.Level.Editor
     /// </summary>
     public static class Level01ArtPass
     {
-        private const string Modular = "Assets/_Echoryx/Art/Environment/kenney_modular-space-kit_1.0/Models/FBX format/";
-        private const string Station = "Assets/_Echoryx/Art/Environment/kenney_space-station-kit/Models/FBX format/";
+        internal const string Modular = "Assets/_Echoryx/Art/Environment/kenney_modular-space-kit_1.0/Models/FBX format/";
+        internal const string Station = "Assets/_Echoryx/Art/Environment/kenney_space-station-kit/Models/FBX format/";
         private const string MaterialFolder = "Assets/_Echoryx/Materials/Art";
         private const string ProfilePath = "Assets/_Echoryx/Settings/Level01VolumeProfile.asset";
         private const string SkyShaderName = "Echoryx/Gradient Skybox";
         private const string ArtRoot = "Level Art";
         private const string VisualName = "Art";
 
-        private sealed class Mats
+        internal sealed class Mats
         {
             public Material Wall, Floor, Door, Hull, Accent, Platform, Flat, Hazard, GoalPad, GoalField, Sky;
         }
@@ -42,7 +42,7 @@ namespace Echoryx.Level.Editor
 
         // ------------------------------------------------------------ materials
 
-        private static Mats BuildMaterials()
+        internal static Mats BuildMaterials()
         {
             var modMap = AssetDatabase.LoadAssetAtPath<Texture2D>(Modular + "Textures/colormap.png");
             var staMap = AssetDatabase.LoadAssetAtPath<Texture2D>(Station + "Textures/colormap.png");
@@ -465,7 +465,7 @@ namespace Echoryx.Level.Editor
             if (!EditorSceneManager.SaveScene(scene)) throw new InvalidOperationException("Could not save scene.");
         }
 
-        private static void MarkScenery(Transform art)
+        internal static void MarkScenery(Transform art)
         {
             foreach (var t in art.GetComponentsInChildren<Transform>(true))
                 GameObjectUtility.SetStaticEditorFlags(t.gameObject, StaticEditorFlags.BatchingStatic);
@@ -473,7 +473,7 @@ namespace Echoryx.Level.Editor
 
         // Camera: sane depth range (near 0.1 / far 5000 caused depth z-fighting on the floor) and obstacle
         // avoidance against the gameplay colliders (Default layer: walls, floors, door panel, platform).
-        private static void ConfigureCamera()
+        internal static void ConfigureCamera()
         {
             var cm = UnityEngine.Object.FindFirstObjectByType<Unity.Cinemachine.CinemachineCamera>()
                 ?? throw new InvalidOperationException("Cinemachine camera missing.");
@@ -522,7 +522,7 @@ namespace Echoryx.Level.Editor
             data.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static void Floor(Transform art, string name, float from, float to, Mats m)
+        internal static void Floor(Transform art, string name, float from, float to, Mats m)
         {
             var length = to - from;
             var count = Mathf.CeilToInt(length / 4.2f);
@@ -535,10 +535,10 @@ namespace Echoryx.Level.Editor
                 new Vector3(5.6f, 2.8f / 0.3f, Mathf.Max(1f, length - 0.8f)), m.Hull);
         }
 
-        private static void Display(Transform art, string name, Vector3 position, float yaw, Mats m) =>
+        internal static void Display(Transform art, string name, Vector3 position, float yaw, Mats m) =>
             Spawn(Station, "display-wall-wide", art, name, position, new Vector3(0f, yaw, 0f), Vector3.one * 2.2f, m.Accent);
 
-        private static void Background(Transform art, Mats m)
+        internal static void Background(Transform art, Mats m)
         {
             var bg = NewChild(art, "Background Station").transform;
             // Deterministic floating station sections and asteroids around the walkway.
@@ -611,7 +611,7 @@ namespace Echoryx.Level.Editor
 
         // ------------------------------------------------------------ helpers
 
-        private static GameObject Spawn(string kit, string model, Transform parent, string name, Vector3 position, Vector3 euler, Vector3 scale, Material material)
+        internal static GameObject Spawn(string kit, string model, Transform parent, string name, Vector3 position, Vector3 euler, Vector3 scale, Material material)
         {
             var asset = AssetDatabase.LoadAssetAtPath<GameObject>(kit + model + ".fbx")
                 ?? throw new InvalidOperationException("Missing model " + kit + model);
@@ -632,10 +632,10 @@ namespace Echoryx.Level.Editor
             return go;
         }
 
-        private static Mesh MeshOf(string kit, string model) =>
+        internal static Mesh MeshOf(string kit, string model) =>
             AssetDatabase.LoadAssetAtPath<GameObject>(kit + model + ".fbx").GetComponentInChildren<MeshFilter>().sharedMesh;
 
-        private static void Hide(Transform target)
+        internal static void Hide(Transform target)
         {
             if (target == null) return;
             var renderer = target.GetComponent<Renderer>();

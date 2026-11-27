@@ -3,6 +3,8 @@
   "rootNamespace": "Echoryx.Level.Editor",
   "references": [
     "Echoryx.Level",
+    "Echoryx.Flow",
+    "Echoryx.Flow.Editor",
     "Echoryx.Game",
     "Echoryx.Player",
     "Echoryx.Echo",
