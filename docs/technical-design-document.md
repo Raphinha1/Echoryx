@@ -820,7 +820,7 @@ Lista no exhaustiva, contrastada con el código de `7d7e795` y con el [GDD v1.0 
 
 | Documento | Discrepancia observada |
 |---|---|
-| `README.md` | Indica 163 pruebas (hay 195), no lista `Level_03_Paradojas` y afirma que el proyecto se rige por TDD sin que el historial lo acredite de forma general |
+| `README.md` | Afirma que el proyecto se rige por TDD sin que el historial lo acredite de forma general |
 | `architecture.md` y `testing.md` | Conservan secciones con Unity `6000.3.22f1` y herramientas retiradas; tienen una nota que lo advierte |
 | `architecture.md` y `game-flow.md` | Indican que ningún ensamblado de juego depende de `Flow`; `Echoryx.Audio` depende de él |
 | `game-flow.md` | Afirma que no hay botón para borrar el progreso y más adelante describe ese botón; cita `Prototype` como segundo nivel de prueba, cuando la prueba usa `Level_02_Sincronia` |
