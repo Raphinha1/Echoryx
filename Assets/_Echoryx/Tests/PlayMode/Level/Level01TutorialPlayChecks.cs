@@ -217,8 +217,8 @@ namespace Echoryx.Level.PlayTests
             Assert.That(flow.State, Is.EqualTo(LevelFlowState.Completed));
             Assert.That(flow.CompleteRetryButton.gameObject.activeInHierarchy, Is.True);
             Assert.That(flow.CompleteMenuButton.gameObject.activeInHierarchy, Is.True);
-            Assert.That(flow.AllCompletedLabel.gameObject.activeInHierarchy, Is.True, "Only one level ships today.");
-            Assert.That(flow.NextLevelButton.gameObject.activeSelf, Is.False);
+            Assert.That(flow.NextLevelButton.gameObject.activeInHierarchy, Is.True, "Level 02 follows the tutorial.");
+            Assert.That(flow.AllCompletedLabel.gameObject.activeSelf, Is.False);
         }
 
         [UnityTest]
