@@ -7,6 +7,7 @@
 | Estado descrito | Rama `main`, commit `7d7e795` (2026-11-27) |
 | Fuentes | `git log`, contenido de los commits, documentación de `docs/` y `docs/archivo/` |
 | Documento relacionado | [Technical Design Document](technical-design-document.md) |
+| Documento de diseño | [GDD v1.0 (docs/GDD.md)](GDD.md) |
 
 **Advertencias de lectura.**
 

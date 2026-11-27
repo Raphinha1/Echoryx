@@ -6,13 +6,10 @@
 |---|---|
 | Estado descrito | Rama `main`, commit `7d7e795` (2026-11-27) |
 | Motor | Unity `6000.3.29f1` |
-| Documento de diseño de referencia | [GDD](GDD.md) versionado en el repositorio |
+| Documento de diseño de referencia | [GDD v1.0 (docs/GDD.md)](GDD.md) |
 | Documento relacionado | [Historial de desarrollo](historial-desarrollo.md) |
 
-**Sobre la versión del GDD.** El archivo `docs/GDD.md` no declara ningún número de versión. En el árbol de trabajo y en el historial de Git no se encontró ningún documento ni texto que identifique un «GDD v1.0» o un «GDD 0.2». Por tanto:
-
-- La alineación con el «GDD v1.0» queda **por verificar**. Este documento se alinea con `docs/GDD.md`.
-- La identificación de `docs/GDD.md` como «GDD 0.2» queda **por verificar**. La sección 9 compara la implementación actual con ese archivo.
+**Sobre las versiones del GDD.** El documento de referencia es el [GDD v1.0 (docs/GDD.md)](GDD.md). Según su encabezado, está actualizado al estado implementado el 27 de noviembre de 2026, la versión 0.2 es el diseño original y su sección 16 registra los cambios. El documento 0.2 no está identificado como tal en el repositorio: que el `docs/GDD.md` presente en `7d7e795` corresponda a esa versión está **por verificar**.
 
 **Criterio de redacción.** Las afirmaciones proceden del código, la configuración, el historial de Git y la documentación versionada. Lo que no puede confirmarse con esas fuentes se marca como «por verificar».
 
@@ -46,17 +43,17 @@ El estado descrito incluye un menú principal, tres niveles encadenados, pausa, 
 | 2 | `level-02-sincronia` | Sincronía | `Level_02_Sincronia` | [level-02](level-02.md) |
 | 3 | `level-03-paradojas` | Paradojas | `Level_03_Paradojas` | [level-03](level-03.md) |
 
-### Trazabilidad con `docs/GDD.md`
+### Trazabilidad con GDD v1.0 (docs/GDD.md)
 
-| Elemento del GDD | Cobertura técnica | Estado en `7d7e795` |
+| Elemento del GDD v1.0 (docs/GDD.md) | Cobertura técnica | Estado en `7d7e795` |
 |---|---|---|
 | Cámara en tercera persona | 3.2 | Implementado |
-| Echo de hasta cinco segundos con inicio manual | 3.3 | Implementado; las reglas de consumo cambiaron (sección 9) |
+| Echo de hasta cinco segundos con inicio manual | 3.3 | Implementado; ver diferencias en 9.2 |
 | Rewind dirigido; el mecanismo continúa desde el estado recuperado | 3.4 | Implementado |
 | Checkpoints | 3.6 | Implementado |
 | Tres niveles cortos | 3.7 y 4 | Tres niveles en el catálogo. Su duración jugada está por verificar |
-| Desafío final | Sin sistema asociado | No hay un cuarto nivel ni un desafío final independiente en el catálogo |
-| Protagonista humano con traje tecnológico | 3.11 | Sustituido por un robot (sección 9) |
+| Desafío final (fuera de la versión actual) | Sin sistema asociado | No implementado, conforme al alcance |
+| Protagonista robótico | 3.11 | Implementado; ver diferencias en 9.2 |
 
 Fuera del alcance de este documento: especificación artística, guion y planificación académica.
 
@@ -696,7 +693,7 @@ No hay en el repositorio mediciones de fotogramas por segundo, memoria ni tiempo
 | Linux, build ejecutable | Sin constancia | Por verificar |
 | Windows, Editor | Sin constancia | Por verificar |
 | Windows, build ejecutable | Sin constancia | Por verificar |
-| GPU híbrida (integrada y dedicada) | No se menciona | Por verificar, incluida la selección de GPU y cualquier ajuste necesario |
+| GPU híbrida (integrada y dedicada) en Linux | El [README](../README.md) indica lanzar con `__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia` (indicación del autor) | No hay registro de pruebas en el repositorio: por verificar |
 | Mando | `Pause` tiene asignación de mando y una prueba usa un mando virtual | Mando físico por verificar; la cobertura de acciones es incompleta (sección 10) |
 | Relaciones de aspecto | Una prueba comprueba el selector en 16:9, 16:10 y 4:3 | El resto de la interfaz está por verificar |
 
@@ -746,9 +743,11 @@ El repositorio no contiene un archivo `LICENSE` propio. El `README.md` muestra l
 
 ## 9. Desviaciones respecto al GDD 0.2
 
-La comparación usa `docs/GDD.md`. Su correspondencia con la versión 0.2 está **por verificar** (ver Control del documento). El archivo mezcla visión general con descripciones de prototipos ya superados.
+### 9.1 Cambios respecto al diseño anterior
 
-| Tema | `docs/GDD.md` | Implementación en `7d7e795` | Evidencia |
+Los cambios oficiales entre las versiones 0.2 y 1.0 constan en la sección 16 del [GDD v1.0 (docs/GDD.md)](GDD.md). La tabla siguiente compara la implementación con el texto anterior de `docs/GDD.md` (el presente en `7d7e795`), cuya correspondencia con la versión 0.2 está **por verificar**.
+
+| Tema | Texto anterior (`7d7e795`) | Implementación en `7d7e795` | Evidencia |
 |---|---|---|---|
 | Protagonista | Persona con traje tecnológico | Robot de un paquete del Asset Store | `b35fe88`, `credits.md` |
 | Estructura | Tres niveles breves y un desafío final | Tres niveles; no hay desafío final independiente | `LevelCatalog.asset` |
@@ -763,6 +762,20 @@ La comparación usa `docs/GDD.md`. Su correspondencia con la versión 0.2 está 
 | Duración | No fijada | El nivel 3 se declara pensado para 5 a 8 minutos; no hay medición | Por verificar |
 
 Sin desviación observada: cámara en tercera persona, límite de cinco segundos del Echo con inicio manual y Rewind dirigido que continúa desde el estado recuperado.
+
+### 9.2 Diferencias observadas entre el GDD v1.0 y la implementación
+
+Lista no exhaustiva, contrastada con el código de `7d7e795` y con el [GDD v1.0 (docs/GDD.md)](GDD.md).
+
+| Sección del GDD v1.0 | Texto | Implementación |
+|---|---|---|
+| 4.2 | El clon reproduce posiciones, orientación y eventos interactivos | Se graban solo posición y rotación; el clon activa placas por su posición |
+| 4.3 | Tras reproducir vuelve a «Disponible» | Vuelve a `Ready` (grabación preparada), coherente con la sección 4.2 del propio GDD |
+| 4.4 y 7.1 | Cada mecanismo indica si acepta al jugador, a Echo o a ambos | `PressurePlate` acepta siempre a ambos; no hay configuración |
+| 5.4 | Contorno al apuntar e indicación de progreso temporal | Hay retículo, indicadores y efectos; no se identificó un contorno al apuntar ni una indicación de progreso |
+| 2.4 y 2.5 | Introducción, terminales holográficas y secuencia final | No se identificaron esos sistemas; hay pistas de texto y panel de fin de nivel |
+| 11.3 | Se priorizará un rig humanoide | El robot usa un rig Generic |
+
 
 ---
 
@@ -813,7 +826,7 @@ Sin desviación observada: cámara en tercera persona, límite de cinco segundos
 | `game-flow.md` | Afirma que no hay botón para borrar el progreso y más adelante describe ese botón; cita `Prototype` como segundo nivel de prueba, cuando la prueba usa `Level_02_Sincronia` |
 | `level-01-tutorial.md` | Indica «Sin audio» |
 | `development-plan.md` | El estado actual se detiene en S05 |
-| `GDD.md` | Describe reglas de prototipo ya sustituidas (sección 9) |
+| `GDD.md` | Quedan diferencias puntuales con la implementación (sección 9.2) |
 
 ### 10.5 Alcance pendiente
 

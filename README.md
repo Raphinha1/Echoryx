@@ -9,6 +9,38 @@
 
 ---
 
+## Documentación
+
+- [Diseño: GDD v1.0](docs/GDD.md)
+- [Technical Design Document (TDD)](docs/technical-design-document.md)
+- [Historial de desarrollo](docs/historial-desarrollo.md)
+- [Créditos y licencias](docs/credits.md)
+- Niveles: [1, Tutorial](docs/level-01-tutorial.md) · [2, Sincronía](docs/level-02.md) · [3, Paradojas](docs/level-03.md)
+
+### Cómo ejecutar
+
+1. Abre el proyecto con Unity `6000.3.29f1`.
+2. Importa *Animated Low Poly Robot Free* en `Assets/FreeLowPolyRobot/` (no está en Git).
+3. Abre `Assets/_Echoryx/Scenes/MainMenu.unity` y pulsa Play. El repositorio no incluye un build.
+
+**GPU híbrida en Linux:** hay que lanzarlo con estas variables, tanto para un build como para el Editor (sustituye la ruta del ejecutable):
+
+```bash
+__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia <ruta-al-ejecutable>
+```
+
+### Controles
+
+| Acción | Control |
+|---|---|
+| Moverse / cámara / saltar | WASD / ratón / Espacio |
+| Echo: grabar o detener / reproducir | Q / E |
+| Rewind | Mantener clic derecho apuntando al mecanismo |
+| Volver al checkpoint / reiniciar nivel | R / Retroceso |
+| Pausa / mostrar u ocultar ayuda | Esc (Start en mando) / H |
+
+---
+
 ## Capturas del Desarrollo (archivo)
 
 Etapas anteriores del proyecto: la sala visual y el protagonista de estas imágenes ya fueron retirados (ver [créditos](docs/credits.md) y [archivo](docs/archivo/README.md)).
