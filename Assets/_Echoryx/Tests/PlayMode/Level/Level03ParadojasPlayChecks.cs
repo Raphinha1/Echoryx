@@ -163,6 +163,9 @@ namespace Echoryx.Level.PlayTests
             yield return WalkTo(plate.transform.position);
             yield return Record();
             yield return WalkTo(new Vector3(0f, 0f, 33.4f));
+            var deckDown = bridge.Panel.localPosition.y;
+            yield return Frames(90); // worst case: the deck is back at the bottom of the pit
+            Assert.That(bridge.Panel.localPosition.y, Is.LessThanOrEqualTo(deckDown));
             var t0 = Time.time;
             yield return Pulse(Key.E);
             yield return WaitUntil(() => bridge.IsOpen, 120);
@@ -344,6 +347,7 @@ namespace Echoryx.Level.PlayTests
 
             // The platform is parked beyond the closed gate: the gate blocks aiming at it.
             yield return WalkTo(new Vector3(0f, 0f, 106.4f));
+            yield return Frames(40); // the gate finishes closing once nobody is on its plate
             AimFrom(platform.transform.position, aim);
             HoldRewind(true);
             yield return Frames(10);
@@ -385,9 +389,11 @@ namespace Echoryx.Level.PlayTests
             }, 600);
             Assert.That(passed, Is.GreaterThan(0f), "Carried under the open gate.");
             yield return WalkTo(new Vector3(0f, 0f, 117.5f));
-            yield return WalkTo(new Vector3(0f, 0f, 120f));
-            yield return Frames(5);
-            Assert.That(stats.IsCompleted, Is.True);
+            basis.rotation = Quaternion.identity;
+            Keys(Key.W); // into the goal: completing the level takes the controls away
+            yield return WaitUntil(() => stats.IsCompleted, 120);
+            Keys();
+            Assert.That(stats.IsCompleted, Is.True, "Access to the reactor unlocked.");
             Debug.Log($"L3TIME s5b passedGate={passed:F2}s echo={EchoSeconds:F2}s margin={EchoSeconds - passed:F2}s");
             Assert.That(EchoSeconds - passed, Is.GreaterThan(RequiredMargin));
         }
