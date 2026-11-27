@@ -31,7 +31,7 @@ namespace Echoryx.Level.Editor
         public const string ScenePath = "Assets/_Echoryx/Scenes/Level_02_Sincronia.unity";
         public const string LevelId = "level-02-sincronia";
         private const string Prefabs = "Assets/_Echoryx/Prefabs/Level/";
-        private const string GratePath = Prefabs + "Grate.prefab";
+        internal const string GratePath = Prefabs + "Grate.prefab";
         private const string ArtMaterials = "Assets/_Echoryx/Materials/Art/";
         private const string OwnMaterials = "Assets/_Echoryx/Materials/Level02/"; // grate and well (not the Lit-only Art set)
         private const string LevelMaterialFolder = "Assets/_Echoryx/Materials/Level/";
@@ -271,7 +271,7 @@ namespace Echoryx.Level.Editor
         /// The well plate sits 2.6 m down in shadow: its beacon (same colours as every plate) is brighter, reacts
         /// from farther away and emits more particles, so it reads as interactive from the lane and the well camera.
         /// </summary>
-        private static void EmphasizeBeacon(GameObject plateObject)
+        internal static void EmphasizeBeacon(GameObject plateObject)
         {
             var driver = new SerializedObject(plateObject.GetComponent<PlateBeaconDriver>());
             driver.FindProperty("nearRange").floatValue = 10f;
@@ -297,10 +297,10 @@ namespace Echoryx.Level.Editor
             light.shadows = LightShadows.None;
         }
 
-        private static void Block(Transform parent, string name, float x0, float x1, float y0, float y1, float z0, float z1) =>
+        internal static void Block(Transform parent, string name, float x0, float x1, float y0, float y1, float z0, float z1) =>
             B.Cube(parent, name, new Vector3((x0 + x1) * 0.5f, (y0 + y1) * 0.5f, (z0 + z1) * 0.5f), new Vector3(x1 - x0, y1 - y0, z1 - z0), null).isStatic = true;
 
-        private static void FloorPiece(Transform art, string name, float x0, float x1, float z0, float z1, float top, Art.Mats a)
+        internal static void FloorPiece(Transform art, string name, float x0, float x1, float z0, float z1, float top, Art.Mats a)
         {
             var count = Mathf.CeilToInt((z1 - z0) / 4.2f);
             var tile = (z1 - z0) / count;
@@ -310,13 +310,13 @@ namespace Echoryx.Level.Editor
         }
 
         // A static beam above a grate up to the top of the walls, so nothing can be aimed or thrown over it.
-        private static void Lintel(Transform parent, Material material, float z)
+        internal static void Lintel(Transform parent, Material material, float z)
         {
             var beam = B.Cube(parent, "Lintel", new Vector3(0f, 8f, z), new Vector3(6.6f, 4f, 0.6f), material);
             beam.isStatic = true;
         }
 
-        private static GameObject BuildPlatform(Transform parent, string label, Vector3 from, Vector3 to, float speed, float rewindSpeed,
+        internal static GameObject BuildPlatform(Transform parent, string label, Vector3 from, Vector3 to, float speed, float rewindSpeed,
             PlayerPlatformCarrier passenger, B.Materials m)
         {
             var start = B.NewChild(parent, "Platform Start").transform;
@@ -389,7 +389,7 @@ namespace Echoryx.Level.Editor
             return saved ?? throw new InvalidOperationException("Could not save the grate prefab.");
         }
 
-        private static void CheckpointMarkers(Art.Mats a)
+        internal static void CheckpointMarkers(Art.Mats a)
         {
             foreach (var marker in UnityEngine.Object.FindObjectsByType<Transform>(FindObjectsSortMode.None))
             {
@@ -402,7 +402,7 @@ namespace Echoryx.Level.Editor
         }
 
         // Same sky, fog, light and post-processing as Level_01 (its volume profile is reused, not modified).
-        private static void Atmosphere(Art.Mats a)
+        internal static void Atmosphere(Art.Mats a)
         {
             RenderSettings.skybox = a.Sky;
             RenderSettings.ambientMode = AmbientMode.Trilight;
@@ -448,7 +448,7 @@ namespace Echoryx.Level.Editor
             EditorUtility.SetDirty(catalog);
         }
 
-        private static B.Materials LevelMaterials() => new B.Materials
+        internal static B.Materials LevelMaterials() => new B.Materials
         {
             Floor = Load<Material>(LevelMaterialFolder + "LevelFloor.mat"),
             Wall = Load<Material>(LevelMaterialFolder + "LevelWall.mat"),
@@ -456,7 +456,7 @@ namespace Echoryx.Level.Editor
             Checkpoint = Load<Material>(LevelMaterialFolder + "LevelCheckpoint.mat"),
         };
 
-        private static Art.Mats ArtMaterialsSet() => new Art.Mats
+        internal static Art.Mats ArtMaterialsSet() => new Art.Mats
         {
             Wall = Load<Material>(ArtMaterials + "ArtWall.mat"),
             Floor = Load<Material>(ArtMaterials + "ArtFloor.mat"),
@@ -505,10 +505,10 @@ namespace Echoryx.Level.Editor
             return material;
         }
 
-        private static T Load<T>(string path) where T : UnityEngine.Object =>
+        internal static T Load<T>(string path) where T : UnityEngine.Object =>
             AssetDatabase.LoadAssetAtPath<T>(path) ?? throw new InvalidOperationException("Missing asset: " + path);
 
-        private static void SetArray(UnityEngine.Object target, string field, params UnityEngine.Object[] values)
+        internal static void SetArray(UnityEngine.Object target, string field, params UnityEngine.Object[] values)
         {
             var data = new SerializedObject(target);
             var list = data.FindProperty(field) ?? throw new InvalidOperationException("Missing field " + field);
@@ -517,7 +517,7 @@ namespace Echoryx.Level.Editor
             data.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static void SetVector(UnityEngine.Object target, string field, Vector3 value)
+        internal static void SetVector(UnityEngine.Object target, string field, Vector3 value)
         {
             var data = new SerializedObject(target);
             data.FindProperty(field).vector3Value = value;

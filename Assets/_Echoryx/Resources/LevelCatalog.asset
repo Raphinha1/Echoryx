@@ -21,3 +21,6 @@ MonoBehaviour:
   - id: level-02-sincronia
     displayName: "Sincron\xEDa"
     scenePath: Assets/_Echoryx/Scenes/Level_02_Sincronia.unity
+  - id: level-03-paradojas
+    displayName: Paradojas
+    scenePath: Assets/_Echoryx/Scenes/Level_03_Paradojas.unity

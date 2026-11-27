@@ -9,7 +9,7 @@ namespace Echoryx.Level.Editor
     /// <summary>
     /// Closes the slits a modular level leaves to the outside: opaque backing panels behind the perimeter walls,
     /// corner pillars and overlapping pit linings. Purely visual: no colliders, so neither the player nor the
-    /// camera deoccluder notice them. Shared by Level_01 (art pass) and Level_02 (builder).
+    /// camera deoccluder notice them. Shared by Level_01 (art pass) and the Level_02 and Level_03 builders.
     /// </summary>
     internal static class LevelEnclosure
     {
