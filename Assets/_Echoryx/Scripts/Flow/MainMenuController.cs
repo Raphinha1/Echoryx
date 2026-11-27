@@ -124,8 +124,9 @@ namespace Echoryx.Flow
             QuitButton.onClick.AddListener(Quit);
 
             selectPanel = UiKit.Stretched(canvas.transform, "Level Select Panel").gameObject;
+            // Title 305..495, heading 240..300, cards from 225 down, Back at -480: clear gaps in reference units.
             UiKit.Label(selectPanel.transform, "Heading", "Seleccionar nivel", 48f, UiKit.Orange, center,
-                new Vector2(0f, 350f), new Vector2(1200f, 70f));
+                new Vector2(0f, 270f), new Vector2(1200f, 60f));
             levelButtons.Clear();
             if (catalog.Count > MaximumVisibleLevels)
                 Debug.LogWarning("The level selector shows only the first " + MaximumVisibleLevels + " levels.", this);
@@ -134,15 +135,15 @@ namespace Echoryx.Flow
             for (var i = 0; i < shown; i++)
             {
                 var index = i;
-                var position = new Vector2((i % 3 - (columns - 1) * 0.5f) * 490f, 220f - i / 3 * 185f);
+                var position = new Vector2((i % 3 - (columns - 1) * 0.5f) * 490f, 150f - i / 3 * 165f);
                 var button = UiKit.Button(selectPanel.transform, "Level " + (i + 1), Describe(i), center, position,
-                    new Vector2(460f, 160f), 34f);
+                    new Vector2(460f, 150f), 34f);
                 button.interactable = progress.IsUnlocked(catalog, i);
                 if (!button.interactable) button.GetComponentInChildren<TMPro.TMP_Text>().color = UiKit.LockedText;
                 button.onClick.AddListener(() => LoadLevel(index));
                 levelButtons.Add(button);
             }
-            BackButton = UiKit.Button(selectPanel.transform, "Back", "Volver", center, new Vector2(0f, -475f), new Vector2(360f, 76f), 34f);
+            BackButton = UiKit.Button(selectPanel.transform, "Back", "Volver", center, new Vector2(0f, -480f), new Vector2(360f, 70f), 34f);
             BackButton.onClick.AddListener(CloseLevelSelect);
 
             var heading = title.gameObject;

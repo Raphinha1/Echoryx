@@ -74,6 +74,47 @@ namespace Echoryx.Flow.PlayTests
             yield return WaitForScene(LevelScene);
         }
 
+        [UnityTest]
+        public IEnumerator LevelSelectorLeavesClearSpaceBetweenTitleHeadingCardsAndBack()
+        {
+            yield return Load(MenuScene);
+            var menu = Object.FindFirstObjectByType<MainMenuController>();
+            // Worst case: the full grid of 12 levels.
+            var catalog = ScriptableObject.CreateInstance<LevelCatalog>();
+            var entries = new LevelEntry[MainMenuController.MaximumVisibleLevels];
+            for (var i = 0; i < entries.Length; i++) entries[i] = new LevelEntry("l" + i, "Nivel " + i, "l" + i + ".unity");
+            catalog.Configure(MenuScene, null, entries);
+            menu.Show(catalog, new GameProgress(storage));
+            menu.SelectButton.onClick.Invoke();
+            yield return null;
+            Canvas.ForceUpdateCanvases();
+            var canvas = menu.PlayButton.GetComponentInParent<Canvas>().transform;
+            var boxes = new System.Collections.Generic.List<(string name, Rect rect)>();
+            foreach (var name in new[] { "Game Title", "Heading" })
+                boxes.Add((name, Box(canvas, canvas.GetComponentsInChildren<TMP_Text>().First(t => t.name == name).rectTransform)));
+            foreach (var button in menu.LevelButtons) boxes.Add((button.name, Box(canvas, (RectTransform)button.transform)));
+            boxes.Add(("Back", Box(canvas, (RectTransform)menu.BackButton.transform)));
+            for (var i = 0; i < boxes.Count; i++)
+            {
+                // 16:9, 16:10 and 4:3 all give a canvas at least 1920 x 1080 reference units tall (match 0.5).
+                Assert.That(boxes[i].rect.yMin >= -540f && boxes[i].rect.yMax <= 540f && boxes[i].rect.xMin >= -831f && boxes[i].rect.xMax <= 831f,
+                    Is.True, boxes[i].name + " fits a 4:3 screen");
+                for (var j = i + 1; j < boxes.Count; j++)
+                    Assert.That(boxes[i].rect.Overlaps(boxes[j].rect), Is.False, boxes[i].name + " overlaps " + boxes[j].name);
+            }
+            Object.Destroy(catalog);
+        }
+
+        // In canvas units, independent of the actual screen resolution.
+        private static Rect Box(Transform canvas, RectTransform rect)
+        {
+            var corners = new Vector3[4];
+            rect.GetWorldCorners(corners);
+            var min = canvas.InverseTransformPoint(corners[0]);
+            var max = canvas.InverseTransformPoint(corners[2]);
+            return Rect.MinMaxRect(min.x, min.y, max.x, max.y);
+        }
+
         private static string Text(Component button) => button.GetComponentInChildren<TMP_Text>().text;
     }
 }
