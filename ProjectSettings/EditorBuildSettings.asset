@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Echoryx/Scenes/Level_01_Tutorial.unity
     guid: 24b4f2730f37e81a19f7a96449ad7e49
+  - enabled: 1
+    path: Assets/_Echoryx/Scenes/Level_02_Sincronia.unity
+    guid: c92058e87d2a9e1a0b4eb384eb9313d7
   - enabled: 0
     path: Assets/_Echoryx/Scenes/Prototype.unity
     guid: 99c9720ab356a0642a771bea13969a05
