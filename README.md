@@ -1,5 +1,7 @@
 # Echoryx
 
+**[Descargar el juego (Windows)](https://github.com/Raphinha1/Echoryx/releases/latest)**
+
 [![Unity](https://img.shields.io/badge/Unity-6000.3.29f1-blue.svg)](https://unity.com/)
 [![Render Pipeline](https://img.shields.io/badge/Render%20Pipeline-URP%2017.3.0-orange.svg)](https://unity.com/srp/universal-render-pipeline)
 [![Tests](https://img.shields.io/badge/Tests-131%20EditMode%20%7C%2064%20PlayMode-blue.svg)](docs/testing.md)
@@ -41,17 +43,19 @@ __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia <ruta-al-ejecutable
 
 ---
 
-## Capturas del Desarrollo (archivo)
+## Galería
 
-Etapas anteriores del proyecto: la sala visual y el protagonista de estas imágenes ya fueron retirados (ver [créditos](docs/credits.md) y [archivo](docs/archivo/README.md)).
-
-| Sala de Referencia Sci-Fi (URP) | Locomoción del Protagonista |
+| Nivel 1: el robot | Echo sobre una placa de presión |
 |:---:|:---:|
-| ![Sala de referencia visual sci-fi](docs/archivo/images/s05-a2-reference-room.png) | ![SuperSoldier corriendo](docs/archivo/images/s05-b42-run.png) |
+| ![Robot dorado en el nivel 1](docs/img/nivel1.png) | ![Echo cian sobre una placa de presión](docs/img/echo.png) |
 
-| Vista en Tercera Persona | Plataforma Móvil con Físicas Desacopladas |
+| Rewind sobre una plataforma | Nivel 3: el puente que sube del foso |
 |:---:|:---:|
-| ![Tercera persona](docs/archivo/images/s05-a2-third-person.png) | ![SuperSoldier sobre plataforma](docs/archivo/images/s05-b42-platform-idle.png) |
+| ![Rewind con partículas violetas sobre una plataforma](docs/img/rewind.png) | ![Puente del nivel 3 subiendo desde el foso](docs/img/nivel3.png) |
+
+| Menú principal | Selector de niveles |
+|:---:|:---:|
+| ![Menú principal](docs/img/menu.png) | ![Selector de niveles](docs/img/niveles.png) |
 
 ---
 
@@ -94,17 +98,11 @@ Al presionar `Q`, el sistema comienza a registrar las poses y rotaciones del jug
 El jugador puede apuntar con el ratón hacia objetos móviles (como plataformas flotantes) y mantener presionado `RMB`. El objeto retrocede fotograma a fotograma por su trayectoria histórica. Al soltar `RMB`, el mecanismo reanuda su movimiento normal hacia adelante desde el punto temporal recuperado, permitiendo cruzar abismos o recuperar plataformas que ya habían partido.
 
 ### 3. Checkpoints y Restauración Determinista de Salas
-El juego divide los desafíos en salas independientes. Si el jugador cae al abismo o pulsa `R`, el sistema restaura el estado exacto de la sala en curso (posiciones iniciales de plataformas, compuertas, placas y cancela cualquier grabación o clon activo), garantizando que los puzles no queden en estados irrecuperables.
-
-### 4. Puzle Combinado (Sala S04-C)
-Integra ambas habilidades en secuencia coordinada:
-1. Superar una compuerta pesada mediante **Echo**.
-2. Llegar a una zona segura intermedia.
-3. Rebobinar con **Rewind** una plataforma móvil que se encuentra al otro lado del abismo para poder abordarla y cruzar al muelle final.
+El juego divide los desafíos en salas independientes. Si el jugador cae al abismo o pulsa `R`, el sistema restaura el estado exacto de la sala en curso (posiciones iniciales de plataformas, compuertas y placas, y elimina el clon activo; la última grabación terminada se conserva), garantizando que los puzles no queden en estados irrecuperables.
 
 ---
 
-## Pipeline Visual y Animación Humanoide
+## Pipeline Visual y Animación
 
 - **Entorno Sci-Fi Modular:** Piezas CC0 de Kenney (Modular Space Kit y Space Station Kit) con materiales URP propios; ver [créditos](docs/credits.md).
 - **Protagonista:** Robot animado (paquete *Animated Low Poly Robot Free*, rig Generic); ver [créditos](docs/credits.md).
@@ -120,7 +118,6 @@ Las escenas principales se encuentran en `Assets/_Echoryx/Scenes/`:
 - **`Level_01_Tutorial.unity`:** Nivel tutorial de tres salas que enseña Echo y Rewind ([detalle](docs/level-01-tutorial.md)).
 - **`Level_02_Sincronia.unity`:** Segundo nivel: tres salas que combinan Echo y Rewind ([solución](docs/level-02.md)).
 - **`Level_03_Paradojas.unity`:** Tercer nivel, «Laboratorio de Paradojas»: cinco tramos que combinan Echo y Rewind, con un acertijo final en dos etapas ([solución](docs/level-03.md)).
-- **`Prototype.unity`:** Circuito de pruebas de movimiento, puzzle de Echo, cruce con Rewind y sala combinada S04-C.
 - **`RobotIntegrationLab.unity`:** Laboratorio del robot; lo usan las pruebas PlayMode de locomoción.
 
 ---
@@ -147,7 +144,6 @@ Para más detalles, consulta la [documentación de pruebas](docs/testing.md).
 
 ## Documentación del Proyecto
 
-- 📄 [**Informe General de Avance (con capturas y análisis técnico)**](docs/archivo/informe-avance-proyecto.md)
 - 🎮 [Game Design Document (GDD)](docs/GDD.md)
 - 🧩 [Nivel 1: Tutorial](docs/level-01-tutorial.md)
 - 🧩 [Nivel 2: Sincronía](docs/level-02.md)
@@ -158,5 +154,3 @@ Para más detalles, consulta la [documentación de pruebas](docs/testing.md).
 - 🏛️ [Arquitectura de Software y Ensamblados](docs/architecture.md)
 - 📅 [Plan de Desarrollo y Roadmap](docs/development-plan.md)
 - 🧪 [Guía de Pruebas y Validación](docs/testing.md)
-- 🎨 [Archivo: pipeline de assets Quaternius (retirado)](docs/archivo/visual-assets.md)
-- 🚶 [Archivo: locomoción del SuperSoldier (retirado)](docs/archivo/supersoldier-locomotion.md)
